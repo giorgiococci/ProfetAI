@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../services/ai_config_service.dart';
+import '../services/secure_config_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -51,8 +51,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _initializeApp() async {
-    // Wait for AI configuration to complete
-    await AIConfigService.initialize();
+    // Initialize secure configuration (migration from .env if needed)
+    await SecureConfigService.initialize();
     
     setState(() {
       _setupComplete = true;

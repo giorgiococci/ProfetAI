@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/ai_config_service.dart';
+import '../services/secure_config_service.dart';
 import '../models/profet.dart';
 
 class AIStatusScreen extends StatefulWidget {
@@ -20,7 +20,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
 
   void _checkAIStatus() {
     setState(() {
-      _isAIEnabled = AIConfigService.isAIEnabled && Profet.isAIEnabled;
+      _isAIEnabled = SecureConfigService.isAIEnabled && Profet.isAIEnabled;
     });
   }
 
@@ -73,7 +73,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        AIConfigService.getStatus(),
+                        SecureConfigService.getStatus(),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 16,
@@ -186,7 +186,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                   _checkAIStatus();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Stato aggiornato: ${AIConfigService.getStatus()}'),
+                      content: Text('Stato aggiornato: ${SecureConfigService.getStatus()}'),
                       backgroundColor: _isAIEnabled ? Colors.green : Colors.orange,
                     ),
                   );
