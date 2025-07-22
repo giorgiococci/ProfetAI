@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/azure_openai_service.dart';
+import 'vision_feedback.dart';
 
 // Classe base astratta per tutti gli oracoli/profeti
 abstract class Profet {
@@ -37,6 +38,39 @@ abstract class Profet {
   
   // Abstract method for personalized loading message
   String get aiLoadingMessage;
+  
+  // Abstract methods for feedback customization - can be overridden by subclasses
+  String getPositiveFeedbackText() => 'La visione ha illuminato il mio cammino';
+  String getNegativeFeedbackText() => 'La visione era offuscata';
+  String getFunnyFeedbackText() => 'Non ho capito, ma mi ha fatto ridere';
+  
+  // Method to create feedback with prophet-specific text
+  VisionFeedback createFeedback({
+    required FeedbackType type,
+    String? visionContent,
+    String? question,
+  }) {
+    switch (type) {
+      case FeedbackType.positive:
+        return VisionFeedback.positive(
+          visionContent: visionContent,
+          question: question,
+          customText: getPositiveFeedbackText(),
+        );
+      case FeedbackType.negative:
+        return VisionFeedback.negative(
+          visionContent: visionContent,
+          question: question,
+          customText: getNegativeFeedbackText(),
+        );
+      case FeedbackType.funny:
+        return VisionFeedback.funny(
+          visionContent: visionContent,
+          question: question,
+          customText: getFunnyFeedbackText(),
+        );
+    }
+  }
   
   // Static AI service methods
   static Future<void> initializeAI({

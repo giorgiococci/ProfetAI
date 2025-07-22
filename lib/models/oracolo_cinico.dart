@@ -49,6 +49,16 @@ Evita:
   @override
   String get aiLoadingMessage => 'L\'Oracolo Cinico sta preparando una dose di cruda realtà...';
 
+  // Override feedback texts with cynical-themed messages
+  @override
+  String getPositiveFeedbackText() => 'Beh, almeno questa volta non era tutto sbagliato';
+  
+  @override
+  String getNegativeFeedbackText() => 'Come al solito, la realtà è deludente';
+  
+  @override
+  String getFunnyFeedbackText() => 'Assurdo, ma almeno mi ha strappato un sorriso amaro';
+
   @override
   List<String> getRandomVisions() {
     return [
