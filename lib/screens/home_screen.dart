@@ -436,45 +436,60 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           // Feedback positivo
-                          _buildFeedbackButton(
-                            context: context,
-                            profet: profet,
-                            feedbackType: FeedbackType.positive,
-                            icon: '🌟',
-                            onPressed: () => _handleFeedback(
-                              context,
-                              profet,
-                              FeedbackType.positive,
-                              content,
-                              question,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: _buildFeedbackButton(
+                                context: context,
+                                profet: profet,
+                                feedbackType: FeedbackType.positive,
+                                icon: '🌟',
+                                onPressed: () => _handleFeedback(
+                                  context,
+                                  profet,
+                                  FeedbackType.positive,
+                                  content,
+                                  question,
+                                ),
+                              ),
                             ),
                           ),
                           // Feedback negativo
-                          _buildFeedbackButton(
-                            context: context,
-                            profet: profet,
-                            feedbackType: FeedbackType.negative,
-                            icon: '🪨',
-                            onPressed: () => _handleFeedback(
-                              context,
-                              profet,
-                              FeedbackType.negative,
-                              content,
-                              question,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: _buildFeedbackButton(
+                                context: context,
+                                profet: profet,
+                                feedbackType: FeedbackType.negative,
+                                icon: '🪨',
+                                onPressed: () => _handleFeedback(
+                                  context,
+                                  profet,
+                                  FeedbackType.negative,
+                                  content,
+                                  question,
+                                ),
+                              ),
                             ),
                           ),
                           // Feedback ironico/divertente
-                          _buildFeedbackButton(
-                            context: context,
-                            profet: profet,
-                            feedbackType: FeedbackType.funny,
-                            icon: '🐸',
-                            onPressed: () => _handleFeedback(
-                              context,
-                              profet,
-                              FeedbackType.funny,
-                              content,
-                              question,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: _buildFeedbackButton(
+                                context: context,
+                                profet: profet,
+                                feedbackType: FeedbackType.funny,
+                                icon: '🐸',
+                                onPressed: () => _handleFeedback(
+                                  context,
+                                  profet,
+                                  FeedbackType.funny,
+                                  content,
+                                  question,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -494,38 +509,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextButton.icon(
-                      icon: Icon(Icons.bookmark_add, color: profet.primaryColor, size: 20),
-                      label: Text(
-                        'Salva',
-                        style: TextStyle(color: profet.primaryColor, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: _buildActionButton(
+                          context: context,
+                          profet: profet,
+                          icon: Icons.bookmark_add,
+                          label: 'Salva',
+                          color: profet.primaryColor,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showSavedMessage();
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        _showSavedMessage();
-                      },
                     ),
-                    TextButton.icon(
-                      icon: Icon(Icons.share, color: profet.secondaryColor, size: 20),
-                      label: Text(
-                        'Condividi',
-                        style: TextStyle(color: profet.secondaryColor, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: _buildActionButton(
+                          context: context,
+                          profet: profet,
+                          icon: Icons.share,
+                          label: 'Condividi',
+                          color: profet.secondaryColor,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showShareMessage();
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        _showShareMessage();
-                      },
                     ),
-                    TextButton.icon(
-                      icon: const Icon(Icons.close, color: Colors.grey, size: 20),
-                      label: const Text(
-                        'Chiudi',
-                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: _buildActionButton(
+                          context: context,
+                          profet: profet,
+                          icon: Icons.close,
+                          label: 'Chiudi',
+                          color: Colors.grey,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            if (hasQuestion) _questionController.clear();
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        if (hasQuestion) _questionController.clear();
-                      },
                     ),
                   ],
                 ),
@@ -635,10 +665,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: profet.primaryColor.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: profet.primaryColor.withValues(alpha: 0.3),
           ),
@@ -648,14 +678,14 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               icon,
-              style: const TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 20),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               _getFeedbackActionText(feedbackType),
               style: TextStyle(
                 color: profet.primaryColor,
-                fontSize: 12,
+                fontSize: 9,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
@@ -666,15 +696,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Build action button (responsive)
+  Widget _buildActionButton({
+    required BuildContext context,
+    required profet,
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    // Get screen width to determine if we should show text
+    final screenWidth = MediaQuery.of(context).size.width;
+    final showText = screenWidth > 350; // Show text only on wider screens
+
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      ),
+      child: showText
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color, size: 18),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            )
+          : Icon(icon, color: color, size: 22),
+    );
+  }
+
   // Get action text for feedback type
   String _getFeedbackActionText(FeedbackType type) {
     switch (type) {
       case FeedbackType.positive:
-        return "Offri una stella\nall'Oracolo";
+        return "Stella\nall'Oracolo";
       case FeedbackType.negative:
-        return 'Lancia un sasso\nnel pozzo';
+        return 'Sasso\nnel pozzo';
       case FeedbackType.funny:
-        return 'Lancia una rana\nnel multiverso';
+        return 'Rana nel\nmultiverso';
     }
   }
 
