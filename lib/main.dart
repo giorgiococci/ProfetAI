@@ -5,14 +5,13 @@ import 'screens/profet_selection_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/vision_book_screen.dart';
 import 'screens/ai_status_screen.dart';
-import 'services/ai_config_service.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize AI configuration at app startup
-  await AIConfigService.initialize();
+  // Don't initialize AI here anymore - let splash screen handle it
   
   runApp(const MyApp());
 }
@@ -41,7 +40,10 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const SplashScreen(),
+      routes: {
+        '/home': (context) => const MyHomePage(),
+      },
     );
   }
 }
