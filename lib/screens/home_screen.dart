@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
+import '../models/profet.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -225,23 +226,63 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showVisionDialog({bool hasQuestion = false, String? question}) {
+  void _showVisionDialog({bool hasQuestion = false, String? question}) async {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
     
     // Determina il titolo e il contenuto in base alla modalità
     String title;
     String content;
     IconData dialogIcon;
+    bool isAIEnabled = false;
     
     if (hasQuestion && question != null && question.isNotEmpty) {
       title = '🔮 ${profet.name} Risponde';
-      content = profet.getPersonalizedResponse(question);
       dialogIcon = Icons.psychology_alt;
+      
+      // Check if AI is enabled
+      await Profet.loadStoredAICredentials();
+      isAIEnabled = Profet.isAIEnabled;
+      
+      if (isAIEnabled) {
+        // Show loading dialog first
+        _showLoadingDialog(profet);
+        
+        try {
+          content = await profet.getAIPersonalizedResponse(question);
+          Navigator.of(context).pop(); // Close loading dialog
+        } catch (e) {
+          Navigator.of(context).pop(); // Close loading dialog
+          content = profet.getPersonalizedResponse(question);
+          isAIEnabled = false; // Fallback to regular response
+        }
+      } else {
+        content = profet.getPersonalizedResponse(question);
+      }
     } else {
       title = '✨ Visione di ${profet.name}';
-      final visions = profet.getRandomVisions();
-      content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
       dialogIcon = Icons.auto_awesome;
+      
+      // Check if AI is enabled
+      await Profet.loadStoredAICredentials();
+      isAIEnabled = Profet.isAIEnabled;
+      
+      if (isAIEnabled) {
+        // Show loading dialog first
+        _showLoadingDialog(profet);
+        
+        try {
+          content = await profet.getAIRandomVision();
+          Navigator.of(context).pop(); // Close loading dialog
+        } catch (e) {
+          Navigator.of(context).pop(); // Close loading dialog
+          final visions = profet.getRandomVisions();
+          content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
+          isAIEnabled = false; // Fallback to regular response
+        }
+      } else {
+        final visions = profet.getRandomVisions();
+        content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
+      }
     }
 
     showDialog(
@@ -267,6 +308,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              // Show AI indicator
+              if (isAIEnabled)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.withOpacity(0.5)),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.psychology, color: Colors.blue, size: 12),
+                      SizedBox(width: 4),
+                      Text(
+                        'AI',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
           content: Column(
@@ -366,6 +432,39 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _showLoadingDialog(profet) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1A1A1A),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: profet.primaryColor.withOpacity(0.3)),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(profet.primaryColor),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'L\'${profet.name} sta consultando l\'intelligenza artificiale...',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: profet.primaryColor,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

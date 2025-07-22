@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'screens/profet_selection_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/vision_book_screen.dart';
+import 'screens/azure_openai_settings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -77,6 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
         return const ProfileScreen();
       case 3:
         return const VisionBookScreen();
+      case 4:
+        return const AzureOpenAISettingsScreen();
       default:
         return HomeScreen(
           selectedProfet: _currentProfetType,
@@ -106,6 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
             label: 'Visioni',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Impostazioni',
           ),
         ],
         currentIndex: _selectedIndex,
