@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../models/profet.dart';
+import '../models/vision_feedback.dart';
+import '../services/feedback_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -413,41 +415,119 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // Prima riga: pulsanti di feedback
+            Column(
               children: [
-                TextButton.icon(
-                  icon: Icon(Icons.bookmark_add, color: profet.primaryColor, size: 20),
-                  label: Text(
-                    'Salva',
-                    style: TextStyle(color: profet.primaryColor, fontWeight: FontWeight.bold),
+                // Sezione feedback
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Come è stata questa visione?',
+                        style: TextStyle(
+                          color: Colors.grey[300],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // Feedback positivo
+                          _buildFeedbackButton(
+                            context: context,
+                            profet: profet,
+                            feedbackType: FeedbackType.positive,
+                            icon: '🌟',
+                            onPressed: () => _handleFeedback(
+                              context,
+                              profet,
+                              FeedbackType.positive,
+                              content,
+                              question,
+                            ),
+                          ),
+                          // Feedback negativo
+                          _buildFeedbackButton(
+                            context: context,
+                            profet: profet,
+                            feedbackType: FeedbackType.negative,
+                            icon: '🪨',
+                            onPressed: () => _handleFeedback(
+                              context,
+                              profet,
+                              FeedbackType.negative,
+                              content,
+                              question,
+                            ),
+                          ),
+                          // Feedback ironico/divertente
+                          _buildFeedbackButton(
+                            context: context,
+                            profet: profet,
+                            feedbackType: FeedbackType.funny,
+                            icon: '🐸',
+                            onPressed: () => _handleFeedback(
+                              context,
+                              profet,
+                              FeedbackType.funny,
+                              content,
+                              question,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _showSavedMessage();
-                  },
                 ),
-                TextButton.icon(
-                  icon: Icon(Icons.share, color: profet.secondaryColor, size: 20),
-                  label: Text(
-                    'Condividi',
-                    style: TextStyle(color: profet.secondaryColor, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _showShareMessage();
-                  },
+                const SizedBox(height: 8),
+                // Divisore
+                Container(
+                  height: 1,
+                  color: profet.primaryColor.withValues(alpha: 0.2),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                 ),
-                TextButton.icon(
-                  icon: const Icon(Icons.close, color: Colors.grey, size: 20),
-                  label: const Text(
-                    'Chiudi',
-                    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    if (hasQuestion) _questionController.clear();
-                  },
+                const SizedBox(height: 8),
+                // Seconda riga: pulsanti di azione originali
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton.icon(
+                      icon: Icon(Icons.bookmark_add, color: profet.primaryColor, size: 20),
+                      label: Text(
+                        'Salva',
+                        style: TextStyle(color: profet.primaryColor, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _showSavedMessage();
+                      },
+                    ),
+                    TextButton.icon(
+                      icon: Icon(Icons.share, color: profet.secondaryColor, size: 20),
+                      label: Text(
+                        'Condividi',
+                        style: TextStyle(color: profet.secondaryColor, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _showShareMessage();
+                      },
+                    ),
+                    TextButton.icon(
+                      icon: const Icon(Icons.close, color: Colors.grey, size: 20),
+                      label: const Text(
+                        'Chiudi',
+                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        if (hasQuestion) _questionController.clear();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -540,6 +620,140 @@ class _HomeScreenState extends State<HomeScreen> {
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  // Build feedback button
+  Widget _buildFeedbackButton({
+    required BuildContext context,
+    required profet,
+    required FeedbackType feedbackType,
+    required String icon,
+    required VoidCallback onPressed,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: profet.primaryColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: profet.primaryColor.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              icon,
+              style: const TextStyle(fontSize: 24),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _getFeedbackActionText(feedbackType),
+              style: TextStyle(
+                color: profet.primaryColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Get action text for feedback type
+  String _getFeedbackActionText(FeedbackType type) {
+    switch (type) {
+      case FeedbackType.positive:
+        return "Offri una stella\nall'Oracolo";
+      case FeedbackType.negative:
+        return 'Lancia un sasso\nnel pozzo';
+      case FeedbackType.funny:
+        return 'Lancia una rana\nnel multiverso';
+    }
+  }
+
+  // Handle feedback selection
+  void _handleFeedback(
+    BuildContext context,
+    profet,
+    FeedbackType feedbackType,
+    String visionContent,
+    String? question,
+  ) async {
+    // Create feedback using the prophet's custom texts
+    final feedback = profet.createFeedback(
+      type: feedbackType,
+      visionContent: visionContent,
+      question: question,
+    );
+
+    // Save feedback
+    await FeedbackService().saveFeedback(feedback);
+
+    // Close the current dialog
+    Navigator.of(context).pop();
+
+    // Show feedback confirmation
+    _showFeedbackConfirmation(context, profet, feedback);
+
+    // Clear question if it was a question-based vision
+    if (question != null && question.isNotEmpty) {
+      _questionController.clear();
+    }
+  }
+
+  // Show feedback confirmation
+  void _showFeedbackConfirmation(
+    BuildContext context,
+    profet,
+    VisionFeedback feedback,
+  ) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Text(
+              feedback.icon,
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    feedback.action,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    feedback.thematicText,
+                    style: TextStyle(
+                      color: Colors.grey[200],
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: profet.primaryColor.withValues(alpha: 0.9),
+        duration: const Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

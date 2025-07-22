@@ -49,6 +49,16 @@ Evita:
   @override
   String get aiLoadingMessage => 'L\'Oracolo Caotico sta mescolando le carte della realtà...';
 
+  // Override feedback texts with chaotic-themed messages
+  @override
+  String getPositiveFeedbackText() => 'EUREKA! Gli unicorni cosmici hanno DANZATO nel mio cervello!';
+  
+  @override
+  String getNegativeFeedbackText() => 'I gatti di Schrödinger erano tutti morti oggi, che sfortuna!';
+  
+  @override
+  String getFunnyFeedbackText() => 'Ho riso come un pinguino che fa surf su una pizza volante!';
+
   @override
   List<String> getRandomVisions() {
     return [

@@ -47,6 +47,16 @@ Evita:
   @override
   String get aiLoadingMessage => 'L\'Oracolo Mistico sta consultando le energie cosmiche...';
 
+  // Override feedback texts with mystic-themed messages
+  @override
+  String getPositiveFeedbackText() => 'Le stelle hanno guidato la mia anima';
+  
+  @override
+  String getNegativeFeedbackText() => 'Le nebbie cosmiche hanno velato la verità';
+  
+  @override
+  String getFunnyFeedbackText() => 'I venti mistici hanno portato confusione, ma anche sorrisi';
+
   @override
   List<String> getRandomVisions() {
     return [
