@@ -15,7 +15,7 @@ class OracoloCaotico extends Profet {
     ],
     icon: Icons.shuffle,
     backgroundImagePath: 'assets/images/backgrounds/chaotic_profet_background.png', // Immagine di sfondo
-    profetImagePath: 'assets/images/prophets/chaotic_prophet_2.png', // Immagine dell'oracolo caotico
+    profetImagePath: 'assets/images/prophets/chaotic_prophet.png', // Immagine dell'oracolo caotico
   );
 
   @override

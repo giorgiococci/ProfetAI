@@ -213,17 +213,17 @@ class _SplashScreenState extends State<SplashScreen>
   List<Widget> _buildProphetIcons() {
     final prophets = [
       {
-        'icon': Icons.visibility,
+        'image': 'assets/images/prophets/mystic_prophet.png',
         'color': const Color(0xFFD4AF37), // Gold - Mystic
         'angle': 0.0,
       },
       {
-        'icon': Icons.shuffle,
+        'image': 'assets/images/prophets/chaotic_prophet.png',
         'color': const Color(0xFFFF6B35), // Orange - Chaotic
         'angle': 2 * math.pi / 3,
       },
       {
-        'icon': Icons.sentiment_dissatisfied,
+        'image': 'assets/images/prophets/cinic_prophet.png',
         'color': const Color(0xFF78909C), // Gray-blue - Cynic
         'angle': 4 * math.pi / 3,
       },
@@ -239,14 +239,14 @@ class _SplashScreenState extends State<SplashScreen>
           radius * math.sin(angle),
         ),
         child: Container(
-          width: 50,
-          height: 50,
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: (prophet['color'] as Color).withOpacity(0.9),
+            color: (prophet['color'] as Color).withOpacity(0.2),
             border: Border.all(
-              color: Colors.white.withOpacity(0.3),
-              width: 2,
+              color: (prophet['color'] as Color),
+              width: 3,
             ),
             boxShadow: [
               BoxShadow(
@@ -256,13 +256,34 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ],
           ),
-          child: Icon(
-            prophet['icon'] as IconData,
-            color: Colors.white,
-            size: 24,
+          child: ClipOval(
+            child: Image.asset(
+              prophet['image'] as String,
+              width: 54,
+              height: 54,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback to icon if image fails to load
+                return Container(
+                  color: (prophet['color'] as Color).withOpacity(0.5),
+                  child: Icon(
+                    _getFallbackIcon(prophet['image'] as String),
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       );
     }).toList();
+  }
+
+  IconData _getFallbackIcon(String imagePath) {
+    if (imagePath.contains('mystic')) return Icons.visibility;
+    if (imagePath.contains('chaotic')) return Icons.shuffle;
+    if (imagePath.contains('cinic')) return Icons.sentiment_dissatisfied;
+    return Icons.help;
   }
 }
