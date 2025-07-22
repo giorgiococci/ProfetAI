@@ -37,9 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
           end: Alignment.bottomCenter,
           colors: profet.backgroundImagePath != null
               ? [
-                  Colors.black.withOpacity(0.6),
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.7),
+                  Colors.black.withValues(alpha: 0.6),
+                  Colors.black.withValues(alpha: 0.4),
+                  Colors.black.withValues(alpha: 0.7),
                 ]
               : profet.backgroundGradient,
         ),
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: profet.primaryColor.withOpacity(0.3),
+                      color: profet.primaryColor.withValues(alpha: 0.3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -98,8 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          profet.primaryColor.withOpacity(0.1),
-                          profet.secondaryColor.withOpacity(0.1),
+                          profet.primaryColor.withValues(alpha: 0.1),
+                          profet.secondaryColor.withValues(alpha: 0.1),
                         ],
                       ),
                     ),
@@ -118,10 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: profet.primaryColor.withOpacity(0.5),
+                    color: profet.primaryColor.withValues(alpha: 0.5),
                   ),
                 ),
                 child: TextField(
@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: OutlinedButton.styleFrom(
                         foregroundColor: profet.primaryColor,
                         side: BorderSide(color: profet.primaryColor, width: 2),
-                        backgroundColor: profet.primaryColor.withOpacity(0.1),
+                        backgroundColor: profet.primaryColor.withValues(alpha: 0.1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
@@ -233,15 +233,11 @@ class _HomeScreenState extends State<HomeScreen> {
     String title;
     String content;
     IconData dialogIcon;
-    bool isAIEnabled = false;
+    bool isAIEnabled = Profet.isAIEnabled; // Check if AI is available
     
     if (hasQuestion && question != null && question.isNotEmpty) {
       title = '🔮 ${profet.name} Risponde';
       dialogIcon = Icons.psychology_alt;
-      
-      // Check if AI is enabled
-      await Profet.loadStoredAICredentials();
-      isAIEnabled = Profet.isAIEnabled;
       
       if (isAIEnabled) {
         // Show loading dialog first
@@ -261,10 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       title = '✨ Visione di ${profet.name}';
       dialogIcon = Icons.auto_awesome;
-      
-      // Check if AI is enabled
-      await Profet.loadStoredAICredentials();
-      isAIEnabled = Profet.isAIEnabled;
       
       if (isAIEnabled) {
         // Show loading dialog first
@@ -292,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: const Color(0xFF1A1A1A),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            side: BorderSide(color: profet.primaryColor.withOpacity(0.3)),
+            side: BorderSide(color: profet.primaryColor.withValues(alpha: 0.3)),
           ),
           title: Row(
             children: [
@@ -313,9 +305,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.2),
+                    color: Colors.blue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue.withOpacity(0.5)),
+                    border: Border.all(color: Colors.blue.withValues(alpha: 0.5)),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
@@ -344,9 +336,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: profet.secondaryColor.withOpacity(0.5)),
+                    border: Border.all(color: profet.secondaryColor.withValues(alpha: 0.5)),
                   ),
                   child: Row(
                     children: [
@@ -374,12 +366,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      profet.primaryColor.withOpacity(0.1),
-                      profet.secondaryColor.withOpacity(0.1),
+                      profet.primaryColor.withValues(alpha: 0.1),
+                      profet.secondaryColor.withValues(alpha: 0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: profet.primaryColor.withOpacity(0.3)),
+                  border: Border.all(color: profet.primaryColor.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   content,
@@ -446,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: const Color(0xFF1A1A1A),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            side: BorderSide(color: profet.primaryColor.withOpacity(0.3)),
+            side: BorderSide(color: profet.primaryColor.withValues(alpha: 0.3)),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -489,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        backgroundColor: profet.primaryColor.withOpacity(0.9),
+        backgroundColor: profet.primaryColor.withValues(alpha: 0.9),
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -516,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        backgroundColor: profet.secondaryColor.withOpacity(0.9),
+        backgroundColor: profet.secondaryColor.withValues(alpha: 0.9),
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

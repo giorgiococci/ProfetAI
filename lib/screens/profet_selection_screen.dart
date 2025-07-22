@@ -73,13 +73,13 @@ class ProfetSelectionScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               color: isSelected 
-                                  ? profet.primaryColor.withOpacity(0.2)
-                                  : Colors.white.withOpacity(0.1),
+                                  ? profet.primaryColor.withValues(alpha: 0.2)
+                                  : Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
                                 color: isSelected 
                                     ? profet.primaryColor
-                                    : Colors.white.withOpacity(0.3),
+                                    : Colors.white.withValues(alpha: 0.3),
                                 width: isSelected ? 3 : 1,
                               ),
                             ),
@@ -89,7 +89,7 @@ class ProfetSelectionScreen extends StatelessWidget {
                                   width: 60,
                                   height: 60,
                                   decoration: BoxDecoration(
-                                    color: profet.primaryColor.withOpacity(0.2),
+                                    color: profet.primaryColor.withValues(alpha: 0.2),
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: profet.primaryColor,

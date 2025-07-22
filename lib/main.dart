@@ -4,9 +4,16 @@ import 'screens/home_screen.dart';
 import 'screens/profet_selection_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/vision_book_screen.dart';
-import 'screens/azure_openai_settings_screen.dart';
+import 'screens/ai_status_screen.dart';
+import 'services/ai_config_service.dart';
 
-void main() {
+void main() async {
+  // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize AI configuration at app startup
+  await AIConfigService.initialize();
+  
   runApp(const MyApp());
 }
 
@@ -79,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         return const VisionBookScreen();
       case 4:
-        return const AzureOpenAISettingsScreen();
+        return const AIStatusScreen();
       default:
         return HomeScreen(
           selectedProfet: _currentProfetType,
@@ -111,8 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Visioni',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Impostazioni',
+            icon: Icon(Icons.info),
+            label: 'Stato AI',
           ),
         ],
         currentIndex: _selectedIndex,

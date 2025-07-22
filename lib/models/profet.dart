@@ -96,25 +96,6 @@ abstract class Profet {
       return getRandomVision();
     }
   }
-
-  Stream<String> getAIStreamingResponse(String question) async* {
-    if (!_aiService.isInitialized) {
-      yield getPersonalizedResponse(question);
-      return;
-    }
-
-    try {
-      yield* _aiService.generateStreamingResponse(
-        prompt: question,
-        systemMessage: aiSystemPrompt,
-        maxTokens: 200,
-        temperature: 0.8,
-      );
-    } catch (e) {
-      print('AI streaming failed: $e');
-      yield getPersonalizedResponse(question);
-    }
-  }
   
   // Metodi comuni a tutti i profeti
   String getRandomVision() {
