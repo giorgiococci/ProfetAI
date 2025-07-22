@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
-    
+
     return Container(
       decoration: BoxDecoration(
         // Se c'è un'immagine di sfondo, usala come DecorationImage
@@ -103,11 +103,39 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    child: Icon(
-                      profet.icon,
-                      size: 80,
-                      color: profet.primaryColor,
-                    ),
+                    child: profet.profetImagePath != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.asset(
+                              profet.profetImagePath!,
+                              width: 194,
+                              height: 194,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                // Fallback all'icona se l'immagine non carica
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        profet.primaryColor.withValues(alpha: 0.1),
+                                        profet.secondaryColor.withValues(alpha: 0.1),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    profet.icon,
+                                    size: 80,
+                                    color: profet.primaryColor,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Icon(
+                            profet.icon,
+                            size: 80,
+                            color: profet.primaryColor,
+                          ),
                   ),
                 ),
               ),
@@ -448,7 +476,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
               Text(
-                'L\'${profet.name} sta consultando l\'intelligenza artificiale...',
+                profet.aiLoadingMessage,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: profet.primaryColor,

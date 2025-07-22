@@ -96,11 +96,28 @@ class ProfetSelectionScreen extends StatelessWidget {
                                       width: 2,
                                     ),
                                   ),
-                                  child: Icon(
-                                    profet.icon,
-                                    color: profet.primaryColor,
-                                    size: 30,
-                                  ),
+                                  child: profet.profetImagePath != null
+                                      ? ClipOval(
+                                          child: Image.asset(
+                                            profet.profetImagePath!,
+                                            width: 56,
+                                            height: 56,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              // Fallback all'icona se l'immagine non carica
+                                              return Icon(
+                                                profet.icon,
+                                                color: profet.primaryColor,
+                                                size: 30,
+                                              );
+                                            },
+                                          ),
+                                        )
+                                      : Icon(
+                                          profet.icon,
+                                          color: profet.primaryColor,
+                                          size: 30,
+                                        ),
                                 ),
                                 const SizedBox(width: 20),
                                 Expanded(

@@ -14,7 +14,8 @@ class OracoloCaotico extends Profet {
       Color(0xFF1B0D2E), // Viola quasi nero
     ],
     icon: Icons.shuffle,
-    backgroundImagePath: 'assets/images/backgrounds/chaotic_profet_background.png', // Immagine caotica
+    backgroundImagePath: 'assets/images/backgrounds/chaotic_profet_background.png', // Immagine di sfondo
+    profetImagePath: 'assets/images/prophets/chaotic_prophet_2.png', // Immagine dell'oracolo caotico
   );
 
   @override
@@ -44,6 +45,9 @@ Evita:
 - Riferimenti offensivi
 - Negatività vera (solo caos divertente)
 ''';
+
+  @override
+  String get aiLoadingMessage => 'L\'Oracolo Caotico sta mescolando le carte della realtà...';
 
   @override
   List<String> getRandomVisions() {

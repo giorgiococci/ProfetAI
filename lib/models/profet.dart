@@ -11,6 +11,7 @@ abstract class Profet {
   final List<Color> backgroundGradient;
   final IconData icon;
   final String? backgroundImagePath; // Percorso opzionale per immagine di sfondo
+  final String? profetImagePath; // Percorso opzionale per immagine dell'oracolo
 
   // Static AI service shared by all profets
   static final AzureOpenAIService _aiService = AzureOpenAIService();
@@ -24,6 +25,7 @@ abstract class Profet {
     required this.backgroundGradient,
     required this.icon,
     this.backgroundImagePath, // Parametro opzionale
+    this.profetImagePath, // Parametro opzionale per immagine dell'oracolo
   });
 
   // Metodi astratti che devono essere implementati dalle classi figlie
@@ -32,6 +34,9 @@ abstract class Profet {
   
   // Abstract method for AI system prompt - each profet defines its personality
   String get aiSystemPrompt;
+  
+  // Abstract method for personalized loading message
+  String get aiLoadingMessage;
   
   // Static AI service methods
   static Future<void> initializeAI({

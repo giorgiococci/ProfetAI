@@ -15,6 +15,7 @@ class OracoloMistico extends Profet {
     ],
     icon: Icons.visibility,
     backgroundImagePath: 'assets/images/backgrounds/mystic_profet_background.png', // Percorso immagine
+    // profetImagePath: 'assets/images/prophets/mystic_prophet.png', // Opzionale
   );
 
   @override
@@ -42,6 +43,9 @@ Evita:
 - Negatività eccessiva o paure
 - Linguaggio moderno o tecnologico
 ''';
+
+  @override
+  String get aiLoadingMessage => 'L\'Oracolo Mistico sta consultando le energie cosmiche...';
 
   @override
   List<String> getRandomVisions() {

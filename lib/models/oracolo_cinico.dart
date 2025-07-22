@@ -15,6 +15,7 @@ class OracoloCinico extends Profet {
     ],
     icon: Icons.sentiment_dissatisfied,
     backgroundImagePath: 'assets/images/backgrounds/oracolo_cinico_background.jpg', // Immagine cinica
+    // profetImagePath: 'assets/images/prophets/cynic_prophet.png', // Opzionale
   );
 
   @override
@@ -44,6 +45,9 @@ Evita:
 - Consigli totalmente negativi
 - Offese personali
 ''';
+
+  @override
+  String get aiLoadingMessage => 'L\'Oracolo Cinico sta preparando una dose di cruda realtà...';
 
   @override
   List<String> getRandomVisions() {

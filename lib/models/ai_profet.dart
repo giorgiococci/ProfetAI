@@ -17,6 +17,7 @@ abstract class AIProfet extends Profet {
     required super.backgroundGradient,
     required super.icon,
     super.backgroundImagePath,
+    super.profetImagePath,
   });
   
   /// Get the system prompt that defines this profet's personality
