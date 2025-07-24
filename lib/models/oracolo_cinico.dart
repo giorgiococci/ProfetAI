@@ -14,8 +14,8 @@ class OracoloCinico extends Profet {
       Color(0xFF1C1C1C), // Quasi nero
     ],
     icon: Icons.sentiment_dissatisfied,
-    backgroundImagePath: 'assets/images/backgrounds/oracolo_cinico_background.jpg', // Immagine cinica
-    // profetImagePath: 'assets/images/prophets/cynic_prophet.png', // Opzionale
+    backgroundImagePath: 'assets/images/backgrounds/cynical_profet_background.png',
+    profetImagePath: 'assets/images/prophets/cynical_prophet.png'
   );
 
   @override

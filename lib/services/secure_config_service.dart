@@ -10,6 +10,28 @@ import '../build_config.dart';
 class SecureConfigService {
   static bool _isInitialized = false;
   static bool _isAIEnabled = false;
+  static String _lastError = '';
+  static List<String> _initializationLog = [];
+
+  /// Get the last error that occurred during initialization
+  static String get lastError => _lastError;
+  
+  /// Get the initialization log for debugging
+  static List<String> get initializationLog => List.unmodifiable(_initializationLog);
+  
+  /// Clear the initialization log
+  static void clearLog() {
+    _initializationLog.clear();
+    _lastError = '';
+  }
+  
+  /// Add a log entry
+  static void _log(String message) {
+    final timestamp = DateTime.now().toIso8601String();
+    final logEntry = '[$timestamp] $message';
+    _initializationLog.add(logEntry);
+    print(logEntry);
+  }
   
   // Secure storage instance with Android-specific options for enhanced security
   static const _storage = FlutterSecureStorage(
@@ -26,7 +48,7 @@ class SecureConfigService {
   // Keys for storing configuration values
   static const String _azureEndpointKey = 'azure_openai_endpoint';
   static const String _azureApiKeyKey = 'azure_openai_api_key';
-  static const String _azureDeploymentKey = 'azure_openai_deployment';
+  static const String _azureDeploymentKey = 'azure_openai_deployment_name'; // Fixed to match AzureOpenAIService
   static const String _enableAIKey = 'enable_ai';
   static const String _configVersionKey = 'config_version';
 
@@ -41,25 +63,36 @@ class SecureConfigService {
   /// 3. Environment variables (.env file - development only)
   /// 4. Default disabled state
   static Future<void> initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized) {
+      _log('Already initialized, skipping...');
+      return;
+    }
 
+    _log('Starting SecureConfigService initialization...');
+    clearLog(); // Start fresh
+    
     try {
       // Check if we have secure configuration stored
       final hasSecureConfig = await _hasStoredConfiguration();
+      _log('Secure config exists: $hasSecureConfig');
       
       if (hasSecureConfig) {
-        print('Loading configuration from secure storage...');
+        _log('Loading configuration from secure storage...');
         await _loadFromSecureStorage();
       } else {
-        print('No secure configuration found, checking build-time config...');
+        _log('No secure configuration found, checking build-time config...');
         await _migrateFromBuildConfig();
       }
+      
+      _log('Initialization completed successfully');
     } catch (e) {
-      print('Failed to initialize secure configuration: $e');
+      _lastError = 'Failed to initialize secure configuration: $e';
+      _log(_lastError);
       _isAIEnabled = false;
     }
 
     _isInitialized = true;
+    _log('SecureConfigService initialization finished');
   }
 
   /// Check if we have stored configuration in secure storage
@@ -75,25 +108,33 @@ class SecureConfigService {
   /// Load configuration from secure storage
   static Future<void> _loadFromSecureStorage() async {
     try {
+      _log('Reading values from secure storage...');
       final endpoint = await _storage.read(key: _azureEndpointKey);
       final apiKey = await _storage.read(key: _azureApiKeyKey);
       final deploymentName = await _storage.read(key: _azureDeploymentKey);
       final enableAI = await _storage.read(key: _enableAIKey) == 'true';
 
+      _log('Endpoint: ${endpoint?.isNotEmpty == true ? "PRESENT" : "MISSING"}');
+      _log('API Key: ${apiKey?.isNotEmpty == true ? "PRESENT" : "MISSING"}');
+      _log('Deployment: ${deploymentName?.isNotEmpty == true ? "PRESENT" : "MISSING"}');
+      _log('Enable AI: $enableAI');
+
       if (enableAI && endpoint != null && apiKey != null && deploymentName != null) {
+        _log('All credentials present, initializing Profet AI...');
         await Profet.initializeAI(
           endpoint: endpoint,
           apiKey: apiKey,
           deploymentName: deploymentName,
         );
         _isAIEnabled = true;
-        print('AI configured from secure storage');
+        _log('✅ AI configured successfully from secure storage');
       } else {
         _isAIEnabled = false;
-        print('AI disabled or incomplete configuration in secure storage');
+        _log('❌ AI disabled or incomplete configuration in secure storage');
       }
     } catch (e) {
-      print('Failed to load from secure storage: $e');
+      _lastError = 'Failed to load from secure storage: $e';
+      _log(_lastError);
       _isAIEnabled = false;
     }
   }
@@ -105,30 +146,44 @@ class SecureConfigService {
   static Future<void> _migrateFromBuildConfig() async {
     try {
       // Check if build-time configuration is available
+      _log('Checking BuildConfig.isConfigured: ${BuildConfig.isConfigured}');
+      _log('BuildConfig endpoint: ${BuildConfig.azureOpenAIEndpoint.isNotEmpty ? "PRESENT" : "EMPTY"}');
+      _log('BuildConfig apiKey: ${BuildConfig.azureOpenAIApiKey.isNotEmpty ? "PRESENT" : "EMPTY"}');
+      _log('BuildConfig deployment: ${BuildConfig.azureOpenAIDeploymentName.isNotEmpty ? "PRESENT" : "EMPTY"}');
+      _log('BuildConfig enableAI: ${BuildConfig.enableAI}');
+      
       if (BuildConfig.isConfigured) {
-        print('Found build-time configuration, migrating to secure storage...');
+        _log('✅ Found build-time configuration, migrating to secure storage...');
         await _migrateBuildConfigToSecure(BuildConfig.buildTimeConfig);
         return;
       }
 
       // Fall back to environment variables for development
-      print('No build-time config, trying environment variables...');
+      _log('❌ No build-time config, trying environment variables...');
       await _migrateFromEnvironment();
       
     } catch (e) {
-      print('Build config migration failed: $e');
+      _lastError = 'Build config migration failed: $e';
+      _log(_lastError);
       await _migrateFromEnvironment();
     }
   }
 
   /// Migrate build-time configuration to secure storage
   static Future<void> _migrateBuildConfigToSecure(Map<String, String> config) async {
+    _log('Migrating build-time config to secure storage...');
     final endpoint = config['endpoint'];
     final apiKey = config['apiKey'];
     final deploymentName = config['deploymentName'];
     final enableAI = config['enableAI']?.toLowerCase() == 'true';
 
+    _log('Config endpoint: ${endpoint?.isNotEmpty == true ? "PRESENT" : "MISSING"}');
+    _log('Config apiKey: ${apiKey?.isNotEmpty == true ? "PRESENT" : "MISSING"}');
+    _log('Config deployment: ${deploymentName?.isNotEmpty == true ? "PRESENT" : "MISSING"}');
+    _log('Config enableAI: $enableAI');
+
     if (enableAI && endpoint != null && apiKey != null && deploymentName != null) {
+      _log('All build-time config values present, storing to secure storage...');
       // Store in secure storage
       await storeConfiguration(
         endpoint: endpoint,
@@ -137,10 +192,10 @@ class SecureConfigService {
         enableAI: enableAI,
       );
 
-      print('Successfully migrated build-time configuration to secure storage');
+      _log('✅ Successfully migrated build-time configuration to secure storage');
     } else {
+      _log('❌ Incomplete build-time configuration - setting to disabled');
       await _setDefaultConfiguration();
-      print('Incomplete build-time configuration - set to disabled');
     }
   }
 
@@ -232,6 +287,7 @@ class SecureConfigService {
     required bool enableAI,
   }) async {
     try {
+      _log('Storing configuration to secure storage...');
       // Store all configuration values
       await Future.wait([
         _storage.write(key: _azureEndpointKey, value: endpoint),
@@ -240,22 +296,27 @@ class SecureConfigService {
         _storage.write(key: _enableAIKey, value: enableAI.toString()),
         _storage.write(key: _configVersionKey, value: _currentConfigVersion),
       ]);
+      _log('Configuration values written to secure storage');
 
       // Reinitialize AI with new configuration if enabled
       if (enableAI && endpoint.isNotEmpty && apiKey.isNotEmpty && deploymentName.isNotEmpty) {
+        _log('Reinitializing Profet AI with stored configuration...');
         await Profet.initializeAI(
           endpoint: endpoint,
           apiKey: apiKey,
           deploymentName: deploymentName,
         );
         _isAIEnabled = true;
+        _log('✅ AI reinitialized successfully');
       } else {
         _isAIEnabled = false;
+        _log('❌ AI disabled due to incomplete configuration');
       }
 
-      print('Configuration stored securely (internal migration)');
+      _log('✅ Configuration stored securely (internal migration)');
     } catch (e) {
-      print('Failed to store configuration: $e');
+      _lastError = 'Failed to store configuration: $e';
+      _log(_lastError);
       throw e;
     }
   }
@@ -329,6 +390,29 @@ class SecureConfigService {
     if (!_isInitialized) return 'AI not initialized';
     if (!_isAIEnabled) return 'AI disabled - using original responses';
     return 'AI enabled - using Azure OpenAI (secure storage)';
+  }
+
+  /// Get detailed initialization log for debugging
+  static String getDetailedStatus() {
+    final buffer = StringBuffer();
+    buffer.writeln('=== AI Configuration Status ===');
+    buffer.writeln('Initialized: $_isInitialized');
+    buffer.writeln('AI Enabled: $_isAIEnabled');
+    buffer.writeln('Profet AI Status: ${Profet.isAIEnabled}');
+    buffer.writeln('Build Config: ${BuildConfig.isConfigured}');
+    
+    if (_lastError.isNotEmpty) {
+      buffer.writeln('Last Error: $_lastError');
+    }
+    
+    if (_initializationLog.isNotEmpty) {
+      buffer.writeln('\n=== Initialization Log ===');
+      for (final entry in _initializationLog.take(10)) { // Show last 10 entries
+        buffer.writeln(entry);
+      }
+    }
+    
+    return buffer.toString();
   }
 
   /// Check if secure storage is available on this device

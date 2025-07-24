@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AzureOpenAIService {
   static const String _apiKeyStorageKey = 'azure_openai_api_key';
   static const String _endpointStorageKey = 'azure_openai_endpoint';
+  static const String _deploymentStorageKey = 'azure_openai_deployment_name';
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
@@ -35,6 +36,7 @@ class AzureOpenAIService {
     // Store credentials securely
     await _secureStorage.write(key: _apiKeyStorageKey, value: apiKey);
     await _secureStorage.write(key: _endpointStorageKey, value: _endpoint);
+    await _secureStorage.write(key: _deploymentStorageKey, value: deploymentName);
     
     _apiKey = apiKey;
   }
@@ -44,7 +46,8 @@ class AzureOpenAIService {
     try {
       _apiKey = await _secureStorage.read(key: _apiKeyStorageKey);
       _endpoint = await _secureStorage.read(key: _endpointStorageKey);
-      return _apiKey != null && _endpoint != null;
+      _deploymentName = await _secureStorage.read(key: _deploymentStorageKey);
+      return _apiKey != null && _endpoint != null && _deploymentName != null;
     } catch (e) {
       print('Error loading stored credentials: $e');
       return false;
@@ -223,6 +226,7 @@ class AzureOpenAIService {
   Future<void> clearCredentials() async {
     await _secureStorage.delete(key: _apiKeyStorageKey);
     await _secureStorage.delete(key: _endpointStorageKey);
+    await _secureStorage.delete(key: _deploymentStorageKey);
     _apiKey = null;
     _endpoint = null;
     _deploymentName = null;

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/secure_config_service.dart';
 import '../models/profet.dart';
+import '../build_config.dart';
 
 class AIStatusScreen extends StatefulWidget {
   const AIStatusScreen({super.key});
@@ -11,6 +14,8 @@ class AIStatusScreen extends StatefulWidget {
 
 class _AIStatusScreenState extends State<AIStatusScreen> {
   bool _isAIEnabled = false;
+  Map<String, String?> _configStatus = {};
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -18,10 +23,50 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
     _checkAIStatus();
   }
 
-  void _checkAIStatus() {
+  Future<void> _checkAIStatus() async {
     setState(() {
-      _isAIEnabled = SecureConfigService.isAIEnabled && Profet.isAIEnabled;
+      _isLoading = true;
     });
+    
+    try {
+      final configStatus = await SecureConfigService.getConfigurationStatus();
+      setState(() {
+        _isAIEnabled = SecureConfigService.isAIEnabled && Profet.isAIEnabled;
+        _configStatus = configStatus;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<Map<String, String?>> _getDebugValues() async {
+    try {
+      // For debugging, read the actual stored values
+      final storage = FlutterSecureStorage(
+        aOptions: AndroidOptions(
+          encryptedSharedPreferences: true,
+        ),
+      );
+      
+      final endpoint = await storage.read(key: 'azure_openai_endpoint');
+      final apiKey = await storage.read(key: 'azure_openai_api_key');
+      final deploymentName = await storage.read(key: 'azure_openai_deployment_name');
+      final enableAI = await storage.read(key: 'enable_ai');
+      final version = await storage.read(key: 'config_version');
+      
+      return {
+        'endpoint': endpoint ?? 'NULL',
+        'apiKey': apiKey ?? 'NULL',
+        'deploymentName': deploymentName ?? 'NULL',
+        'enableAI': enableAI ?? 'NULL',
+        'version': version ?? 'NULL',
+      };
+    } catch (e) {
+      return {'error': e.toString()};
+    }
   }
 
   @override
@@ -30,6 +75,17 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
       appBar: AppBar(
         title: const Text('Stato Intelligenza Artificiale'),
         backgroundColor: const Color(0xFF1F1B24),
+        actions: [
+          IconButton(
+            icon: _isLoading ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            ) : const Icon(Icons.refresh),
+            onPressed: _isLoading ? null : _checkAIStatus,
+            tooltip: 'Aggiorna stato',
+          ),
+        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -42,10 +98,11 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
             ],
           ),
         ),
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
+              // AI Status Card
               Card(
                 color: const Color(0xFF2D2D30),
                 elevation: 8,
@@ -84,7 +141,98 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              
+              const SizedBox(height: 16),
+              
+              // Debug Configuration Card
+              Card(
+                color: const Color(0xFF2D2D30),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.bug_report, color: Colors.orange),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Debug - Configurazione',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.copy, size: 16),
+                            onPressed: () => _copyDebugInfo(),
+                            tooltip: 'Copia info debug',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildDebugRow('Build Config', BuildConfig.isConfigured ? 'Configurato' : 'Non configurato'),
+                      _buildDebugRow('Secure Storage', SecureConfigService.isAIEnabled ? 'Abilitato' : 'Disabilitato'),
+                      _buildDebugRow('Profet AI', Profet.isAIEnabled ? 'Attivo' : 'Non attivo'),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Valori BuildConfig:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      _buildDebugRow('BC Endpoint', BuildConfig.azureOpenAIEndpoint.isEmpty ? 'EMPTY' : BuildConfig.azureOpenAIEndpoint),
+                      _buildDebugRow('BC API Key', BuildConfig.azureOpenAIApiKey.isEmpty ? 'EMPTY' : BuildConfig.azureOpenAIApiKey),
+                      _buildDebugRow('BC Deployment', BuildConfig.azureOpenAIDeploymentName.isEmpty ? 'EMPTY' : BuildConfig.azureOpenAIDeploymentName),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Valori Secure Storage:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      FutureBuilder<Map<String, String?>>(
+                        future: _getDebugValues(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final values = snapshot.data!;
+                            return Column(
+                              children: [
+                                _buildDebugRow('SS Endpoint', values['endpoint'] ?? 'ERROR'),
+                                _buildDebugRow('SS API Key', values['apiKey'] ?? 'ERROR'),
+                                _buildDebugRow('SS Deployment', values['deploymentName'] ?? 'ERROR'),
+                                _buildDebugRow('SS EnableAI', values['enableAI'] ?? 'ERROR'),
+                                _buildDebugRow('SS Version', values['version'] ?? 'ERROR'),
+                              ],
+                            );
+                          } else {
+                            return const Text('Loading...');
+                          }
+                        },
+                      ),
+                      const Divider(color: Colors.white24),
+                      _buildDebugRow('Endpoint', _configStatus['endpoint'] ?? 'Non impostato'),
+                      _buildDebugRow('API Key', _configStatus['apiKey'] ?? 'Non impostato'),
+                      _buildDebugRow('Deployment', _configStatus['deploymentName'] ?? 'Non impostato'),
+                      _buildDebugRow('AI Abilitato', _configStatus['enableAI'] ?? 'false'),
+                      _buildDebugRow('Versione Config', _configStatus['configVersion'] ?? 'Sconosciuta'),
+                      const Divider(color: Colors.white24),
+                      if (BuildConfig.isConfigured) ...[
+                        _buildDebugRow('Build Endpoint', BuildConfig.azureOpenAIEndpoint.isNotEmpty ? 'Presente' : 'Vuoto'),
+                        _buildDebugRow('Build API Key', BuildConfig.azureOpenAIApiKey.isNotEmpty ? 'Presente' : 'Vuoto'),
+                        _buildDebugRow('Build Deployment', BuildConfig.azureOpenAIDeploymentName.isNotEmpty ? 'Presente' : 'Vuoto'),
+                        _buildDebugRow('Build AI Enable', BuildConfig.enableAI.toString()),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 16),
               
               Card(
                 color: const Color(0xFF2D2D30),
@@ -178,20 +326,27 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                   ),
                 ),
               ),
-              
-              const Spacer(),
+              const SizedBox(height: 24),
               
               ElevatedButton.icon(
-                onPressed: () {
-                  _checkAIStatus();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Stato aggiornato: ${SecureConfigService.getStatus()}'),
-                      backgroundColor: _isAIEnabled ? Colors.green : Colors.orange,
-                    ),
-                  );
+                onPressed: _isLoading ? null : () async {
+                  await _checkAIStatus();
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Stato aggiornato: ${SecureConfigService.getStatus()}'),
+                        backgroundColor: _isAIEnabled ? Colors.green : Colors.orange,
+                      ),
+                    );
+                  }
                 },
-                icon: const Icon(Icons.refresh),
+                icon: _isLoading 
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh),
                 label: const Text('Aggiorna Stato'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6A1B9A),
@@ -202,9 +357,76 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                   ),
                 ),
               ),
+              
+              const SizedBox(height: 16),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDebugRow(String label, String value) {
+    final isError = value.contains('Non') || value.contains('Vuoto') || value == 'false';
+    final isSuccess = value.contains('Configurato') || value.contains('Presente') || value.contains('Abilitato') || value.contains('Attivo') || value == 'true';
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.white70,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontFamily: 'monospace',
+                color: isError 
+                    ? Colors.red[300] 
+                    : isSuccess 
+                        ? Colors.green[300] 
+                        : Colors.white,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _copyDebugInfo() {
+    final debugInfo = '''
+=== DEBUG INFO ===
+Build Config: ${BuildConfig.isConfigured ? 'Configurato' : 'Non configurato'}
+Secure Storage: ${SecureConfigService.isAIEnabled ? 'Abilitato' : 'Disabilitato'}
+Profet AI: ${Profet.isAIEnabled ? 'Attivo' : 'Non attivo'}
+Endpoint: ${_configStatus['endpoint'] ?? 'Non impostato'}
+API Key: ${_configStatus['apiKey'] ?? 'Non impostato'}
+Deployment: ${_configStatus['deploymentName'] ?? 'Non impostato'}
+AI Abilitato: ${_configStatus['enableAI'] ?? 'false'}
+Versione Config: ${_configStatus['configVersion'] ?? 'Sconosciuta'}
+${BuildConfig.isConfigured ? '''
+Build Endpoint: ${BuildConfig.azureOpenAIEndpoint.isNotEmpty ? 'Presente' : 'Vuoto'}
+Build API Key: ${BuildConfig.azureOpenAIApiKey.isNotEmpty ? 'Presente' : 'Vuoto'}
+Build Deployment: ${BuildConfig.azureOpenAIDeploymentName.isNotEmpty ? 'Presente' : 'Vuoto'}
+Build AI Enable: ${BuildConfig.enableAI}''' : ''}
+==================
+''';
+
+    Clipboard.setData(ClipboardData(text: debugInfo));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Info debug copiate negli appunti'),
+        backgroundColor: Colors.blue,
       ),
     );
   }
