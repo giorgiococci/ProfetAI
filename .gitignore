@@ -48,6 +48,14 @@ app.*.map.json
 .env
 *.env
 !.env.example
+!local_credentials.env.example
+
+# Build configuration with credentials
+build_config_with_secrets.dart
+local_credentials.env
+
+# Release artifacts with embedded secrets
+/build/app/outputs/flutter-apk/app-release.apk
 
 # Azure and API keys
 azure.yaml

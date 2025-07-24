@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/profet.dart';
+import '../build_config.dart';
 
 /// Secure configuration service for storing and retrieving sensitive data
 /// 
@@ -34,10 +35,11 @@ class SecureConfigService {
 
   /// Initialize secure configuration
   /// 
-  /// This will:
-  /// 1. Try to load from secure storage first
-  /// 2. Fall back to environment variables if no secure config exists
-  /// 3. Migrate environment config to secure storage if needed
+  /// Priority order:
+  /// 1. Existing secure storage (user has configured)
+  /// 2. Build-time configuration (embedded in release)
+  /// 3. Environment variables (.env file - development only)
+  /// 4. Default disabled state
   static Future<void> initialize() async {
     if (_isInitialized) return;
 
@@ -49,8 +51,8 @@ class SecureConfigService {
         print('Loading configuration from secure storage...');
         await _loadFromSecureStorage();
       } else {
-        print('No secure configuration found, trying migration from environment...');
-        await _migrateFromEnvironment();
+        print('No secure configuration found, checking build-time config...');
+        await _migrateFromBuildConfig();
       }
     } catch (e) {
       print('Failed to initialize secure configuration: $e');
@@ -96,10 +98,55 @@ class SecureConfigService {
     }
   }
 
+  /// Migrate configuration from build-time config to secure storage
+  /// 
+  /// This handles the initial setup for release builds where credentials
+  /// are embedded at build time via --dart-define flags
+  static Future<void> _migrateFromBuildConfig() async {
+    try {
+      // Check if build-time configuration is available
+      if (BuildConfig.isConfigured) {
+        print('Found build-time configuration, migrating to secure storage...');
+        await _migrateBuildConfigToSecure(BuildConfig.buildTimeConfig);
+        return;
+      }
+
+      // Fall back to environment variables for development
+      print('No build-time config, trying environment variables...');
+      await _migrateFromEnvironment();
+      
+    } catch (e) {
+      print('Build config migration failed: $e');
+      await _migrateFromEnvironment();
+    }
+  }
+
+  /// Migrate build-time configuration to secure storage
+  static Future<void> _migrateBuildConfigToSecure(Map<String, String> config) async {
+    final endpoint = config['endpoint'];
+    final apiKey = config['apiKey'];
+    final deploymentName = config['deploymentName'];
+    final enableAI = config['enableAI']?.toLowerCase() == 'true';
+
+    if (enableAI && endpoint != null && apiKey != null && deploymentName != null) {
+      // Store in secure storage
+      await storeConfiguration(
+        endpoint: endpoint,
+        apiKey: apiKey,
+        deploymentName: deploymentName,
+        enableAI: enableAI,
+      );
+
+      print('Successfully migrated build-time configuration to secure storage');
+    } else {
+      await _setDefaultConfiguration();
+      print('Incomplete build-time configuration - set to disabled');
+    }
+  }
+
   /// Migrate configuration from environment variables to secure storage
   /// 
-  /// This is a one-time migration that will read from .env file (if it exists)
-  /// and store the values securely. After migration, the app will use secure storage.
+  /// This is a fallback for development builds when no build-time config exists
   static Future<void> _migrateFromEnvironment() async {
     try {
       // Try to load from environment file for migration
@@ -173,13 +220,11 @@ class SecureConfigService {
     _isAIEnabled = false;
   }
 
-  /// Store configuration securely
+  /// Store configuration securely (Internal use only)
   /// 
-  /// This method allows you to update the secure configuration programmatically.
-  /// Useful for:
-  /// - Initial setup after user enters credentials
-  /// - Key rotation
-  /// - Configuration updates
+  /// This method is used internally during migration from build-time config
+  /// to secure storage. It should not be called directly by UI components
+  /// in production builds with embedded credentials.
   static Future<void> storeConfiguration({
     required String endpoint,
     required String apiKey,
@@ -208,17 +253,17 @@ class SecureConfigService {
         _isAIEnabled = false;
       }
 
-      print('Configuration stored securely');
+      print('Configuration stored securely (internal migration)');
     } catch (e) {
       print('Failed to store configuration: $e');
       throw e;
     }
   }
 
-  /// Get current configuration status (masked for security)
+  /// Get current configuration status (Always masked for security)
   /// 
   /// This only returns non-sensitive configuration status information.
-  /// API keys and other secrets are never exposed.
+  /// API keys and other secrets are never exposed in production builds.
   static Future<Map<String, String?>> getConfigurationStatus() async {
     try {
       final endpoint = await _storage.read(key: _azureEndpointKey);
@@ -239,12 +284,25 @@ class SecureConfigService {
     }
   }
 
-  /// Clear all stored configuration
+  /// Get configuration (Always masked for production security)
+  /// 
+  /// In production builds with embedded credentials, sensitive data
+  /// is always masked to prevent credential exposure.
+  static Future<Map<String, String?>> getConfiguration({bool maskSensitive = true}) async {
+    // Always use masked version for production security
+    return await getConfigurationStatus();
+  }
+
+  /// Clear all stored configuration (Emergency use only)
+  /// 
+  /// ⚠️  WARNING: This is for emergency use only (e.g., security incident)
+  /// In production apps with embedded credentials, this will disable AI
+  /// until the app is reinstalled or updated.
   /// 
   /// Use this for:
-  /// - User logout
-  /// - Reset to factory settings
   /// - Security incident response (clear all secrets)
+  /// - Factory reset functionality
+  /// - Debugging/testing only
   static Future<void> clearConfiguration() async {
     try {
       await Future.wait([
@@ -256,7 +314,7 @@ class SecureConfigService {
       ]);
 
       _isAIEnabled = false;
-      print('Configuration cleared');
+      print('⚠️  Configuration cleared - AI features disabled');
     } catch (e) {
       print('Failed to clear configuration: $e');
       throw e;
