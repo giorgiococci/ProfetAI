@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
 import '../utils/app_logger.dart';
+import '../l10n/prophet_localization_loader.dart';
 
 class OracoloCaotico extends Profet {
   const OracoloCaotico() : super(
@@ -47,8 +48,28 @@ Evita:
 - Negatività vera (solo caos divertente)
 ''';
 
+  // New localized AI system prompt method
+  Future<String> getLocalizedAISystemPrompt(BuildContext context) async {
+    try {
+      return await ProphetLocalizationLoader.getAISystemPrompt(context, 'chaotic');
+    } catch (e) {
+      AppLogger.logWarning('OracoloCaotico', 'Failed to load localized AI prompt: $e');
+      return aiSystemPrompt; // Fallback to hardcoded prompt
+    }
+  }
+
   @override
   String get aiLoadingMessage => 'L\'Oracolo Caotico sta mescolando le carte della realtà...';
+
+  // New localized loading message method
+  Future<String> getLocalizedLoadingMessage(BuildContext context) async {
+    try {
+      return await ProphetLocalizationLoader.getAILoadingMessage(context, 'chaotic');
+    } catch (e) {
+      AppLogger.logWarning('OracoloCaotico', 'Failed to load localized loading message: $e');
+      return aiLoadingMessage; // Fallback to hardcoded message
+    }
+  }
 
   // Override feedback texts with chaotic-themed messages
   @override
@@ -59,6 +80,26 @@ Evita:
   
   @override
   String getFunnyFeedbackText() => 'Ho riso come un pinguino che fa surf su una pizza volante!';
+
+  // New localized feedback methods
+  Future<String> getLocalizedFeedbackText(BuildContext context, String feedbackType) async {
+    try {
+      return await ProphetLocalizationLoader.getFeedbackText(context, 'chaotic', feedbackType);
+    } catch (e) {
+      AppLogger.logWarning('OracoloCaotico', 'Failed to load localized feedback: $e');
+      // Fallback to hardcoded messages
+      switch (feedbackType.toLowerCase()) {
+        case 'positive':
+          return getPositiveFeedbackText();
+        case 'negative':
+          return getNegativeFeedbackText();
+        case 'funny':
+          return getFunnyFeedbackText();
+        default:
+          return getPositiveFeedbackText();
+      }
+    }
+  }
 
   @override
   List<String> getRandomVisions() {
@@ -73,6 +114,16 @@ Evita:
       "Il gatto di Schrödinger ha appena fatto una scommessa sul tuo futuro. Ha vinto... o perso?",
       "BREAKING NEWS: L'universo ha dichiarato sciopero. Aspetta sviluppi caotici.",
     ];
+  }
+
+  // New localized random visions method
+  Future<List<String>> getLocalizedRandomVisions(BuildContext context) async {
+    try {
+      return await ProphetLocalizationLoader.getRandomVisions(context, 'chaotic');
+    } catch (e) {
+      AppLogger.logWarning('OracoloCaotico', 'Failed to load localized visions: $e');
+      return getRandomVisions(); // Fallback to hardcoded visions
+    }
   }
 
   @override
@@ -100,5 +151,15 @@ Evita:
     final response = caoticResponses[randomIndex];
     AppLogger.logInfo('OracoloCaotico', 'Fallback response: $response');
     return response;
+  }
+
+  // New localized fallback response method
+  Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question) async {
+    try {
+      return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'chaotic');
+    } catch (e) {
+      AppLogger.logWarning('OracoloCaotico', 'Failed to load localized fallback response: $e');
+      return getPersonalizedResponse(question); // Fallback to hardcoded responses
+    }
   }
 }

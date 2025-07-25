@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
+import '../l10n/app_localizations.dart';
 
 class ProfetSelectionScreen extends StatelessWidget {
   final ProfetType selectedProfet;
@@ -14,6 +15,7 @@ class ProfetSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentProfet = ProfetManager.getProfet(selectedProfet);
+    final localizations = AppLocalizations.of(context)!;
     
     return Container(
       decoration: BoxDecoration(
@@ -30,7 +32,7 @@ class ProfetSelectionScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               Text(
-                'SELEZIONA IL TUO ORACOLO',
+                localizations.selectYourOracle,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -41,7 +43,7 @@ class ProfetSelectionScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Ogni oracolo ha la sua personalità unica',
+                localizations.everyOracleUniquePersonality,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[300],

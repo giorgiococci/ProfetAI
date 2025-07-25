@@ -3,6 +3,7 @@ import '../models/profet_manager.dart';
 import '../models/profet.dart';
 import '../models/vision_feedback.dart';
 import '../services/feedback_service.dart';
+import '../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -158,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   controller: _questionController,
                   style: TextStyle(color: Colors.grey[100], fontSize: 16),
                   decoration: InputDecoration(
-                    hintText: profet.getHintText(),
+                    hintText: localizations.enterQuestionPlaceholder(profet.name),
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
@@ -186,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (question.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: const Text('📝 Inserisci una domanda prima di chiedere!'),
+                              content: Text(localizations.enterQuestionFirst),
                               backgroundColor: Colors.red[700],
                               duration: const Duration(seconds: 2),
                             ),
@@ -204,9 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         elevation: 8,
                       ),
                       icon: const Icon(Icons.help_outline, size: 24),
-                      label: const Text(
-                        'DOMANDA ALL\'ORACOLO',
-                        style: TextStyle(
+                      label: Text(
+                        localizations.askTheOracle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
@@ -235,9 +237,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         elevation: 4,
                       ),
                       icon: const Icon(Icons.hearing, size: 24),
-                      label: const Text(
-                        'ASCOLTA L\'ORACOLO',
-                        style: TextStyle(
+                      label: Text(
+                        localizations.listenToOracle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
