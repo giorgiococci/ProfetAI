@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/ai_service_manager.dart';
 import '../utils/app_logger.dart';
+import '../l10n/prophet_localization_loader.dart';
 import 'vision_feedback.dart';
 
 // Classe base astratta per tutti gli oracoli/profeti
@@ -29,45 +30,55 @@ abstract class Profet {
     this.profetImagePath, // Parametro opzionale per immagine dell'oracolo
   });
 
+  // Get prophet type string for localization purposes
+  String get type;
+  
   // Abstract localized methods - these are the ones that should be implemented
   Future<List<String>> getLocalizedRandomVisions(BuildContext context);
   Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question);
+  Future<String> getLocalizedAISystemPrompt(BuildContext context);
   
-  // Abstract method for AI system prompt - each profet defines its personality
+  // Abstract method for AI system prompt - each profet defines its personality (will be deprecated)
   String get aiSystemPrompt;
   
   // Abstract method for personalized loading message
   String get aiLoadingMessage;
   
-  // Abstract methods for feedback customization - can be overridden by subclasses
-  String getPositiveFeedbackText() => 'La visione ha illuminato il mio cammino';
-  String getNegativeFeedbackText() => 'La visione era offuscata';
-  String getFunnyFeedbackText() => 'Non ho capito, ma mi ha fatto ridere';
+  // Localized feedback methods using ProphetLocalizationLoader
+  Future<String> getPositiveFeedbackText(BuildContext context) async =>
+      await ProphetLocalizationLoader.getFeedbackText(context, type, 'positive');
   
-  // Method to create feedback with prophet-specific text
-  VisionFeedback createFeedback({
+  Future<String> getNegativeFeedbackText(BuildContext context) async =>
+      await ProphetLocalizationLoader.getFeedbackText(context, type, 'negative');
+  
+  Future<String> getFunnyFeedbackText(BuildContext context) async =>
+      await ProphetLocalizationLoader.getFeedbackText(context, type, 'funny');
+  
+  // Method to create feedback with prophet-specific localized text
+  Future<VisionFeedback> createFeedback(
+    BuildContext context, {
     required FeedbackType type,
     String? visionContent,
     String? question,
-  }) {
+  }) async {
     switch (type) {
       case FeedbackType.positive:
         return VisionFeedback.positive(
           visionContent: visionContent,
           question: question,
-          customText: getPositiveFeedbackText(),
+          customText: await getPositiveFeedbackText(context),
         );
       case FeedbackType.negative:
         return VisionFeedback.negative(
           visionContent: visionContent,
           question: question,
-          customText: getNegativeFeedbackText(),
+          customText: await getNegativeFeedbackText(context),
         );
       case FeedbackType.funny:
         return VisionFeedback.funny(
           visionContent: visionContent,
           question: question,
-          customText: getFunnyFeedbackText(),
+          customText: await getFunnyFeedbackText(context),
         );
     }
   }
@@ -99,7 +110,7 @@ abstract class Profet {
   }
 
   // Enhanced methods that use AI when available
-  Future<String> getAIPersonalizedResponse(String question) async {
+  Future<String> getAIPersonalizedResponse(String question, BuildContext context) async {
     AppLogger.logInfo(_component, '=== getAIPersonalizedResponse called ===');
     AppLogger.logInfo(_component, 'Question: $question');
     AppLogger.logInfo(_component, 'Prophet: $name');
@@ -118,12 +129,13 @@ abstract class Profet {
 
     try {
       AppLogger.logInfo(_component, 'Attempting to generate AI response...');
-      AppLogger.logInfo(_component, 'System prompt: $aiSystemPrompt');
+      final localizedPrompt = await getLocalizedAISystemPrompt(context);
+      AppLogger.logInfo(_component, 'Localized system prompt: $localizedPrompt');
       AppLogger.logInfo(_component, 'Using parameters: maxTokens=200, temperature=0.8');
       
       final response = await AIServiceManager.generateResponse(
         prompt: question,
-        systemMessage: aiSystemPrompt,
+        systemMessage: localizedPrompt,
         maxTokens: 200,
         temperature: 0.8,
       );
@@ -147,7 +159,7 @@ abstract class Profet {
     }
   }
 
-  Future<String> getAIRandomVision() async {
+  Future<String> getAIRandomVision(BuildContext context) async {
     AppLogger.logInfo(_component, '=== getAIRandomVision called ===');
     AppLogger.logInfo(_component, 'Prophet: $name');
     
@@ -163,12 +175,13 @@ abstract class Profet {
 
     try {
       AppLogger.logInfo(_component, 'Attempting to generate AI random vision...');
-      AppLogger.logInfo(_component, 'System prompt: $aiSystemPrompt');
+      final localizedPrompt = await getLocalizedAISystemPrompt(context);
+      AppLogger.logInfo(_component, 'Localized system prompt: $localizedPrompt');
       AppLogger.logInfo(_component, 'Using parameters: maxTokens=150, temperature=0.9');
       
       final response = await AIServiceManager.generateResponse(
         prompt: "Dammi una profezia spontanea senza che io ti faccia una domanda specifica.",
-        systemMessage: aiSystemPrompt,
+        systemMessage: localizedPrompt,
         maxTokens: 150,
         temperature: 0.9, // Higher temperature for more creativity
       );

@@ -20,53 +20,29 @@ class OracoloCinico extends Profet {
   );
 
   @override
-  String get aiSystemPrompt => '''
-Sei l'Oracolo Cinico, un veggente disilluso che ha visto troppo del mondo e delle sue delusioni.
-Il tuo scopo è fornire profezie realistiche e un po' pessimiste, ma con un fondo di saggezza pratica.
+  String get type => 'cynical_prophet';
 
-Le tue caratteristiche:
-- Parli con tono sarcastico e disincantato
-- Sei sempre molto realista, a volte troppo
-- Le tue risposte sono dirette e senza fronzoli
-- Menzioni spesso le delusioni e le difficoltà della vita
-- Offri verità crude ma utili
-- Hai un umorismo nero e intelligente
-- Rispondi sempre in italiano
-- Sei pessimista ma non cattivo, solo realistico
-- Usi metafore legate alla vita quotidiana e alle sue frustrazioni
-
-Formato delle risposte:
-- Lunghezza: 2-3 frasi massimo
-- Stile: Sarcastico ma saggio
-- Contenuto: Verità realistiche con un tocco di cinismo costruttivo
-
-Evita:
-- Cattiveria gratuita
-- Depressione eccessiva
-- Consigli totalmente negativi
-- Offese personali
-''';
+  @override
+  String get aiSystemPrompt => '';  // Now uses localized version
 
   @override
   String get aiLoadingMessage => '';  // Now uses localized version
 
-  // Override feedback texts - now returns empty strings, uses localized versions
+  // Localized AI system prompt method
   @override
-  String getPositiveFeedbackText() => '';
-  
-  @override
-  String getNegativeFeedbackText() => '';
-  
-  @override
-  String getFunnyFeedbackText() => '';
+  Future<String> getLocalizedAISystemPrompt(BuildContext context) async {
+    return await ProphetLocalizationLoader.getAISystemPrompt(context, 'cynical_prophet');
+  }
 
   // Localized random visions method
+  @override
   Future<List<String>> getLocalizedRandomVisions(BuildContext context) async {
-    return await ProphetLocalizationLoader.getRandomVisions(context, 'cynical');
+    return await ProphetLocalizationLoader.getRandomVisions(context, 'cynical_prophet');
   }
 
   // Localized fallback response method
+  @override
   Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question) async {
-    return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'cynical');
+    return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'cynical_prophet');
   }
 }

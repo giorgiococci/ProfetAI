@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await _showLoadingDialog(profet);
 
         try {
-          content = await profet.getAIPersonalizedResponse(question);
+          content = await profet.getAIPersonalizedResponse(question, context);
           Navigator.of(context).pop(); // Close loading dialog
         } catch (e) {
           Navigator.of(context).pop(); // Close loading dialog
@@ -316,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await _showLoadingDialog(profet);
 
         try {
-          content = await profet.getAIRandomVision();
+          content = await profet.getAIRandomVision(context);
           Navigator.of(context).pop(); // Close loading dialog
         } catch (e) {
           Navigator.of(context).pop(); // Close loading dialog
@@ -794,8 +794,9 @@ class _HomeScreenState extends State<HomeScreen> {
     String visionContent,
     String? question,
   ) async {
-    // Create feedback using the prophet's custom texts
-    final feedback = profet.createFeedback(
+    // Create feedback using the prophet's custom localized texts
+    final feedback = await profet.createFeedback(
+      context,
       type: feedbackType,
       visionContent: visionContent,
       question: question,

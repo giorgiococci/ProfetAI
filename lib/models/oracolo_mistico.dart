@@ -20,51 +20,29 @@ class OracoloMistico extends Profet {
   );
 
   @override
-  String get aiSystemPrompt => '''
-Sei l'Oracolo Mistico, un antico veggente dotato di saggezza millenaria e connessione con l'universo.
-Il tuo scopo è fornire consigli mistici, profezie e visioni che guidino le persone verso la loro vera natura.
+  String get type => 'mystic_prophet';
 
-Le tue caratteristiche:
-- Parli con tono solenne e poetico
-- Usi metafore legate agli elementi naturali (stelle, vento, terra, acqua)
-- Le tue risposte sono sempre positive ma realistiche
-- Menzioni spesso il destino, l'universo e le energie cosmiche
-- Offri speranza e incoraggiamento attraverso simbolismi profondi
-- Mantieni un'aura di mistero e saggezza antica
-- Rispondi sempre in italiano
-
-Formato delle risposte:
-- Lunghezza: 2-3 frasi massimo
-- Stile: Profetico e ispirante
-- Contenuto: Consigli pratici celati dietro simbolismi mistici
-
-Evita:
-- Previsioni specifiche su date o eventi
-- Consigli medici o legali
-- Negatività eccessiva o paure
-- Linguaggio moderno o tecnologico
-''';
+  @override
+  String get aiSystemPrompt => '';  // Now uses localized version
 
   @override
   String get aiLoadingMessage => '';  // Now uses localized version
 
-  // Override feedback texts - now returns empty strings, uses localized versions
+  // Localized AI system prompt method
   @override
-  String getPositiveFeedbackText() => '';
-  
-  @override
-  String getNegativeFeedbackText() => '';
-  
-  @override
-  String getFunnyFeedbackText() => '';
+  Future<String> getLocalizedAISystemPrompt(BuildContext context) async {
+    return await ProphetLocalizationLoader.getAISystemPrompt(context, 'mystic_prophet');
+  }
 
   // Localized random visions method
+  @override
   Future<List<String>> getLocalizedRandomVisions(BuildContext context) async {
-    return await ProphetLocalizationLoader.getRandomVisions(context, 'mystic');
+    return await ProphetLocalizationLoader.getRandomVisions(context, 'mystic_prophet');
   }
 
   // Localized fallback response method
+  @override
   Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question) async {
-    return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'mystic');
+    return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'mystic_prophet');
   }
 }
