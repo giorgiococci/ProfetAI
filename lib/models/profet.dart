@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../services/azure_openai_service.dart';
+import '../services/ai_service_manager.dart';
+import '../utils/app_logger.dart';
 import 'vision_feedback.dart';
 
 // Classe base astratta per tutti gli oracoli/profeti
 abstract class Profet {
+  static const String _component = 'Profet';
+  
   final String name;
   final String description;
   final String location;
@@ -13,9 +16,6 @@ abstract class Profet {
   final IconData icon;
   final String? backgroundImagePath; // Percorso opzionale per immagine di sfondo
   final String? profetImagePath; // Percorso opzionale per immagine dell'oracolo
-
-  // Static AI service shared by all profets
-  static final AzureOpenAIService _aiService = AzureOpenAIService();
 
   const Profet({
     required this.name,
@@ -72,75 +72,145 @@ abstract class Profet {
     }
   }
   
-  // Static AI service methods
+  // Static AI service methods - simplified
   static Future<void> initializeAI({
     required String endpoint,
     required String apiKey,
     required String deploymentName,
   }) async {
-    await _aiService.initialize(
-      endpoint: endpoint,
-      apiKey: apiKey,
-      deploymentName: deploymentName,
-    );
+    // This is now handled by AIServiceManager
+    AppLogger.logInfo(_component, 'AI initialization requested (handled by AIServiceManager)');
   }
 
   static Future<bool> loadStoredAICredentials() async {
-    return await _aiService.loadStoredCredentials();
+    // This is now handled by AIServiceManager
+    return AIServiceManager.initialize();
   }
 
-  static bool get isAIEnabled => _aiService.isInitialized;
+  static bool get isAIEnabled {
+    final isAvailable = AIServiceManager.isAIAvailable;
+    AppLogger.logInfo(_component, 'Profet.isAIEnabled called - result: $isAvailable');
+    AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
+    return isAvailable;
+  }
 
   static Future<void> clearAICredentials() async {
-    await _aiService.clearCredentials();
+    await AIServiceManager.clearConfiguration();
   }
 
   // Enhanced methods that use AI when available
   Future<String> getAIPersonalizedResponse(String question) async {
-    if (!_aiService.isInitialized) {
-      // Fallback to original response
-      return getPersonalizedResponse(question);
+    AppLogger.logInfo(_component, '=== getAIPersonalizedResponse called ===');
+    AppLogger.logInfo(_component, 'Question: $question');
+    AppLogger.logInfo(_component, 'Prophet: $name');
+    
+    // Check AI availability
+    final isAIAvailable = AIServiceManager.isAIAvailable;
+    AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
+    
+    if (!isAIAvailable) {
+      AppLogger.logWarning(_component, 'AI not available, using fallback response');
+      AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
+      final fallbackResponse = getPersonalizedResponse(question);
+      AppLogger.logInfo(_component, 'Fallback response: $fallbackResponse');
+      return fallbackResponse;
     }
 
     try {
-      final response = await _aiService.generateResponse(
+      AppLogger.logInfo(_component, 'Attempting to generate AI response...');
+      AppLogger.logInfo(_component, 'System prompt: $aiSystemPrompt');
+      AppLogger.logInfo(_component, 'Using parameters: maxTokens=200, temperature=0.8');
+      
+      final response = await AIServiceManager.generateResponse(
         prompt: question,
         systemMessage: aiSystemPrompt,
         maxTokens: 200,
         temperature: 0.8,
       );
-      return response;
+      
+      AppLogger.logInfo(_component, 'AI response received: ${response != null ? "YES" : "NULL"}');
+      if (response != null) {
+        AppLogger.logInfo(_component, 'AI response length: ${response.length}');
+        AppLogger.logInfo(_component, 'AI response content: $response');
+      }
+      
+      if (response != null && response.isNotEmpty) {
+        AppLogger.logInfo(_component, '✅ AI response generated successfully');
+        return response;
+      } else {
+        AppLogger.logWarning(_component, '⚠️ AI returned empty response, using fallback');
+        final fallbackResponse = getPersonalizedResponse(question);
+        AppLogger.logInfo(_component, 'Fallback response: $fallbackResponse');
+        return fallbackResponse;
+      }
     } catch (e) {
-      print('AI response failed, using fallback: $e');
-      return getPersonalizedResponse(question);
+      AppLogger.logError(_component, '❌ AI response failed, using fallback', e);
+      final fallbackResponse = getPersonalizedResponse(question);
+      AppLogger.logInfo(_component, 'Fallback response: $fallbackResponse');
+      return fallbackResponse;
     }
   }
 
   Future<String> getAIRandomVision() async {
-    if (!_aiService.isInitialized) {
-      // Fallback to original random vision
-      return getRandomVision();
+    AppLogger.logInfo(_component, '=== getAIRandomVision called ===');
+    AppLogger.logInfo(_component, 'Prophet: $name');
+    
+    // Check AI availability
+    final isAIAvailable = AIServiceManager.isAIAvailable;
+    AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
+    
+    if (!isAIAvailable) {
+      AppLogger.logWarning(_component, 'AI not available for random vision, using fallback');
+      AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
+      final fallbackVision = getRandomVision();
+      AppLogger.logInfo(_component, 'Fallback vision: $fallbackVision');
+      return fallbackVision;
     }
 
     try {
-      final response = await _aiService.generateResponse(
+      AppLogger.logInfo(_component, 'Attempting to generate AI random vision...');
+      AppLogger.logInfo(_component, 'System prompt: $aiSystemPrompt');
+      AppLogger.logInfo(_component, 'Using parameters: maxTokens=150, temperature=0.9');
+      
+      final response = await AIServiceManager.generateResponse(
         prompt: "Dammi una profezia spontanea senza che io ti faccia una domanda specifica.",
         systemMessage: aiSystemPrompt,
         maxTokens: 150,
         temperature: 0.9, // Higher temperature for more creativity
       );
-      return response;
+      
+      AppLogger.logInfo(_component, 'AI vision received: ${response != null ? "YES" : "NULL"}');
+      if (response != null) {
+        AppLogger.logInfo(_component, 'AI vision length: ${response.length}');
+        AppLogger.logInfo(_component, 'AI vision content: $response');
+      }
+      
+      if (response != null && response.isNotEmpty) {
+        AppLogger.logInfo(_component, '✅ AI random vision generated successfully');
+        return response;
+      } else {
+        AppLogger.logWarning(_component, '⚠️ AI returned empty vision, using fallback');
+        final fallbackVision = getRandomVision();
+        AppLogger.logInfo(_component, 'Fallback vision: $fallbackVision');
+        return fallbackVision;
+      }
     } catch (e) {
-      print('AI random vision failed, using fallback: $e');
-      return getRandomVision();
+      AppLogger.logError(_component, '❌ AI vision failed, using fallback', e);
+      final fallbackVision = getRandomVision();
+      AppLogger.logInfo(_component, 'Fallback vision: $fallbackVision');
+      return fallbackVision;
     }
   }
   
   // Metodi comuni a tutti i profeti
   String getRandomVision() {
+    AppLogger.logInfo(_component, '=== getRandomVision (fallback) called ===');
+    AppLogger.logInfo(_component, 'Prophet: $name');
     final visions = getRandomVisions();
     final randomIndex = DateTime.now().millisecondsSinceEpoch % visions.length;
-    return visions[randomIndex];
+    final selectedVision = visions[randomIndex];
+    AppLogger.logInfo(_component, 'Selected fallback vision: $selectedVision');
+    return selectedVision;
   }
 
   String getHintText() => 'Poni la tua domanda all\'$name...';

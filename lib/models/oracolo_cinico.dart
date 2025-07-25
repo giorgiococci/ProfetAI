@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
+import '../utils/app_logger.dart';
 
 class OracoloCinico extends Profet {
   const OracoloCinico() : super(
@@ -14,8 +15,8 @@ class OracoloCinico extends Profet {
       Color(0xFF1C1C1C), // Quasi nero
     ],
     icon: Icons.sentiment_dissatisfied,
-    backgroundImagePath: 'assets/images/backgrounds/oracolo_cinico_background.jpg', // Immagine cinica
-    // profetImagePath: 'assets/images/prophets/cynic_prophet.png', // Opzionale
+    backgroundImagePath: 'assets/images/backgrounds/cynical_profet_background.png',
+    profetImagePath: 'assets/images/prophets/cynical_prophet.png'
   );
 
   @override
@@ -76,6 +77,9 @@ Evita:
 
   @override
   String getPersonalizedResponse(String question) {
+    AppLogger.logInfo('OracoloCinico', '=== getPersonalizedResponse (fallback) called ===');
+    AppLogger.logInfo('OracoloCinico', 'Question: $question');
+    
     final List<String> cinicoResponses = [
       'Oh, davvero? Stai chiedendo consiglio a un\'app? '
           'Bene, eccoti la verità: la risposta alla tua domanda è che '
@@ -94,6 +98,8 @@ Evita:
     ];
     
     final randomIndex = DateTime.now().millisecondsSinceEpoch % cinicoResponses.length;
-    return cinicoResponses[randomIndex];
+    final response = cinicoResponses[randomIndex];
+    AppLogger.logInfo('OracoloCinico', 'Fallback response: $response');
+    return response;
   }
 }

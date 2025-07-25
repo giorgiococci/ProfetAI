@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
+import '../utils/app_logger.dart';
 
 class OracoloCaotico extends Profet {
   const OracoloCaotico() : super(
@@ -76,6 +77,9 @@ Evita:
 
   @override
   String getPersonalizedResponse(String question) {
+    AppLogger.logInfo('OracoloCaotico', '=== getPersonalizedResponse (fallback) called ===');
+    AppLogger.logInfo('OracoloCaotico', 'Question: $question');
+    
     final List<String> caoticResponses = [
       'CAOS DETECTED! 🌪️ La tua domanda ha creato un paradosso temporale! '
           'La risposta è: fai esattamente il contrario di quello che pensi sia giusto, '
@@ -93,6 +97,8 @@ Evita:
     ];
     
     final randomIndex = DateTime.now().millisecondsSinceEpoch % caoticResponses.length;
-    return caoticResponses[randomIndex];
+    final response = caoticResponses[randomIndex];
+    AppLogger.logInfo('OracoloCaotico', 'Fallback response: $response');
+    return response;
   }
 }

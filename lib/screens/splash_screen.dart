@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../services/ai_config_service.dart';
+import '../services/ai_service_manager.dart';
+import '../config/app_config.dart';
+import '../utils/app_logger.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -51,26 +53,156 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _initializeApp() async {
-    // Wait for AI configuration to complete
-    await AIConfigService.initialize();
+    try {
+      AppLogger.logInfo('SplashScreen', 'Starting app initialization...');
+      
+      // Initialize AI service (this handles config and setup)
+      final aiInitialized = await AIServiceManager.initialize();
+      AppLogger.logInfo('SplashScreen', 'AI initialization result: $aiInitialized');
+      
+      setState(() {
+        _setupComplete = true;
+      });
+      
+      // Check if minimum time has passed
+      final elapsed = DateTime.now().difference(_startTime!).inMilliseconds;
+      final remainingTime = _minDurationMs - elapsed;
+      
+      if (remainingTime > 0) {
+        // Wait for remaining time
+        await Future.delayed(Duration(milliseconds: remainingTime));
+      }
+      
+      // Check AI status and show appropriate alert (only if debug alerts enabled)
+      if (AppConfig.showDebugAlerts) {
+        await _checkAndShowAIStatus();
+      }
+      
+      // Navigate to home screen
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
+    } catch (e) {
+      AppLogger.logError('SplashScreen', 'App initialization failed', e);
+      // Show error dialog if initialization fails
+      if (mounted) {
+        _showErrorDialog('Initialization Error', 'Failed to initialize app: $e');
+      }
+    }
+  }
+
+  Future<void> _checkAndShowAIStatus() async {
+    if (!mounted) return;
     
-    setState(() {
-      _setupComplete = true;
-    });
+    final isAIAvailable = AIServiceManager.isAIAvailable;
     
-    // Check if minimum time has passed
-    final elapsed = DateTime.now().difference(_startTime!).inMilliseconds;
-    final remainingTime = _minDurationMs - elapsed;
+    String title;
+    String message;
+    Color iconColor;
+    IconData icon;
     
-    if (remainingTime > 0) {
-      // Wait for remaining time
-      await Future.delayed(Duration(milliseconds: remainingTime));
+    // Always show detailed debug info for now
+    final debugInfo = AIServiceManager.getDetailedStatus();
+    
+    if (isAIAvailable) {
+      title = '🎯 AI Attiva!';
+      message = 'L\'intelligenza artificiale è configurata correttamente. I tuoi oracoli possono fornire risposte personalizzate.\n\n$debugInfo';
+      iconColor = Colors.green;
+      icon = Icons.check_circle;
+    } else {
+      title = '⚠️ AI Non Disponibile';
+      message = 'Configurazione AI ha problemi:\n\n'
+          '• AI Available: $isAIAvailable\n'
+          '• Build Config Valid: ${AppConfig.isAIConfigured}\n\n'
+          '$debugInfo';
+      iconColor = Colors.orange;
+      icon = Icons.warning;
     }
     
-    // Navigate to home screen
-    if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
-    }
+    await _showStatusDialog(title, message, icon, iconColor);
+  }
+
+  Future<void> _showStatusDialog(String title, String message, IconData icon, Color iconColor) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF2D2D30),
+          title: Row(
+            children: [
+              Icon(icon, color: iconColor, size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          content: Container(
+            constraints: const BoxConstraints(maxHeight: 400),
+            child: SingleChildScrollView(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white70, fontSize: 14, fontFamily: 'monospace'),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.deepPurpleAccent),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showErrorDialog(String title, String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF2D2D30),
+          title: Row(
+            children: [
+              const Icon(Icons.error, color: Colors.red, size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.deepPurpleAccent),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -223,61 +355,105 @@ class _SplashScreenState extends State<SplashScreen>
         'angle': 2 * math.pi / 3,
       },
       {
-        'image': 'assets/images/prophets/cinic_prophet.png',
+        'image': 'assets/images/prophets/cynical_prophet.png',
         'color': const Color(0xFF78909C), // Gray-blue - Cynic
         'angle': 4 * math.pi / 3,
       },
     ];
 
     return prophets.map((prophet) {
-      final angle = prophet['angle'] as double;
-      final radius = 75.0;
-      
-      return Transform.translate(
-        offset: Offset(
-          radius * math.cos(angle),
-          radius * math.sin(angle),
-        ),
-        child: Container(
+      try {
+        final angle = prophet['angle'] as double;
+        final radius = 75.0;
+        
+        return Transform.translate(
+          offset: Offset(
+            radius * math.cos(angle),
+            radius * math.sin(angle),
+          ),
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: (prophet['color'] as Color).withOpacity(0.2),
+              border: Border.all(
+                color: (prophet['color'] as Color),
+                width: 3,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: (prophet['color'] as Color).withOpacity(0.4),
+                  blurRadius: 10,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: _buildProphetImage(prophet),
+            ),
+          ),
+        );
+      } catch (e) {
+        AppLogger.logError('SplashScreen', 'Error building prophet icon', e);
+        // Return a fallback container in case of any error
+        return Container(
           width: 60,
           height: 60,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: (prophet['color'] as Color).withOpacity(0.2),
-            border: Border.all(
-              color: (prophet['color'] as Color),
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: (prophet['color'] as Color).withOpacity(0.4),
-                blurRadius: 10,
-                spreadRadius: 1,
-              ),
-            ],
+            color: Colors.grey,
           ),
-          child: ClipOval(
-            child: Image.asset(
-              prophet['image'] as String,
-              width: 54,
-              height: 54,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                // Fallback to icon if image fails to load
-                return Container(
-                  color: (prophet['color'] as Color).withOpacity(0.5),
-                  child: Icon(
-                    _getFallbackIcon(prophet['image'] as String),
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                );
-              },
+          child: const Icon(Icons.help, color: Colors.white),
+        );
+      }
+    }).toList();
+  }
+
+  Widget _buildProphetImage(Map<String, dynamic> prophet) {
+    try {
+      return Image.asset(
+        prophet['image'] as String,
+        width: 54,
+        height: 54,
+        fit: BoxFit.cover,
+        cacheWidth: 54,
+        cacheHeight: 54,
+        errorBuilder: (context, error, stackTrace) {
+          AppLogger.logWarning('SplashScreen', 'Failed to load image: ${prophet['image']}, error: $error');
+          // Fallback to icon if image fails to load
+          return Container(
+            color: (prophet['color'] as Color).withOpacity(0.5),
+            child: Icon(
+              _getFallbackIcon(prophet['image'] as String),
+              color: Colors.white,
+              size: 24,
             ),
-          ),
+          );
+        },
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(milliseconds: 300),
+            child: child,
+          );
+        },
+      );
+    } catch (e) {
+      AppLogger.logError('SplashScreen', 'Error creating prophet image widget', e);
+      // Ultimate fallback
+      return Container(
+        color: (prophet['color'] as Color).withOpacity(0.5),
+        child: Icon(
+          _getFallbackIcon(prophet['image'] as String),
+          color: Colors.white,
+          size: 24,
         ),
       );
-    }).toList();
+    }
   }
 
   IconData _getFallbackIcon(String imagePath) {
