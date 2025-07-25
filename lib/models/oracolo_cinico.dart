@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
+import '../utils/app_logger.dart';
 
 class OracoloCinico extends Profet {
   const OracoloCinico() : super(
@@ -76,6 +77,9 @@ Evita:
 
   @override
   String getPersonalizedResponse(String question) {
+    AppLogger.logInfo('OracoloCinico', '=== getPersonalizedResponse (fallback) called ===');
+    AppLogger.logInfo('OracoloCinico', 'Question: $question');
+    
     final List<String> cinicoResponses = [
       'Oh, davvero? Stai chiedendo consiglio a un\'app? '
           'Bene, eccoti la verità: la risposta alla tua domanda è che '
@@ -94,6 +98,8 @@ Evita:
     ];
     
     final randomIndex = DateTime.now().millisecondsSinceEpoch % cinicoResponses.length;
-    return cinicoResponses[randomIndex];
+    final response = cinicoResponses[randomIndex];
+    AppLogger.logInfo('OracoloCinico', 'Fallback response: $response');
+    return response;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
+import '../utils/app_logger.dart';
 
 class OracoloMistico extends Profet {
   const OracoloMistico() : super(
@@ -72,9 +73,13 @@ Evita:
 
   @override
   String getPersonalizedResponse(String question) {
-    return 'Il sentiero che cerchi è nascosto nella nebbia del tempo. '
+    AppLogger.logInfo('OracoloMistico', '=== getPersonalizedResponse (fallback) called ===');
+    AppLogger.logInfo('OracoloMistico', 'Question: $question');
+    final response = 'Il sentiero che cerchi è nascosto nella nebbia del tempo. '
         'La risposta che desideri giace già nel profondo del tuo cuore, '
         'aspetta solo di essere riconosciuta. Guarda oltre le apparenze '
         'e troverai la verità che la tua anima già conosce.';
+    AppLogger.logInfo('OracoloMistico', 'Fallback response: $response');
+    return response;
   }
 }

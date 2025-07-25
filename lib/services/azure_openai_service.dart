@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../utils/app_logger.dart';
 
 /// Service class for Azure OpenAI API integration
 /// 
@@ -73,6 +75,12 @@ class AzureOpenAIService {
     try {
       final url = Uri.parse('$_endpoint/openai/deployments/$_deploymentName/chat/completions?api-version=2024-02-15-preview');
       
+      AppLogger.logInfo('AzureOpenAIService', '=== Azure OpenAI Request ===');
+      AppLogger.logInfo('AzureOpenAIService', 'Endpoint: $_endpoint');
+      AppLogger.logInfo('AzureOpenAIService', 'Deployment: $_deploymentName');
+      AppLogger.logInfo('AzureOpenAIService', 'Full URL: $url');
+      AppLogger.logInfo('AzureOpenAIService', 'Prompt length: ${prompt.length}');
+      
       final messages = <Map<String, String>>[];
       
       // Add system message if provided
@@ -108,6 +116,7 @@ class AzureOpenAIService {
       ).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
+          AppLogger.logError('AzureOpenAIService', 'Request timed out after 30 seconds');
           throw Exception('Request timed out. Please try again.');
         },
       );
@@ -138,11 +147,30 @@ class AzureOpenAIService {
             throw Exception('HTTP ${response.statusCode}: $errorMessage');
         }
       }
+    } on SocketException catch (e) {
+      AppLogger.logError('AzureOpenAIService', 'Network connectivity issue', e);
+      if (e.osError?.errorCode == 11001 || e.message.contains('Failed host lookup')) {
+        throw Exception('DNS resolution failed: Cannot resolve hostname "$_endpoint". Please check:\n'
+            '1. Your internet connection\n'
+            '2. The Azure OpenAI endpoint URL is correct\n'
+            '3. Your DNS settings\n'
+            'Original error: ${e.message}');
+      } else {
+        throw Exception('Network connection failed: ${e.message}');
+      }
     } on http.ClientException catch (e) {
+      AppLogger.logError('AzureOpenAIService', 'HTTP client error', e);
       throw Exception('Network error: ${e.message}');
+    } on FormatException catch (e) {
+      AppLogger.logError('AzureOpenAIService', 'Response format error', e);
+      throw Exception('Invalid response format from Azure OpenAI: ${e.message}');
     } catch (e) {
+      AppLogger.logError('AzureOpenAIService', 'Unexpected error in generateResponse', e);
       if (e.toString().contains('timeout')) {
         throw Exception('Request timed out. Please check your connection.');
+      }
+      if (e.toString().toLowerCase().contains('failed host lookup')) {
+        throw Exception('DNS resolution failed: Cannot resolve "$_endpoint". Please check your internet connection and endpoint URL.');
       }
       rethrow;
     }

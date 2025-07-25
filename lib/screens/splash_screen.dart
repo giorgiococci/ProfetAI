@@ -355,61 +355,105 @@ class _SplashScreenState extends State<SplashScreen>
         'angle': 2 * math.pi / 3,
       },
       {
-        'image': 'assets/images/prophets/cinic_prophet.png',
+        'image': 'assets/images/prophets/cynical_prophet.png',
         'color': const Color(0xFF78909C), // Gray-blue - Cynic
         'angle': 4 * math.pi / 3,
       },
     ];
 
     return prophets.map((prophet) {
-      final angle = prophet['angle'] as double;
-      final radius = 75.0;
-      
-      return Transform.translate(
-        offset: Offset(
-          radius * math.cos(angle),
-          radius * math.sin(angle),
-        ),
-        child: Container(
+      try {
+        final angle = prophet['angle'] as double;
+        final radius = 75.0;
+        
+        return Transform.translate(
+          offset: Offset(
+            radius * math.cos(angle),
+            radius * math.sin(angle),
+          ),
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: (prophet['color'] as Color).withOpacity(0.2),
+              border: Border.all(
+                color: (prophet['color'] as Color),
+                width: 3,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: (prophet['color'] as Color).withOpacity(0.4),
+                  blurRadius: 10,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: _buildProphetImage(prophet),
+            ),
+          ),
+        );
+      } catch (e) {
+        AppLogger.logError('SplashScreen', 'Error building prophet icon', e);
+        // Return a fallback container in case of any error
+        return Container(
           width: 60,
           height: 60,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: (prophet['color'] as Color).withOpacity(0.2),
-            border: Border.all(
-              color: (prophet['color'] as Color),
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: (prophet['color'] as Color).withOpacity(0.4),
-                blurRadius: 10,
-                spreadRadius: 1,
-              ),
-            ],
+            color: Colors.grey,
           ),
-          child: ClipOval(
-            child: Image.asset(
-              prophet['image'] as String,
-              width: 54,
-              height: 54,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                // Fallback to icon if image fails to load
-                return Container(
-                  color: (prophet['color'] as Color).withOpacity(0.5),
-                  child: Icon(
-                    _getFallbackIcon(prophet['image'] as String),
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                );
-              },
+          child: const Icon(Icons.help, color: Colors.white),
+        );
+      }
+    }).toList();
+  }
+
+  Widget _buildProphetImage(Map<String, dynamic> prophet) {
+    try {
+      return Image.asset(
+        prophet['image'] as String,
+        width: 54,
+        height: 54,
+        fit: BoxFit.cover,
+        cacheWidth: 54,
+        cacheHeight: 54,
+        errorBuilder: (context, error, stackTrace) {
+          AppLogger.logWarning('SplashScreen', 'Failed to load image: ${prophet['image']}, error: $error');
+          // Fallback to icon if image fails to load
+          return Container(
+            color: (prophet['color'] as Color).withOpacity(0.5),
+            child: Icon(
+              _getFallbackIcon(prophet['image'] as String),
+              color: Colors.white,
+              size: 24,
             ),
-          ),
+          );
+        },
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(milliseconds: 300),
+            child: child,
+          );
+        },
+      );
+    } catch (e) {
+      AppLogger.logError('SplashScreen', 'Error creating prophet image widget', e);
+      // Ultimate fallback
+      return Container(
+        color: (prophet['color'] as Color).withOpacity(0.5),
+        child: Icon(
+          _getFallbackIcon(prophet['image'] as String),
+          color: Colors.white,
+          size: 24,
         ),
       );
-    }).toList();
+    }
   }
 
   IconData _getFallbackIcon(String imagePath) {

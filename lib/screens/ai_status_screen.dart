@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 import '../services/ai_service_manager.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
@@ -14,11 +15,29 @@ class AIStatusScreen extends StatefulWidget {
 class _AIStatusScreenState extends State<AIStatusScreen> {
   bool _isAIEnabled = false;
   bool _isLoading = false;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
     _checkAIStatus();
+    
+    // Auto-refresh every 3 seconds when debug mode is on
+    if (AppConfig.isDebugMode) {
+      _refreshTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+        if (mounted) {
+          setState(() {
+            // This will rebuild the widget and refresh the logs
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _checkAIStatus() async {
@@ -85,7 +104,9 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                       const SizedBox(height: 20),
                       _buildConfigurationCard(),
                       const SizedBox(height: 20),
-                      if (AppConfig.isDebugMode) _buildDebugCard(),
+                      // Always show debug card if there are logs or if debug mode is on
+                      if (AppConfig.isDebugMode || AppLogger.getLogsAsString(lastN: 1).isNotEmpty) 
+                        _buildDebugCard(),
                       const SizedBox(height: 20),
                       _buildActionButtons(),
                     ],
@@ -184,6 +205,8 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            
+            // AI Service Status
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -192,13 +215,80 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[700]!),
               ),
-              child: Text(
-                AIServiceManager.getDetailedStatus(),
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                  fontFamily: 'monospace',
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'AI Service Status:',
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    AIServiceManager.getDetailedStatus(),
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Runtime Logs
+            Container(
+              width: double.infinity,
+              height: 200,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E1E1E),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[700]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        'Runtime Logs (Last 10):',
+                        style: TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.refresh, size: 16),
+                        onPressed: () => setState(() {}),
+                        color: Colors.deepPurpleAccent,
+                        tooltip: 'Refresh logs',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Text(
+                        AppLogger.getLogsAsString(lastN: 30).isEmpty 
+                            ? 'No logs available. Try using the app to generate some logs.'
+                            : AppLogger.getLogsAsString(lastN: 30),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 10,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -276,6 +366,30 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
             ),
           ),
         ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              AppLogger.clear();
+              setState(() {});
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Runtime logs cleared'),
+                  backgroundColor: Colors.orange,
+                ),
+              );
+            },
+            icon: const Icon(Icons.clear_all),
+            label: const Text('Clear Runtime Logs'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2D2D30),
+              foregroundColor: Colors.orange,
+              side: const BorderSide(color: Colors.orange),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -290,6 +404,9 @@ ${AppConfig.getDebugInfo()}
 
 === Detailed Status ===
 ${AIServiceManager.getDetailedStatus()}
+
+=== Runtime Logs (Last 30 entries) ===
+${AppLogger.getLogsAsString(lastN: 30)}
 
 Generated: ${DateTime.now()}
     ''';
