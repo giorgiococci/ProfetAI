@@ -34,9 +34,32 @@ class ProphetLocalizationLoader {
       
       return data;
     } catch (e) {
-      // Return empty map if file doesn't exist or can't be loaded
-      debugPrint('Warning: Could not load prophet localization for $prophetType ($locale): $e');
-      return {};
+      // If the current locale fails, try to fallback to English
+      if (locale != 'en') {
+        debugPrint('Warning: Could not load prophet localization for $prophetType ($locale): $e');
+        debugPrint('Falling back to English localization...');
+        
+        try {
+          final prophetFolder = _getProphetFolderName(prophetType);
+          final englishFileName = '${prophetFolder}_en.json';
+          final englishPath = 'lib/l10n/prophets/$prophetFolder/$englishFileName';
+          
+          final String englishJsonString = await rootBundle.loadString(englishPath);
+          final Map<String, dynamic> englishData = json.decode(englishJsonString);
+          
+          // Cache the English fallback data with the original locale key
+          _cache[cacheKey] = englishData;
+          
+          return englishData;
+        } catch (englishError) {
+          debugPrint('Error: Could not load English fallback for $prophetType: $englishError');
+          return {};
+        }
+      } else {
+        // If English itself fails, return empty map
+        debugPrint('Error: Could not load English localization for $prophetType: $e');
+        return {};
+      }
     }
   }
   
@@ -44,14 +67,14 @@ class ProphetLocalizationLoader {
   static Future<String> getAISystemPrompt(BuildContext context, String prophetType) async {
     final locale = Localizations.localeOf(context).languageCode;
     final data = await loadProphetLocalization(prophetType, locale);
-    return data['aiSystemPrompt'] ?? '';
+    return data['aiSystemPrompt'] ?? 'You are a wise oracle providing guidance.';
   }
   
   /// Get the AI loading message for a prophet in the current locale
   static Future<String> getAILoadingMessage(BuildContext context, String prophetType) async {
     final locale = Localizations.localeOf(context).languageCode;
     final data = await loadProphetLocalization(prophetType, locale);
-    return data['aiLoadingMessage'] ?? 'Loading...';
+    return data['aiLoadingMessage'] ?? 'The oracle is thinking...';
   }
   
   /// Get feedback text for a prophet in the current locale
@@ -65,13 +88,13 @@ class ProphetLocalizationLoader {
     
     switch (feedbackType.toLowerCase()) {
       case 'positive':
-        return data['positiveFeedbackText'] ?? 'Great!';
+        return data['positiveFeedbackText'] ?? 'The vision was enlightening!';
       case 'negative':
-        return data['negativeFeedbackText'] ?? 'Not clear';
+        return data['negativeFeedbackText'] ?? 'The vision was unclear';
       case 'funny':
-        return data['funnyFeedbackText'] ?? 'Interesting!';
+        return data['funnyFeedbackText'] ?? 'The vision was amusing!';
       default:
-        return data['positiveFeedbackText'] ?? 'Thank you!';
+        return data['positiveFeedbackText'] ?? 'Thank you for the feedback!';
     }
   }
   
@@ -84,7 +107,7 @@ class ProphetLocalizationLoader {
     if (visions is List) {
       return visions.cast<String>();
     }
-    return ['The future is mysterious...'];
+    return ['The oracle gazes into the unknown...'];
   }
   
   /// Get fallback responses for a prophet in the current locale
@@ -96,13 +119,13 @@ class ProphetLocalizationLoader {
     if (responses is List) {
       return responses.cast<String>();
     }
-    return ['The oracle is currently unavailable.'];
+    return ['The oracle provides wisdom when needed.'];
   }
   
   /// Get a random fallback response for a prophet in the current locale
   static Future<String> getRandomFallbackResponse(BuildContext context, String prophetType) async {
     final responses = await getFallbackResponses(context, prophetType);
-    if (responses.isEmpty) return 'The oracle is silent.';
+    if (responses.isEmpty) return 'The oracle shares its wisdom with you.';
     
     final randomIndex = DateTime.now().millisecondsSinceEpoch % responses.length;
     return responses[randomIndex];

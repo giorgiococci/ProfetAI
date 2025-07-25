@@ -38,6 +38,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get oracleSilent => 'The oracle is silent...';
+
+  @override
+  String get feedbackPositiveAction => 'Star to\nthe Oracle';
+
+  @override
+  String get feedbackNegativeAction => 'Stone in\nthe well';
+
+  @override
+  String get feedbackFunnyAction => 'Frog in the\nmultiverse';
+
+  @override
   String visionOf(String oracleName) {
     return '✨ Vision of $oracleName';
   }

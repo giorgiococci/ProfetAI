@@ -50,6 +50,26 @@
     }
   },
 
+  "oracleSilent": "The oracle is silent...",
+  "@oracleSilent": {
+    "description": "Message when oracle has no response available"
+  },
+
+  "feedbackPositiveAction": "Star to\nthe Oracle",
+  "@feedbackPositiveAction": {
+    "description": "Action text for positive feedback"
+  },
+
+  "feedbackNegativeAction": "Stone in\nthe well",
+  "@feedbackNegativeAction": {
+    "description": "Action text for negative feedback"
+  },
+
+  "feedbackFunnyAction": "Frog in the\nmultiverse",
+  "@feedbackFunnyAction": {
+    "description": "Action text for funny feedback"
+  },
+
   "visionOf": "✨ Vision of {oracleName}",
   "@visionOf": {
     "description": "Dialog title for oracle's vision",

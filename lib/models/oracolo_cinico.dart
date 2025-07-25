@@ -48,27 +48,17 @@ Evita:
 - Offese personali
 ''';
 
-  // New localized AI system prompt method
+  // Localized AI system prompt method
   Future<String> getLocalizedAISystemPrompt(BuildContext context) async {
-    try {
-      return await ProphetLocalizationLoader.getAISystemPrompt(context, 'cynical');
-    } catch (e) {
-      AppLogger.logWarning('OracoloCinico', 'Failed to load localized AI prompt: $e');
-      return aiSystemPrompt; // Fallback to hardcoded prompt
-    }
+    return await ProphetLocalizationLoader.getAISystemPrompt(context, 'cynical');
   }
 
   @override
   String get aiLoadingMessage => 'L\'Oracolo Cinico sta preparando una dose di cruda realtà...';
 
-  // New localized loading message method
+  // Localized loading message method
   Future<String> getLocalizedLoadingMessage(BuildContext context) async {
-    try {
-      return await ProphetLocalizationLoader.getAILoadingMessage(context, 'cynical');
-    } catch (e) {
-      AppLogger.logWarning('OracoloCinico', 'Failed to load localized loading message: $e');
-      return aiLoadingMessage; // Fallback to hardcoded message
-    }
+    return await ProphetLocalizationLoader.getAILoadingMessage(context, 'cynical');
   }
 
   // Override feedback texts with cynical-themed messages
@@ -81,24 +71,9 @@ Evita:
   @override
   String getFunnyFeedbackText() => 'Assurdo, ma almeno mi ha strappato un sorriso amaro';
 
-  // New localized feedback methods
+  // Localized feedback methods
   Future<String> getLocalizedFeedbackText(BuildContext context, String feedbackType) async {
-    try {
-      return await ProphetLocalizationLoader.getFeedbackText(context, 'cynical', feedbackType);
-    } catch (e) {
-      AppLogger.logWarning('OracoloCinico', 'Failed to load localized feedback: $e');
-      // Fallback to hardcoded messages
-      switch (feedbackType.toLowerCase()) {
-        case 'positive':
-          return getPositiveFeedbackText();
-        case 'negative':
-          return getNegativeFeedbackText();
-        case 'funny':
-          return getFunnyFeedbackText();
-        default:
-          return getPositiveFeedbackText();
-      }
-    }
+    return await ProphetLocalizationLoader.getFeedbackText(context, 'cynical', feedbackType);
   }
 
   @override
@@ -116,14 +91,9 @@ Evita:
     ];
   }
 
-  // New localized random visions method
+  // Localized random visions method
   Future<List<String>> getLocalizedRandomVisions(BuildContext context) async {
-    try {
-      return await ProphetLocalizationLoader.getRandomVisions(context, 'cynical');
-    } catch (e) {
-      AppLogger.logWarning('OracoloCinico', 'Failed to load localized visions: $e');
-      return getRandomVisions(); // Fallback to hardcoded visions
-    }
+    return await ProphetLocalizationLoader.getRandomVisions(context, 'cynical');
   }
 
   @override
@@ -154,13 +124,8 @@ Evita:
     return response;
   }
 
-  // New localized fallback response method
+  // Localized fallback response method
   Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question) async {
-    try {
-      return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'cynical');
-    } catch (e) {
-      AppLogger.logWarning('OracoloCinico', 'Failed to load localized fallback response: $e');
-      return getPersonalizedResponse(question); // Fallback to hardcoded responses
-    }
+    return await ProphetLocalizationLoader.getRandomFallbackResponse(context, 'cynical');
   }
 }

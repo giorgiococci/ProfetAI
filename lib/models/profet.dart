@@ -33,6 +33,10 @@ abstract class Profet {
   List<String> getRandomVisions();
   String getPersonalizedResponse(String question);
   
+  // Abstract localized methods
+  Future<List<String>> getLocalizedRandomVisions(BuildContext context);
+  Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question);
+  
   // Abstract method for AI system prompt - each profet defines its personality
   String get aiSystemPrompt;
   

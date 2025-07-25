@@ -299,28 +299,12 @@ class _HomeScreenState extends State<HomeScreen> {
         } catch (e) {
           Navigator.of(context).pop(); // Close loading dialog
           // Use localized fallback response
-          if (profet is OracoloCaotico) {
-            content = await profet.getLocalizedPersonalizedResponse(context, question);
-          } else if (profet is OracoloMistico) {
-            content = await profet.getLocalizedPersonalizedResponse(context, question);
-          } else if (profet is OracoloCinico) {
-            content = await profet.getLocalizedPersonalizedResponse(context, question);
-          } else {
-            content = profet.getPersonalizedResponse(question);
-          }
+          content = await profet.getLocalizedPersonalizedResponse(context, question);
           isAIEnabled = false; // Fallback to regular response
         }
       } else {
         // Use localized fallback response when AI is disabled
-        if (profet is OracoloCaotico) {
-          content = await profet.getLocalizedPersonalizedResponse(context, question);
-        } else if (profet is OracoloMistico) {
-          content = await profet.getLocalizedPersonalizedResponse(context, question);
-        } else if (profet is OracoloCinico) {
-          content = await profet.getLocalizedPersonalizedResponse(context, question);
-        } else {
-          content = profet.getPersonalizedResponse(question);
-        }
+        content = await profet.getLocalizedPersonalizedResponse(context, question);
       }
     } else {
       title = '✨ Visione di ${ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))}';
@@ -336,36 +320,14 @@ class _HomeScreenState extends State<HomeScreen> {
         } catch (e) {
           Navigator.of(context).pop(); // Close loading dialog
           // Use localized random visions as fallback
-          if (profet is OracoloCaotico) {
-            final visions = await profet.getLocalizedRandomVisions(context);
-            content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-          } else if (profet is OracoloMistico) {
-            final visions = await profet.getLocalizedRandomVisions(context);
-            content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-          } else if (profet is OracoloCinico) {
-            final visions = await profet.getLocalizedRandomVisions(context);
-            content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-          } else {
-            final visions = profet.getRandomVisions();
-            content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-          }
+          final visions = await profet.getLocalizedRandomVisions(context);
+          content = visions.isNotEmpty ? visions.first : AppLocalizations.of(context)!.oracleSilent;
           isAIEnabled = false; // Fallback to regular response
         }
       } else {
         // Use localized random visions when AI is disabled
-        if (profet is OracoloCaotico) {
-          final visions = await profet.getLocalizedRandomVisions(context);
-          content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-        } else if (profet is OracoloMistico) {
-          final visions = await profet.getLocalizedRandomVisions(context);
-          content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-        } else if (profet is OracoloCinico) {
-          final visions = await profet.getLocalizedRandomVisions(context);
-          content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-        } else {
-          final visions = profet.getRandomVisions();
-          content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-        }
+        final visions = await profet.getLocalizedRandomVisions(context);
+        content = visions.isNotEmpty ? visions.first : AppLocalizations.of(context)!.oracleSilent;
       }
     }
 
@@ -815,11 +777,11 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getFeedbackActionText(FeedbackType type) {
     switch (type) {
       case FeedbackType.positive:
-        return "Stella\nall'Oracolo";
+        return AppLocalizations.of(context)!.feedbackPositiveAction;
       case FeedbackType.negative:
-        return 'Sasso\nnel pozzo';
+        return AppLocalizations.of(context)!.feedbackNegativeAction;
       case FeedbackType.funny:
-        return 'Rana nel\nmultiverso';
+        return AppLocalizations.of(context)!.feedbackFunnyAction;
     }
   }
 

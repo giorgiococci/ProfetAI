@@ -146,6 +146,30 @@ abstract class AppLocalizations {
   /// **'🔮 {oracleName} Responds'**
   String oracleResponds(String oracleName);
 
+  /// Message when oracle has no response available
+  ///
+  /// In en, this message translates to:
+  /// **'The oracle is silent...'**
+  String get oracleSilent;
+
+  /// Action text for positive feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Star to\nthe Oracle'**
+  String get feedbackPositiveAction;
+
+  /// Action text for negative feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Stone in\nthe well'**
+  String get feedbackNegativeAction;
+
+  /// Action text for funny feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Frog in the\nmultiverse'**
+  String get feedbackFunnyAction;
+
   /// Dialog title for oracle's vision
   ///
   /// In en, this message translates to:
