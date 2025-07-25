@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
-import '../utils/app_logger.dart';
 import '../l10n/prophet_localization_loader.dart';
 
 class OracoloCaotico extends Profet {
@@ -48,79 +47,22 @@ Evita:
 - Negatività vera (solo caos divertente)
 ''';
 
-  // Localized AI system prompt method
-  Future<String> getLocalizedAISystemPrompt(BuildContext context) async {
-    return await ProphetLocalizationLoader.getAISystemPrompt(context, 'chaotic');
-  }
-
   @override
-  String get aiLoadingMessage => 'L\'Oracolo Caotico sta mescolando le carte della realtà...';
+  String get aiLoadingMessage => '';  // Now uses localized version
 
-  // Localized loading message method
-  Future<String> getLocalizedLoadingMessage(BuildContext context) async {
-    return await ProphetLocalizationLoader.getAILoadingMessage(context, 'chaotic');
-  }
-
-  // Override feedback texts with chaotic-themed messages
+  // Override feedback texts - now returns empty strings, uses localized versions
   @override
-  String getPositiveFeedbackText() => 'EUREKA! Gli unicorni cosmici hanno DANZATO nel mio cervello!';
+  String getPositiveFeedbackText() => '';
   
   @override
-  String getNegativeFeedbackText() => 'I gatti di Schrödinger erano tutti morti oggi, che sfortuna!';
+  String getNegativeFeedbackText() => '';
   
   @override
-  String getFunnyFeedbackText() => 'Ho riso come un pinguino che fa surf su una pizza volante!';
-
-  // Localized feedback methods
-  Future<String> getLocalizedFeedbackText(BuildContext context, String feedbackType) async {
-    return await ProphetLocalizationLoader.getFeedbackText(context, 'chaotic', feedbackType);
-  }
-
-  @override
-  List<String> getRandomVisions() {
-    return [
-      "CAOS! La tua vita è come un sandwich al burro d'arachidi che cade sempre dal lato sbagliato!",
-      "Le probabilità dicono 42. Non chiedere il perché, l'universo è così.",
-      "Un unicorno viola sta ballando la macarena nel tuo futuro. O forse è solo martedì.",
-      "ATTENZIONE: Il caos rileva anomalie spazio-temporali nel tuo caffè del mattino!",
-      "La risposta è: SÌ, NO, FORSE, DECISAMENTE, MAI PIÙ. Scegli tu!",
-      "Il destino ha fatto cadere i suoi dadi... sono finiti sotto il divano.",
-      "ERRORE 404: Destino non trovato. Riprova dopo aver riavviato la realtà.",
-      "Il gatto di Schrödinger ha appena fatto una scommessa sul tuo futuro. Ha vinto... o perso?",
-      "BREAKING NEWS: L'universo ha dichiarato sciopero. Aspetta sviluppi caotici.",
-    ];
-  }
+  String getFunnyFeedbackText() => '';
 
   // Localized random visions method
   Future<List<String>> getLocalizedRandomVisions(BuildContext context) async {
     return await ProphetLocalizationLoader.getRandomVisions(context, 'chaotic');
-  }
-
-  @override
-  String getPersonalizedResponse(String question) {
-    AppLogger.logInfo('OracoloCaotico', '=== getPersonalizedResponse (fallback) called ===');
-    AppLogger.logInfo('OracoloCaotico', 'Question: $question');
-    
-    final List<String> caoticResponses = [
-      'CAOS DETECTED! 🌪️ La tua domanda ha creato un paradosso temporale! '
-          'La risposta è: fai esattamente il contrario di quello che pensi sia giusto, '
-          'ma solo nei giorni pari, e quando piove. Oppure comprati un gatto. '
-          'Il caos approva entrambe le opzioni!',
-      
-      'ALERT! 🚨 Il tuo cervello ha fatto una domanda troppo logica! '
-          'Sistema di risposta: ERRORE CRITICO. Soluzione: balla per 3 minuti, '
-          'poi decidi lanciando una moneta. Se cade di taglio, la risposta è "forse".',
-      
-      'CAOS SUPREMO! 🎪 La tua domanda ha fatto ridere l\'universo! '
-          'Risposta ufficiale: fai quello che NON faresti mai, '
-          'ma solo dopo aver mangiato una pizza con l\'ananas. '
-          'Trust the chaos, embrace the weird!',
-    ];
-    
-    final randomIndex = DateTime.now().millisecondsSinceEpoch % caoticResponses.length;
-    final response = caoticResponses[randomIndex];
-    AppLogger.logInfo('OracoloCaotico', 'Fallback response: $response');
-    return response;
   }
 
   // Localized fallback response method

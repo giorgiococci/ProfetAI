@@ -8,6 +8,7 @@ import '../models/oracolo_caotico.dart';
 import '../models/oracolo_mistico.dart';
 import '../models/oracolo_cinico.dart';
 import '../prophet_localizations.dart';
+import '../l10n/prophet_localization_loader.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -592,16 +593,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _showLoadingDialog(profet) async {
-    // Get localized loading message
+    // Get localized loading message based on prophet type
     String loadingMessage;
     if (profet is OracoloCaotico) {
-      loadingMessage = await profet.getLocalizedLoadingMessage(context);
+      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'chaotic');
     } else if (profet is OracoloMistico) {
-      loadingMessage = await profet.getLocalizedLoadingMessage(context);
+      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'mystic');
     } else if (profet is OracoloCinico) {
-      loadingMessage = await profet.getLocalizedLoadingMessage(context);
+      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'cynical');
     } else {
-      loadingMessage = profet.aiLoadingMessage;
+      loadingMessage = 'Loading...'; // Fallback
     }
 
     showDialog(

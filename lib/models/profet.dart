@@ -29,11 +29,7 @@ abstract class Profet {
     this.profetImagePath, // Parametro opzionale per immagine dell'oracolo
   });
 
-  // Metodi astratti che devono essere implementati dalle classi figlie
-  List<String> getRandomVisions();
-  String getPersonalizedResponse(String question);
-  
-  // Abstract localized methods
+  // Abstract localized methods - these are the ones that should be implemented
   Future<List<String>> getLocalizedRandomVisions(BuildContext context);
   Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question);
   
@@ -113,11 +109,11 @@ abstract class Profet {
     AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
     
     if (!isAIAvailable) {
-      AppLogger.logWarning(_component, 'AI not available, using fallback response');
+      AppLogger.logWarning(_component, 'AI not available, using localized fallback response');
       AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
-      final fallbackResponse = getPersonalizedResponse(question);
-      AppLogger.logInfo(_component, 'Fallback response: $fallbackResponse');
-      return fallbackResponse;
+      // Note: This fallback won't work in base class as it needs BuildContext
+      // The UI should handle this case by catching and using localized methods
+      throw Exception('AI not available - UI should handle with localized fallback');
     }
 
     try {
@@ -142,16 +138,12 @@ abstract class Profet {
         AppLogger.logInfo(_component, '✅ AI response generated successfully');
         return response;
       } else {
-        AppLogger.logWarning(_component, '⚠️ AI returned empty response, using fallback');
-        final fallbackResponse = getPersonalizedResponse(question);
-        AppLogger.logInfo(_component, 'Fallback response: $fallbackResponse');
-        return fallbackResponse;
+        AppLogger.logWarning(_component, '⚠️ AI returned empty response, throwing for UI fallback');
+        throw Exception('AI returned empty response - UI should handle with localized fallback');
       }
     } catch (e) {
-      AppLogger.logError(_component, '❌ AI response failed, using fallback', e);
-      final fallbackResponse = getPersonalizedResponse(question);
-      AppLogger.logInfo(_component, 'Fallback response: $fallbackResponse');
-      return fallbackResponse;
+      AppLogger.logError(_component, '❌ AI response failed, throwing for UI fallback', e);
+      throw e; // Re-throw so UI can handle with localized methods
     }
   }
 
@@ -164,11 +156,9 @@ abstract class Profet {
     AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
     
     if (!isAIAvailable) {
-      AppLogger.logWarning(_component, 'AI not available for random vision, using fallback');
+      AppLogger.logWarning(_component, 'AI not available for random vision, throwing for UI fallback');
       AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
-      final fallbackVision = getRandomVision();
-      AppLogger.logInfo(_component, 'Fallback vision: $fallbackVision');
-      return fallbackVision;
+      throw Exception('AI not available - UI should handle with localized fallback');
     }
 
     try {
@@ -193,45 +183,12 @@ abstract class Profet {
         AppLogger.logInfo(_component, '✅ AI random vision generated successfully');
         return response;
       } else {
-        AppLogger.logWarning(_component, '⚠️ AI returned empty vision, using fallback');
-        final fallbackVision = getRandomVision();
-        AppLogger.logInfo(_component, 'Fallback vision: $fallbackVision');
-        return fallbackVision;
+        AppLogger.logWarning(_component, '⚠️ AI returned empty vision, throwing for UI fallback');
+        throw Exception('AI returned empty vision - UI should handle with localized fallback');
       }
     } catch (e) {
-      AppLogger.logError(_component, '❌ AI vision failed, using fallback', e);
-      final fallbackVision = getRandomVision();
-      AppLogger.logInfo(_component, 'Fallback vision: $fallbackVision');
-      return fallbackVision;
-    }
-  }
-  
-  // Metodi comuni a tutti i profeti
-  String getRandomVision() {
-    AppLogger.logInfo(_component, '=== getRandomVision (fallback) called ===');
-    AppLogger.logInfo(_component, 'Prophet: $name');
-    final visions = getRandomVisions();
-    final randomIndex = DateTime.now().millisecondsSinceEpoch % visions.length;
-    final selectedVision = visions[randomIndex];
-    AppLogger.logInfo(_component, 'Selected fallback vision: $selectedVision');
-    return selectedVision;
-  }
-
-  String getHintText() => 'Poni la tua domanda all\'$name...';
-  
-  String getVisionTitle(bool hasQuestion) {
-    return hasQuestion 
-        ? 'La Visione dell\'$name'
-        : 'Visione Spontanea dell\'$name';
-  }
-
-  String getVisionContent(bool hasQuestion, String? question) {
-    if (hasQuestion && question != null) {
-      return 'La tua domanda: "$question"\n\n'
-          'L\'$name risponde:\n\n'
-          '"${getPersonalizedResponse(question)}"';
-    } else {
-      return 'L\'$name ha una visione per te:\n\n"${getRandomVision()}"';
+      AppLogger.logError(_component, '❌ AI vision failed, throwing for UI fallback', e);
+      throw e; // Re-throw so UI can handle with localized methods
     }
   }
 }

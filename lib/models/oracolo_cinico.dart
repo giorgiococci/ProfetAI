@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'profet.dart';
-import '../utils/app_logger.dart';
 import '../l10n/prophet_localization_loader.dart';
 
 class OracoloCinico extends Profet {
@@ -48,80 +47,22 @@ Evita:
 - Offese personali
 ''';
 
-  // Localized AI system prompt method
-  Future<String> getLocalizedAISystemPrompt(BuildContext context) async {
-    return await ProphetLocalizationLoader.getAISystemPrompt(context, 'cynical');
-  }
-
   @override
-  String get aiLoadingMessage => 'L\'Oracolo Cinico sta preparando una dose di cruda realtà...';
+  String get aiLoadingMessage => '';  // Now uses localized version
 
-  // Localized loading message method
-  Future<String> getLocalizedLoadingMessage(BuildContext context) async {
-    return await ProphetLocalizationLoader.getAILoadingMessage(context, 'cynical');
-  }
-
-  // Override feedback texts with cynical-themed messages
+  // Override feedback texts - now returns empty strings, uses localized versions
   @override
-  String getPositiveFeedbackText() => 'Beh, almeno questa volta non era tutto sbagliato';
+  String getPositiveFeedbackText() => '';
   
   @override
-  String getNegativeFeedbackText() => 'Come al solito, la realtà è deludente';
+  String getNegativeFeedbackText() => '';
   
   @override
-  String getFunnyFeedbackText() => 'Assurdo, ma almeno mi ha strappato un sorriso amaro';
-
-  // Localized feedback methods
-  Future<String> getLocalizedFeedbackText(BuildContext context, String feedbackType) async {
-    return await ProphetLocalizationLoader.getFeedbackText(context, 'cynical', feedbackType);
-  }
-
-  @override
-  List<String> getRandomVisions() {
-    return [
-      "Ah, un'altra persona che cerca risposte facili. La vita non è un film Disney.",
-      "Congratulazioni, hai scoperto che il mondo è ingiusto. Benvenuto nella realtà.",
-      "Le tue aspettative erano troppo alte. Come sempre.",
-      "Sì, quello che pensi accadrà probabilmente non accadrà. Sorpreso?",
-      "La speranza è l'ultima a morire, ma alla fine muore anche quella.",
-      "Il bicchiere non è né mezzo pieno né mezzo vuoto. È semplicemente rotto.",
-      "La vita è come una serie TV che viene cancellata sul più bello.",
-      "Stai aspettando un miracolo? Bene, continua ad aspettare.",
-      "L'ottimismo è solo mancanza di informazioni.",
-    ];
-  }
+  String getFunnyFeedbackText() => '';
 
   // Localized random visions method
   Future<List<String>> getLocalizedRandomVisions(BuildContext context) async {
     return await ProphetLocalizationLoader.getRandomVisions(context, 'cynical');
-  }
-
-  @override
-  String getPersonalizedResponse(String question) {
-    AppLogger.logInfo('OracoloCinico', '=== getPersonalizedResponse (fallback) called ===');
-    AppLogger.logInfo('OracoloCinico', 'Question: $question');
-    
-    final List<String> cinicoResponses = [
-      'Oh, davvero? Stai chiedendo consiglio a un\'app? '
-          'Bene, eccoti la verità: la risposta alla tua domanda è che '
-          'probabilmente non otterrai quello che vuoi, e anche se lo ottieni, '
-          'non sarà come te lo aspettavi. Ma ehi, almeno ora lo sai.',
-      
-      'Interessante domanda. Peccato che la vita non si interessi alle tue domande. '
-          'La realtà è questa: quello che vuoi sapere probabilmente non ti piacerà, '
-          'e quello che ti aspetti probabilmente non accadrà. '
-          'Ma tranquillo, c\'è sempre il gelato per consolarti.',
-      
-      'Una domanda profonda, davvero. Quasi quanto la delusione che proverai '
-          'quando realizzerai che non esiste una risposta magica. '
-          'Il mondo continua a girare indifferente alle tue preoccupazioni. '
-          'Però hey, almeno hai fatto una domanda intelligente.',
-    ];
-    
-    final randomIndex = DateTime.now().millisecondsSinceEpoch % cinicoResponses.length;
-    final response = cinicoResponses[randomIndex];
-    AppLogger.logInfo('OracoloCinico', 'Fallback response: $response');
-    return response;
   }
 
   // Localized fallback response method
