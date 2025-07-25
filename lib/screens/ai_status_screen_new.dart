@@ -13,6 +13,7 @@ class AIStatusScreen extends StatefulWidget {
 
 class _AIStatusScreenState extends State<AIStatusScreen> {
   bool _isAIEnabled = false;
+  Map<String, String?> _configStatus = {};
   bool _isLoading = false;
 
   @override
@@ -28,9 +29,11 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
     
     try {
       final isInitialized = await AIServiceManager.initialize();
+      final configStatus = await _getConfigurationStatus();
       
       setState(() {
         _isAIEnabled = AIServiceManager.isAIAvailable;
+        _configStatus = configStatus;
         _isLoading = false;
       });
       
@@ -40,6 +43,24 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  /// Get configuration status using new system
+  Future<Map<String, String?>> _getConfigurationStatus() async {
+    try {
+      final storedConfig = await SecureConfigManager.getStoredConfig();
+      return {
+        'buildTimeConfigured': AppConfig.isAIConfigured.toString(),
+        'aiAvailable': AIServiceManager.isAIAvailable.toString(),
+        'endpoint': storedConfig['endpoint'] ?? AppConfig.azureEndpoint,
+        'apiKey': storedConfig['apiKey']?.isNotEmpty == true ? 'CONFIGURED' : 'EMPTY',
+        'deploymentName': storedConfig['deploymentName'] ?? AppConfig.azureDeploymentName,
+        'enableAI': storedConfig['enableAI'] ?? AppConfig.enableAI.toString(),
+      };
+    } catch (e) {
+      AppLogger.logError('AIStatusScreen', 'Failed to get configuration status', e);
+      return {};
     }
   }
 

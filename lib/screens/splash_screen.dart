@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../services/secure_config_service.dart';
-import '../models/profet.dart';
-import '../build_config.dart';
+import '../services/ai_service_manager.dart';
+import '../config/app_config.dart';
+import '../utils/app_logger.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -54,13 +54,11 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initializeApp() async {
     try {
-      // Initialize secure configuration (migration from .env if needed)
-      await SecureConfigService.initialize();
+      AppLogger.logInfo('SplashScreen', 'Starting app initialization...');
       
-      // CRITICAL: Load AI credentials from storage into the AzureOpenAI service
-      // This is needed because SecureConfigService only manages storage,
-      // but the Profet class needs to load them into its AI service
-      await Profet.loadStoredAICredentials();
+      // Initialize AI service (this handles config and setup)
+      final aiInitialized = await AIServiceManager.initialize();
+      AppLogger.logInfo('SplashScreen', 'AI initialization result: $aiInitialized');
       
       setState(() {
         _setupComplete = true;
@@ -75,14 +73,17 @@ class _SplashScreenState extends State<SplashScreen>
         await Future.delayed(Duration(milliseconds: remainingTime));
       }
       
-      // Check AI status and show appropriate alert
-      await _checkAndShowAIStatus();
+      // Check AI status and show appropriate alert (only if debug alerts enabled)
+      if (AppConfig.showDebugAlerts) {
+        await _checkAndShowAIStatus();
+      }
       
       // Navigate to home screen
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/home');
       }
     } catch (e) {
+      AppLogger.logError('SplashScreen', 'App initialization failed', e);
       // Show error dialog if initialization fails
       if (mounted) {
         _showErrorDialog('Initialization Error', 'Failed to initialize app: $e');
@@ -93,9 +94,7 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _checkAndShowAIStatus() async {
     if (!mounted) return;
     
-    final isAIConfigured = SecureConfigService.isAIEnabled;
-    final isProfetAIEnabled = Profet.isAIEnabled;
-    final hasBuildConfig = BuildConfig.isConfigured;
+    final isAIAvailable = AIServiceManager.isAIAvailable;
     
     String title;
     String message;
@@ -103,18 +102,9 @@ class _SplashScreenState extends State<SplashScreen>
     IconData icon;
     
     // Always show detailed debug info for now
-    final debugLog = SecureConfigService.initializationLog;
-    final lastError = SecureConfigService.lastError;
+    final debugInfo = AIServiceManager.getDetailedStatus();
     
-    String debugInfo = 'Debug Log:\n';
-    for (int i = math.max(0, debugLog.length - 10); i < debugLog.length; i++) {
-      debugInfo += '${debugLog[i]}\n';
-    }
-    if (lastError.isNotEmpty) {
-      debugInfo += '\nLast Error: $lastError';
-    }
-    
-    if (isAIConfigured && isProfetAIEnabled) {
+    if (isAIAvailable) {
       title = '🎯 AI Attiva!';
       message = 'L\'intelligenza artificiale è configurata correttamente. I tuoi oracoli possono fornire risposte personalizzate.\n\n$debugInfo';
       iconColor = Colors.green;
@@ -122,9 +112,8 @@ class _SplashScreenState extends State<SplashScreen>
     } else {
       title = '⚠️ AI Non Disponibile';
       message = 'Configurazione AI ha problemi:\n\n'
-          '• SecureConfigService.isAIEnabled: $isAIConfigured\n'
-          '• Profet.isAIEnabled: $isProfetAIEnabled\n'
-          '• BuildConfig.isConfigured: $hasBuildConfig\n\n'
+          '• AI Available: $isAIAvailable\n'
+          '• Build Config Valid: ${AppConfig.isAIConfigured}\n\n'
           '$debugInfo';
       iconColor = Colors.orange;
       icon = Icons.warning;
