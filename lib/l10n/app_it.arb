@@ -1,6 +1,11 @@
 {
   "@@locale": "it",
   "appTitle": "Profet AI",
+  "navigationHome": "Home",
+  "navigationOracles": "Oracoli",
+  "navigationProfile": "Profilo",
+  "navigationVisions": "Visioni",
+  "navigationAIStatus": "Stato AI",
   "selectYourOracle": "SELEZIONA IL TUO ORACOLO",
   "everyOracleUniquePersonality": "Ogni oracolo ha la sua personalità unica",
   "askTheOracle": "DOMANDA ALL'ORACOLO",
@@ -45,29 +50,5 @@
   "feedbackFunnyAction": "Rana nel\nmultiverso",
   "loadingProphetsFromUniverse": "Caricamento profeti dall'universo",
   "initializationError": "Errore di Inizializzazione",
-  "failedToInitializeApp": "Impossibile inizializzare l'app: {error}",
-  
-  "prophetMysticName": "Oracolo Mistico",
-  "prophetMysticDescription": "L'Oracolo Mistico ti aspetta",
-  "prophetMysticLocation": "TEMPIO DELLE VISIONI",
-  "prophetMysticLoadingMessage": "L'Oracolo Mistico sta consultando le energie cosmiche...",
-  "prophetMysticPositiveFeedback": "Le stelle hanno guidato la mia anima",
-  "prophetMysticNegativeFeedback": "Le nebbie cosmiche hanno velato la verità",
-  "prophetMysticFunnyFeedback": "I venti mistici hanno portato confusione, ma anche sorrisi",
-  
-  "prophetChaoticName": "Oracolo Caotico",
-  "prophetChaoticDescription": "Il Caos ti chiama... forse",
-  "prophetChaoticLocation": "DIMENSIONE DEL CAOS",
-  "prophetChaoticLoadingMessage": "L'Oracolo Caotico sta... aspetta, cosa stavo facendo?",
-  "prophetChaoticPositiveFeedback": "Il caos mi ha sorriso! O forse era indigestione?",
-  "prophetChaoticNegativeFeedback": "Persino il caos è confuso da questa visione",
-  "prophetChaoticFunnyFeedback": "Ho capito tutto e niente, perfettamente caotico!",
-  
-  "prophetCynicalName": "Oracolo Cinico",
-  "prophetCynicalDescription": "La realtà è deludente, come sempre",
-  "prophetCynicalLocation": "TORRE DELLA DISILLUSIONE",
-  "prophetCynicalLoadingMessage": "L'Oracolo Cinico sta pensando controvoglia...",
-  "prophetCynicalPositiveFeedback": "Beh, non è stato terribile come mi aspettavo",
-  "prophetCynicalNegativeFeedback": "Come immaginavo, un'altra delusione",
-  "prophetCynicalFunnyFeedback": "Almeno la confusione è stata divertente"
+  "failedToInitializeApp": "Impossibile inizializzare l'app: {error}"
 }

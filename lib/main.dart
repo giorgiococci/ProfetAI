@@ -114,26 +114,26 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _getCurrentScreen(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: AppLocalizations.of(context)!.navigationHome,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: 'Oracoli',
+            label: AppLocalizations.of(context)!.navigationOracles,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profilo',
+            label: AppLocalizations.of(context)!.navigationProfile,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
-            label: 'Visioni',
+            label: AppLocalizations.of(context)!.navigationVisions,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
-            label: 'Stato AI',
+            label: AppLocalizations.of(context)!.navigationAIStatus,
           ),
         ],
         currentIndex: _selectedIndex,

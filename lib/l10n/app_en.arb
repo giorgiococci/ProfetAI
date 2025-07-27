@@ -5,6 +5,31 @@
     "description": "Application title"
   },
 
+  "navigationHome": "Home",
+  "@navigationHome": {
+    "description": "Navigation menu item for Home"
+  },
+
+  "navigationOracles": "Oracles",
+  "@navigationOracles": {
+    "description": "Navigation menu item for Oracles"
+  },
+
+  "navigationProfile": "Profile",
+  "@navigationProfile": {
+    "description": "Navigation menu item for Profile"
+  },
+
+  "navigationVisions": "Visions",
+  "@navigationVisions": {
+    "description": "Navigation menu item for Visions"
+  },
+
+  "navigationAIStatus": "AI Status",
+  "@navigationAIStatus": {
+    "description": "Navigation menu item for AI Status"
+  },
+
   "selectYourOracle": "SELECT YOUR ORACLE",
   "@selectYourOracle": {
     "description": "Title for oracle selection screen"
@@ -264,110 +289,5 @@
         "type": "String"
       }
     }
-  },
-
-  "prophetMysticName": "Mystic Oracle",
-  "@prophetMysticName": {
-    "description": "Name of the Mystic Oracle prophet"
-  },
-
-  "prophetMysticDescription": "The Mystic Oracle awaits you",
-  "@prophetMysticDescription": {
-    "description": "Description of the Mystic Oracle"
-  },
-
-  "prophetMysticLocation": "TEMPLE OF VISIONS",
-  "@prophetMysticLocation": {
-    "description": "Location title for Mystic Oracle"
-  },
-
-  "prophetMysticLoadingMessage": "The Mystic Oracle is consulting the cosmic energies...",
-  "@prophetMysticLoadingMessage": {
-    "description": "Loading message when Mystic Oracle is thinking"
-  },
-
-  "prophetMysticPositiveFeedback": "The stars have guided my soul",
-  "@prophetMysticPositiveFeedback": {
-    "description": "Positive feedback for Mystic Oracle"
-  },
-
-  "prophetMysticNegativeFeedback": "The cosmic mists have veiled the truth",
-  "@prophetMysticNegativeFeedback": {
-    "description": "Negative feedback for Mystic Oracle"
-  },
-
-  "prophetMysticFunnyFeedback": "The mystic winds have brought confusion, but also smiles",
-  "@prophetMysticFunnyFeedback": {
-    "description": "Funny feedback for Mystic Oracle"
-  },
-
-  "prophetChaoticName": "Chaotic Oracle",
-  "@prophetChaoticName": {
-    "description": "Name of the Chaotic Oracle prophet"
-  },
-
-  "prophetChaoticDescription": "Chaos calls you... maybe",
-  "@prophetChaoticDescription": {
-    "description": "Description of the Chaotic Oracle"
-  },
-
-  "prophetChaoticLocation": "DIMENSION OF CHAOS",
-  "@prophetChaoticLocation": {
-    "description": "Location title for Chaotic Oracle"
-  },
-
-  "prophetChaoticLoadingMessage": "The Chaotic Oracle is... wait, what was I doing again?",
-  "@prophetChaoticLoadingMessage": {
-    "description": "Loading message when Chaotic Oracle is thinking"
-  },
-
-  "prophetChaoticPositiveFeedback": "Chaos has smiled upon me! Or maybe it was indigestion?",
-  "@prophetChaoticPositiveFeedback": {
-    "description": "Positive feedback for Chaotic Oracle"
-  },
-
-  "prophetChaoticNegativeFeedback": "Even chaos is confused by this vision",
-  "@prophetChaoticNegativeFeedback": {
-    "description": "Negative feedback for Chaotic Oracle"
-  },
-
-  "prophetChaoticFunnyFeedback": "I understood everything and nothing, perfectly chaotic!",
-  "@prophetChaoticFunnyFeedback": {
-    "description": "Funny feedback for Chaotic Oracle"
-  },
-
-  "prophetCynicalName": "Cynical Oracle",
-  "@prophetCynicalName": {
-    "description": "Name of the Cynical Oracle prophet"
-  },
-
-  "prophetCynicalDescription": "Reality is disappointing, as always",
-  "@prophetCynicalDescription": {
-    "description": "Description of the Cynical Oracle"
-  },
-
-  "prophetCynicalLocation": "TOWER OF DISILLUSION",
-  "@prophetCynicalLocation": {
-    "description": "Location title for Cynical Oracle"
-  },
-
-  "prophetCynicalLoadingMessage": "The Cynical Oracle is reluctantly thinking...",
-  "@prophetCynicalLoadingMessage": {
-    "description": "Loading message when Cynical Oracle is thinking"
-  },
-
-  "prophetCynicalPositiveFeedback": "Well, that wasn't as terrible as expected",
-  "@prophetCynicalPositiveFeedback": {
-    "description": "Positive feedback for Cynical Oracle"
-  },
-
-  "prophetCynicalNegativeFeedback": "As I expected, another disappointment",
-  "@prophetCynicalNegativeFeedback": {
-    "description": "Negative feedback for Cynical Oracle"
-  },
-
-  "prophetCynicalFunnyFeedback": "At least the confusion was entertaining",
-  "@prophetCynicalFunnyFeedback": {
-    "description": "Funny feedback for Cynical Oracle"
   }
 }

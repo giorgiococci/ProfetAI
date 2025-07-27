@@ -12,6 +12,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Profet AI';
 
   @override
+  String get navigationHome => 'Home';
+
+  @override
+  String get navigationOracles => 'Oracles';
+
+  @override
+  String get navigationProfile => 'Profile';
+
+  @override
+  String get navigationVisions => 'Visions';
+
+  @override
+  String get navigationAIStatus => 'AI Status';
+
+  @override
   String get selectYourOracle => 'SELECT YOUR ORACLE';
 
   @override
@@ -165,78 +180,4 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToInitializeApp(String error) {
     return 'Failed to initialize app: $error';
   }
-
-  @override
-  String get prophetMysticName => 'Mystic Oracle';
-
-  @override
-  String get prophetMysticDescription => 'The Mystic Oracle awaits you';
-
-  @override
-  String get prophetMysticLocation => 'TEMPLE OF VISIONS';
-
-  @override
-  String get prophetMysticLoadingMessage =>
-      'The Mystic Oracle is consulting the cosmic energies...';
-
-  @override
-  String get prophetMysticPositiveFeedback => 'The stars have guided my soul';
-
-  @override
-  String get prophetMysticNegativeFeedback =>
-      'The cosmic mists have veiled the truth';
-
-  @override
-  String get prophetMysticFunnyFeedback =>
-      'The mystic winds have brought confusion, but also smiles';
-
-  @override
-  String get prophetChaoticName => 'Chaotic Oracle';
-
-  @override
-  String get prophetChaoticDescription => 'Chaos calls you... maybe';
-
-  @override
-  String get prophetChaoticLocation => 'DIMENSION OF CHAOS';
-
-  @override
-  String get prophetChaoticLoadingMessage =>
-      'The Chaotic Oracle is... wait, what was I doing again?';
-
-  @override
-  String get prophetChaoticPositiveFeedback =>
-      'Chaos has smiled upon me! Or maybe it was indigestion?';
-
-  @override
-  String get prophetChaoticNegativeFeedback =>
-      'Even chaos is confused by this vision';
-
-  @override
-  String get prophetChaoticFunnyFeedback =>
-      'I understood everything and nothing, perfectly chaotic!';
-
-  @override
-  String get prophetCynicalName => 'Cynical Oracle';
-
-  @override
-  String get prophetCynicalDescription => 'Reality is disappointing, as always';
-
-  @override
-  String get prophetCynicalLocation => 'TOWER OF DISILLUSION';
-
-  @override
-  String get prophetCynicalLoadingMessage =>
-      'The Cynical Oracle is reluctantly thinking...';
-
-  @override
-  String get prophetCynicalPositiveFeedback =>
-      'Well, that wasn\'t as terrible as expected';
-
-  @override
-  String get prophetCynicalNegativeFeedback =>
-      'As I expected, another disappointment';
-
-  @override
-  String get prophetCynicalFunnyFeedback =>
-      'At least the confusion was entertaining';
 }

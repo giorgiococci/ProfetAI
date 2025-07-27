@@ -12,6 +12,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Profet AI';
 
   @override
+  String get navigationHome => 'Home';
+
+  @override
+  String get navigationOracles => 'Oracoli';
+
+  @override
+  String get navigationProfile => 'Profilo';
+
+  @override
+  String get navigationVisions => 'Visioni';
+
+  @override
+  String get navigationAIStatus => 'Stato AI';
+
+  @override
   String get selectYourOracle => 'SELEZIONA IL TUO ORACOLO';
 
   @override
@@ -166,79 +181,4 @@ class AppLocalizationsIt extends AppLocalizations {
   String failedToInitializeApp(String error) {
     return 'Impossibile inizializzare l\'app: $error';
   }
-
-  @override
-  String get prophetMysticName => 'Oracolo Mistico';
-
-  @override
-  String get prophetMysticDescription => 'L\'Oracolo Mistico ti aspetta';
-
-  @override
-  String get prophetMysticLocation => 'TEMPIO DELLE VISIONI';
-
-  @override
-  String get prophetMysticLoadingMessage =>
-      'L\'Oracolo Mistico sta consultando le energie cosmiche...';
-
-  @override
-  String get prophetMysticPositiveFeedback =>
-      'Le stelle hanno guidato la mia anima';
-
-  @override
-  String get prophetMysticNegativeFeedback =>
-      'Le nebbie cosmiche hanno velato la verità';
-
-  @override
-  String get prophetMysticFunnyFeedback =>
-      'I venti mistici hanno portato confusione, ma anche sorrisi';
-
-  @override
-  String get prophetChaoticName => 'Oracolo Caotico';
-
-  @override
-  String get prophetChaoticDescription => 'Il Caos ti chiama... forse';
-
-  @override
-  String get prophetChaoticLocation => 'DIMENSIONE DEL CAOS';
-
-  @override
-  String get prophetChaoticLoadingMessage =>
-      'L\'Oracolo Caotico sta... aspetta, cosa stavo facendo?';
-
-  @override
-  String get prophetChaoticPositiveFeedback =>
-      'Il caos mi ha sorriso! O forse era indigestione?';
-
-  @override
-  String get prophetChaoticNegativeFeedback =>
-      'Persino il caos è confuso da questa visione';
-
-  @override
-  String get prophetChaoticFunnyFeedback =>
-      'Ho capito tutto e niente, perfettamente caotico!';
-
-  @override
-  String get prophetCynicalName => 'Oracolo Cinico';
-
-  @override
-  String get prophetCynicalDescription => 'La realtà è deludente, come sempre';
-
-  @override
-  String get prophetCynicalLocation => 'TORRE DELLA DISILLUSIONE';
-
-  @override
-  String get prophetCynicalLoadingMessage =>
-      'L\'Oracolo Cinico sta pensando controvoglia...';
-
-  @override
-  String get prophetCynicalPositiveFeedback =>
-      'Beh, non è stato terribile come mi aspettavo';
-
-  @override
-  String get prophetCynicalNegativeFeedback =>
-      'Come immaginavo, un\'altra delusione';
-
-  @override
-  String get prophetCynicalFunnyFeedback =>
-      'Almeno la confusione è stata divertente';
 }

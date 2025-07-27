@@ -104,6 +104,36 @@ abstract class AppLocalizations {
   /// **'Profet AI'**
   String get appTitle;
 
+  /// Navigation menu item for Home
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navigationHome;
+
+  /// Navigation menu item for Oracles
+  ///
+  /// In en, this message translates to:
+  /// **'Oracles'**
+  String get navigationOracles;
+
+  /// Navigation menu item for Profile
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navigationProfile;
+
+  /// Navigation menu item for Visions
+  ///
+  /// In en, this message translates to:
+  /// **'Visions'**
+  String get navigationVisions;
+
+  /// Navigation menu item for AI Status
+  ///
+  /// In en, this message translates to:
+  /// **'AI Status'**
+  String get navigationAIStatus;
+
   /// Title for oracle selection screen
   ///
   /// In en, this message translates to:
@@ -377,132 +407,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to initialize app: {error}'**
   String failedToInitializeApp(String error);
-
-  /// Name of the Mystic Oracle prophet
-  ///
-  /// In en, this message translates to:
-  /// **'Mystic Oracle'**
-  String get prophetMysticName;
-
-  /// Description of the Mystic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'The Mystic Oracle awaits you'**
-  String get prophetMysticDescription;
-
-  /// Location title for Mystic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'TEMPLE OF VISIONS'**
-  String get prophetMysticLocation;
-
-  /// Loading message when Mystic Oracle is thinking
-  ///
-  /// In en, this message translates to:
-  /// **'The Mystic Oracle is consulting the cosmic energies...'**
-  String get prophetMysticLoadingMessage;
-
-  /// Positive feedback for Mystic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'The stars have guided my soul'**
-  String get prophetMysticPositiveFeedback;
-
-  /// Negative feedback for Mystic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'The cosmic mists have veiled the truth'**
-  String get prophetMysticNegativeFeedback;
-
-  /// Funny feedback for Mystic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'The mystic winds have brought confusion, but also smiles'**
-  String get prophetMysticFunnyFeedback;
-
-  /// Name of the Chaotic Oracle prophet
-  ///
-  /// In en, this message translates to:
-  /// **'Chaotic Oracle'**
-  String get prophetChaoticName;
-
-  /// Description of the Chaotic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'Chaos calls you... maybe'**
-  String get prophetChaoticDescription;
-
-  /// Location title for Chaotic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'DIMENSION OF CHAOS'**
-  String get prophetChaoticLocation;
-
-  /// Loading message when Chaotic Oracle is thinking
-  ///
-  /// In en, this message translates to:
-  /// **'The Chaotic Oracle is... wait, what was I doing again?'**
-  String get prophetChaoticLoadingMessage;
-
-  /// Positive feedback for Chaotic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'Chaos has smiled upon me! Or maybe it was indigestion?'**
-  String get prophetChaoticPositiveFeedback;
-
-  /// Negative feedback for Chaotic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'Even chaos is confused by this vision'**
-  String get prophetChaoticNegativeFeedback;
-
-  /// Funny feedback for Chaotic Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'I understood everything and nothing, perfectly chaotic!'**
-  String get prophetChaoticFunnyFeedback;
-
-  /// Name of the Cynical Oracle prophet
-  ///
-  /// In en, this message translates to:
-  /// **'Cynical Oracle'**
-  String get prophetCynicalName;
-
-  /// Description of the Cynical Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'Reality is disappointing, as always'**
-  String get prophetCynicalDescription;
-
-  /// Location title for Cynical Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'TOWER OF DISILLUSION'**
-  String get prophetCynicalLocation;
-
-  /// Loading message when Cynical Oracle is thinking
-  ///
-  /// In en, this message translates to:
-  /// **'The Cynical Oracle is reluctantly thinking...'**
-  String get prophetCynicalLoadingMessage;
-
-  /// Positive feedback for Cynical Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'Well, that wasn\'t as terrible as expected'**
-  String get prophetCynicalPositiveFeedback;
-
-  /// Negative feedback for Cynical Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'As I expected, another disappointment'**
-  String get prophetCynicalNegativeFeedback;
-
-  /// Funny feedback for Cynical Oracle
-  ///
-  /// In en, this message translates to:
-  /// **'At least the confusion was entertaining'**
-  String get prophetCynicalFunnyFeedback;
 }
 
 class _AppLocalizationsDelegate
