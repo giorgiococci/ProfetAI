@@ -141,31 +141,46 @@ class ProfetSelectionScreen extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        ProphetLocalizations.getName(context, prophetTypeString),
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: profet.primaryColor,
-                                        ),
+                                      FutureBuilder<String>(
+                                        future: ProphetLocalizations.getName(context, prophetTypeString),
+                                        builder: (context, snapshot) {
+                                          return Text(
+                                            snapshot.data ?? 'Oracle',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: profet.primaryColor,
+                                            ),
+                                          );
+                                        },
                                       ),
                                       const SizedBox(height: 5),
-                                      Text(
-                                        ProphetLocalizations.getDescription(context, prophetTypeString),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[300],
-                                          fontStyle: FontStyle.italic,
-                                        ),
+                                      FutureBuilder<String>(
+                                        future: ProphetLocalizations.getDescription(context, prophetTypeString),
+                                        builder: (context, snapshot) {
+                                          return Text(
+                                            snapshot.data ?? 'An ancient oracle',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[300],
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                          );
+                                        },
                                       ),
                                       const SizedBox(height: 8),
-                                      Text(
-                                        ProphetLocalizations.getLocation(context, prophetTypeString),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[400],
-                                          letterSpacing: 1.0,
-                                        ),
+                                      FutureBuilder<String>(
+                                        future: ProphetLocalizations.getLocation(context, prophetTypeString),
+                                        builder: (context, snapshot) {
+                                          return Text(
+                                            snapshot.data ?? 'Temple of Wisdom',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[400],
+                                              letterSpacing: 1.0,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ],
                                   ),

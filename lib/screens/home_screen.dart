@@ -24,6 +24,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _questionController = TextEditingController();
+  String _prophetName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Load prophet name after first frame to ensure context is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProphetName();
+    });
+  }
+
+  Future<void> _loadProphetName() async {
+    final name = await ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet));
+    if (mounted) {
+      setState(() {
+        _prophetName = name;
+      });
+    }
+  }
 
   // Helper function to get prophet type string for localization
   String _getProphetTypeString(ProfetType profetType) {
@@ -72,25 +91,35 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // Titolo del tempio
               const SizedBox(height: 20),
-              Text(
-                ProphetLocalizations.getLocation(context, _getProphetTypeString(widget.selectedProfet)),
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: profet.primaryColor,
-                  letterSpacing: 2.0,
-                ),
-                textAlign: TextAlign.center,
+              FutureBuilder<String>(
+                future: ProphetLocalizations.getLocation(context, _getProphetTypeString(widget.selectedProfet)),
+                builder: (context, snapshot) {
+                  return Text(
+                    snapshot.data ?? 'Temple of Wisdom',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: profet.primaryColor,
+                      letterSpacing: 2.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
               const SizedBox(height: 10),
-              Text(
-                ProphetLocalizations.getDescription(context, _getProphetTypeString(widget.selectedProfet)),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[300],
-                  fontStyle: FontStyle.italic,
-                ),
-                textAlign: TextAlign.center,
+              FutureBuilder<String>(
+                future: ProphetLocalizations.getDescription(context, _getProphetTypeString(widget.selectedProfet)),
+                builder: (context, snapshot) {
+                  return Text(
+                    snapshot.data ?? 'An ancient oracle with wisdom',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[300],
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
 
               const Spacer(flex: 1),
@@ -177,9 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   controller: _questionController,
                   style: TextStyle(color: Colors.grey[100], fontSize: 16),
                   decoration: InputDecoration(
-                    hintText: localizations.enterQuestionPlaceholder(
-                      ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))
-                    ),
+                    hintText: _prophetName.isNotEmpty 
+                        ? localizations.enterQuestionPlaceholder(_prophetName)
+                        : localizations.enterQuestionPlaceholder('Oracle'),
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
@@ -287,7 +316,8 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isAIEnabled = Profet.isAIEnabled; // Check if AI is available
 
     if (hasQuestion && question != null && question.isNotEmpty) {
-      title = '🔮 ${ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))} Risponde';
+      final prophetName = await ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet));
+      title = '🔮 $prophetName Risponde';
       dialogIcon = Icons.psychology_alt;
 
       if (isAIEnabled) {
@@ -318,7 +348,8 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     } else {
-      title = '✨ Visione di ${ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))}';
+      final prophetName = await ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet));
+      title = '✨ Visione di $prophetName';
       dialogIcon = Icons.auto_awesome;
 
       if (isAIEnabled) {

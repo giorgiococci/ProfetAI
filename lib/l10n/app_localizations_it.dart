@@ -181,4 +181,100 @@ class AppLocalizationsIt extends AppLocalizations {
   String failedToInitializeApp(String error) {
     return 'Impossibile inizializzare l\'app: $error';
   }
+
+  @override
+  String get profilePageTitle => 'Profilo';
+
+  @override
+  String get personalInformation => 'Informazioni Personali';
+
+  @override
+  String get preferencesAndLanguages => 'Preferenze e Lingue';
+
+  @override
+  String get interestsAndTopics => 'Interessi e Argomenti';
+
+  @override
+  String get nameLabel => 'Nome';
+
+  @override
+  String get nameHint => 'Inserisci il tuo nome';
+
+  @override
+  String get countryLabel => 'Paese';
+
+  @override
+  String get countryHint => 'Seleziona il tuo paese';
+
+  @override
+  String get genderLabel => 'Genere';
+
+  @override
+  String get genderHint => 'Seleziona il tuo genere';
+
+  @override
+  String get languagesLabel => 'Lingue';
+
+  @override
+  String get languagesHint => 'Seleziona le tue lingue preferite';
+
+  @override
+  String get interestsLabel => 'Interessi';
+
+  @override
+  String get interestsHint => 'Seleziona i tuoi interessi';
+
+  @override
+  String get saveProfile => 'Salva Profilo';
+
+  @override
+  String get profileSaved => 'Profilo salvato con successo!';
+
+  @override
+  String get genderMale => 'Maschile';
+
+  @override
+  String get genderFemale => 'Femminile';
+
+  @override
+  String get genderNonBinary => 'Non-binario';
+
+  @override
+  String get genderPreferNotToSay => 'Preferisco non dirlo';
+
+  @override
+  String get languageEnglish => 'Inglese';
+
+  @override
+  String get languageItalian => 'Italiano';
+
+  @override
+  String get interestSpirituality => 'Spiritualità';
+
+  @override
+  String get interestMeditation => 'Meditazione';
+
+  @override
+  String get interestPhilosophy => 'Filosofia';
+
+  @override
+  String get interestMysticism => 'Misticismo';
+
+  @override
+  String get interestDivination => 'Divinazione';
+
+  @override
+  String get interestWisdom => 'Saggezza Antica';
+
+  @override
+  String get interestDreams => 'Interpretazione dei Sogni';
+
+  @override
+  String get interestTarot => 'Tarocchi';
+
+  @override
+  String get interestAstrology => 'Astrologia';
+
+  @override
+  String get interestNumerology => 'Numerologia';
 }
