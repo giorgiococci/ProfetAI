@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
+import '../l10n/app_localizations.dart';
+import '../prophet_localizations.dart';
 
 class ProfetSelectionScreen extends StatelessWidget {
   final ProfetType selectedProfet;
@@ -14,6 +16,7 @@ class ProfetSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentProfet = ProfetManager.getProfet(selectedProfet);
+    final localizations = AppLocalizations.of(context)!;
     
     return Container(
       decoration: BoxDecoration(
@@ -30,7 +33,7 @@ class ProfetSelectionScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               Text(
-                'SELEZIONA IL TUO ORACOLO',
+                localizations.selectYourOracle,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -41,7 +44,7 @@ class ProfetSelectionScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Ogni oracolo ha la sua personalità unica',
+                localizations.everyOracleUniquePersonality,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[300],
@@ -58,6 +61,20 @@ class ProfetSelectionScreen extends StatelessWidget {
                   children: ProfetManager.getAllTypes().map((profetType) {
                     final profet = ProfetManager.getProfet(profetType);
                     final isSelected = profetType == selectedProfet;
+                    
+                    // Get the prophet type string for localization
+                    String prophetTypeString;
+                    switch (profetType) {
+                      case ProfetType.mistico:
+                        prophetTypeString = 'mystic';
+                        break;
+                      case ProfetType.caotico:
+                        prophetTypeString = 'chaotic';
+                        break;
+                      case ProfetType.cinico:
+                        prophetTypeString = 'cynical';
+                        break;
+                    }
                     
                     return Container(
                       margin: const EdgeInsets.only(bottom: 20),
@@ -125,7 +142,7 @@ class ProfetSelectionScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        profet.name,
+                                        ProphetLocalizations.getName(context, prophetTypeString),
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -134,7 +151,7 @@ class ProfetSelectionScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 5),
                                       Text(
-                                        profet.description,
+                                        ProphetLocalizations.getDescription(context, prophetTypeString),
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey[300],
@@ -143,7 +160,7 @@ class ProfetSelectionScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                        profet.location,
+                                        ProphetLocalizations.getLocation(context, prophetTypeString),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey[400],

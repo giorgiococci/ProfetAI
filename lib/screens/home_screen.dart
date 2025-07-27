@@ -3,6 +3,12 @@ import '../models/profet_manager.dart';
 import '../models/profet.dart';
 import '../models/vision_feedback.dart';
 import '../services/feedback_service.dart';
+import '../l10n/app_localizations.dart';
+import '../models/oracolo_caotico.dart';
+import '../models/oracolo_mistico.dart';
+import '../models/oracolo_cinico.dart';
+import '../prophet_localizations.dart';
+import '../l10n/prophet_localization_loader.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -19,9 +25,22 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _questionController = TextEditingController();
 
+  // Helper function to get prophet type string for localization
+  String _getProphetTypeString(ProfetType profetType) {
+    switch (profetType) {
+      case ProfetType.mistico:
+        return 'mystic';
+      case ProfetType.caotico:
+        return 'chaotic';
+      case ProfetType.cinico:
+        return 'cynical';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -54,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Titolo del tempio
               const SizedBox(height: 20),
               Text(
-                profet.location,
+                ProphetLocalizations.getLocation(context, _getProphetTypeString(widget.selectedProfet)),
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -65,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                profet.description,
+                ProphetLocalizations.getDescription(context, _getProphetTypeString(widget.selectedProfet)),
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[300],
@@ -73,9 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const Spacer(flex: 1),
-              
+
               // Immagine dell'Oracolo (placeholder dominante)
               Container(
                 width: 200,
@@ -141,9 +160,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              
+
               const Spacer(flex: 1),
-              
+
               // Campo per la domanda
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -158,7 +177,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   controller: _questionController,
                   style: TextStyle(color: Colors.grey[100], fontSize: 16),
                   decoration: InputDecoration(
-                    hintText: profet.getHintText(),
+                    hintText: localizations.enterQuestionPlaceholder(
+                      ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))
+                    ),
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
@@ -170,9 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   minLines: 1,
                 ),
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Due bottoni separati per le diverse modalità
               Column(
                 children: [
@@ -186,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (question.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: const Text('📝 Inserisci una domanda prima di chiedere!'),
+                              content: Text(localizations.enterQuestionFirst),
                               backgroundColor: Colors.red[700],
                               duration: const Duration(seconds: 2),
                             ),
@@ -204,9 +225,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         elevation: 8,
                       ),
                       icon: const Icon(Icons.help_outline, size: 24),
-                      label: const Text(
-                        'DOMANDA ALL\'ORACOLO',
-                        style: TextStyle(
+                      label: Text(
+                        localizations.askTheOracle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
@@ -214,9 +235,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 15),
-                  
+
                   // Pulsante "Ascolta l'Oracolo"
                   SizedBox(
                     width: double.infinity,
@@ -235,9 +256,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         elevation: 4,
                       ),
                       icon: const Icon(Icons.hearing, size: 24),
-                      label: const Text(
-                        'ASCOLTA L\'ORACOLO',
-                        style: TextStyle(
+                      label: Text(
+                        localizations.listenToOracle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
@@ -247,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              
+
               const Spacer(flex: 1),
             ],
           ),
@@ -258,54 +279,83 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showVisionDialog({bool hasQuestion = false, String? question}) async {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
-    
+
     // Determina il titolo e il contenuto in base alla modalità
     String title;
-    String content;
+    String content = ''; // Initialize to avoid null errors
     IconData dialogIcon;
     bool isAIEnabled = Profet.isAIEnabled; // Check if AI is available
-    
+
     if (hasQuestion && question != null && question.isNotEmpty) {
-      title = '🔮 ${profet.name} Risponde';
+      title = '🔮 ${ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))} Risponde';
       dialogIcon = Icons.psychology_alt;
-      
+
       if (isAIEnabled) {
         // Show loading dialog first
-        _showLoadingDialog(profet);
-        
+        await _showLoadingDialog(profet);
+
         try {
-          content = await profet.getAIPersonalizedResponse(question);
-          Navigator.of(context).pop(); // Close loading dialog
+          if (mounted) {
+            content = await profet.getAIPersonalizedResponse(question, context);
+          }
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
         } catch (e) {
-          Navigator.of(context).pop(); // Close loading dialog
-          content = profet.getPersonalizedResponse(question);
-          isAIEnabled = false; // Fallback to regular response
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
+          // Use localized fallback response
+          if (mounted) {
+            content = await profet.getLocalizedPersonalizedResponse(context, question);
+            isAIEnabled = false; // Fallback to regular response
+          } else {
+            return; // Widget is no longer mounted, exit early
+          }
         }
       } else {
-        content = profet.getPersonalizedResponse(question);
+        // Use localized fallback response when AI is disabled
+        if (mounted) {
+          content = await profet.getLocalizedPersonalizedResponse(context, question);
+        } else {
+          return; // Widget is no longer mounted, exit early
+        }
       }
     } else {
-      title = '✨ Visione di ${profet.name}';
+      title = '✨ Visione di ${ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))}';
       dialogIcon = Icons.auto_awesome;
-      
+
       if (isAIEnabled) {
         // Show loading dialog first
-        _showLoadingDialog(profet);
-        
+        await _showLoadingDialog(profet);
+
         try {
-          content = await profet.getAIRandomVision();
-          Navigator.of(context).pop(); // Close loading dialog
+          if (mounted) {
+            content = await profet.getAIRandomVision(context);
+          }
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
         } catch (e) {
-          Navigator.of(context).pop(); // Close loading dialog
-          final visions = profet.getRandomVisions();
-          content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
-          isAIEnabled = false; // Fallback to regular response
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
+          // Use localized random visions as fallback
+          if (mounted) {
+            final visions = await profet.getLocalizedRandomVisions(context);
+            final fallbackText = mounted ? AppLocalizations.of(context)!.oracleSilent : 'Silent...';
+            content = visions.isNotEmpty ? visions.first : fallbackText;
+            isAIEnabled = false; // Fallback to regular response
+          } else {
+            return; // Widget is no longer mounted, exit early
+          }
         }
       } else {
-        final visions = profet.getRandomVisions();
-        content = visions.isNotEmpty ? visions.first : "L'oracolo è in silenzio...";
+        // Use localized random visions when AI is disabled
+        if (mounted) {
+          final visions = await profet.getLocalizedRandomVisions(context);
+          final fallbackText = mounted ? AppLocalizations.of(context)!.oracleSilent : 'Silent...';
+          content = visions.isNotEmpty ? visions.first : fallbackText;
+        } else {
+          return; // Widget is no longer mounted, exit early
+        }
       }
     }
+
+    // Check mounted one more time before showing dialog
+    if (!mounted) return;
 
     showDialog(
       context: context,
@@ -389,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 15),
               ],
-              
+
               // Contenuto della risposta/visione
               Container(
                 padding: const EdgeInsets.all(15),
@@ -567,7 +617,22 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showLoadingDialog(profet) {
+  Future<void> _showLoadingDialog(profet) async {
+    // Get localized loading message based on prophet type
+    String loadingMessage;
+    if (profet is OracoloCaotico) {
+      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'chaotic');
+    } else if (profet is OracoloMistico) {
+      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'mystic');
+    } else if (profet is OracoloCinico) {
+      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'cynical');
+    } else {
+      loadingMessage = 'Loading...'; // Fallback
+    }
+
+    // Check if widget is still mounted before showing dialog
+    if (!mounted) return;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -586,7 +651,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
               Text(
-                profet.aiLoadingMessage,
+                loadingMessage,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: profet.primaryColor,
@@ -741,11 +806,11 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getFeedbackActionText(FeedbackType type) {
     switch (type) {
       case FeedbackType.positive:
-        return "Stella\nall'Oracolo";
+        return AppLocalizations.of(context)!.feedbackPositiveAction;
       case FeedbackType.negative:
-        return 'Sasso\nnel pozzo';
+        return AppLocalizations.of(context)!.feedbackNegativeAction;
       case FeedbackType.funny:
-        return 'Rana nel\nmultiverso';
+        return AppLocalizations.of(context)!.feedbackFunnyAction;
     }
   }
 
@@ -757,8 +822,9 @@ class _HomeScreenState extends State<HomeScreen> {
     String visionContent,
     String? question,
   ) async {
-    // Create feedback using the prophet's custom texts
-    final feedback = profet.createFeedback(
+    // Create feedback using the prophet's custom localized texts
+    final feedback = await profet.createFeedback(
+      context,
       type: feedbackType,
       visionContent: visionContent,
       question: question,
@@ -766,6 +832,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Save feedback
     await FeedbackService().saveFeedback(feedback);
+
+    // Check mounted before using context
+    if (!mounted) return;
 
     // Close the current dialog
     Navigator.of(context).pop();

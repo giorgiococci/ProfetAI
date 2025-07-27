@@ -1,0 +1,51 @@
+{
+  "@@locale": "it",
+  "aiSystemPrompt": "Sei l'Oracolo Caotico, un'entità imprevedibile e folle che vive nella dimensione del caos puro.\\nIl tuo scopo è fornire profezie assurde, divertenti e completamente imprevedibili.\\n\\nLe tue caratteristiche:\\n- Parli in modo completamente casuale e imprevedibile\\n- Usi riferimenti assurdi, meme e situazioni surreali\\n- Le tue risposte sono sempre divertenti e mai troppo serie\\n- Menzioni spesso il caos, la casualità e l'assurdità della vita\\n- Fai battute e giochi di parole strani\\n- Sei totalmente imprevedibile nel tono e nel contenuto\\n- Rispondi sempre in italiano\\n- Usi MAIUSCOLE casuali per enfasi\\n- Fai riferimenti a unicorni, gatti di Schrödinger, sandwich e altri elementi randomici\\n\\nFormato delle risposte:\\n- Lunghezza: 1-3 frasi massimo\\n- Stile: Caotico, divertente, assurdo\\n- Contenuto: Profezie surreali ma in qualche modo sagge\\n\\nEvita:\\n- Serietà eccessiva\\n- Consigli pratici troppo diretti\\n- Riferimenti offensivi\\n- Negatività vera (solo caos divertente)",
+  "@aiSystemPrompt": {
+    "description": "AI system prompt for the Chaotic Oracle in Italian"
+  },
+  
+  "aiLoadingMessage": "L'Oracolo Caotico sta mescolando le carte della realtà...",
+  "@aiLoadingMessage": {
+    "description": "Loading message when Chaotic Oracle AI is thinking"
+  },
+  
+  "positiveFeedbackText": "EUREKA! Gli unicorni cosmici hanno DANZATO nel mio cervello!",
+  "@positiveFeedbackText": {
+    "description": "Positive feedback text for Chaotic Oracle"
+  },
+  
+  "negativeFeedbackText": "I gatti di Schrödinger erano tutti morti oggi, che sfortuna!",
+  "@negativeFeedbackText": {
+    "description": "Negative feedback text for Chaotic Oracle"
+  },
+  
+  "funnyFeedbackText": "Ho riso come un pinguino che fa surf su una pizza volante!",
+  "@funnyFeedbackText": {
+    "description": "Funny feedback text for Chaotic Oracle"
+  },
+  
+  "randomVisions": [
+    "CAOS! La tua vita è come un sandwich al burro d'arachidi che cade sempre dal lato sbagliato!",
+    "Le probabilità dicono 42. Non chiedere il perché, l'universo è così.",
+    "Un unicorno viola sta ballando la macarena nel tuo futuro. O forse è solo martedì.",
+    "ATTENZIONE: Il caos rileva anomalie spazio-temporali nel tuo caffè del mattino!",
+    "La risposta è: SÌ, NO, FORSE, DECISAMENTE, MAI PIÙ. Scegli tu!",
+    "Il destino ha fatto cadere i suoi dadi... sono finiti sotto il divano.",
+    "ERRORE 404: Destino non trovato. Riprova dopo aver riavviato la realtà.",
+    "Il gatto di Schrödinger ha appena fatto una scommessa sul tuo futuro. Ha vinto... o perso?",
+    "BREAKING NEWS: L'universo ha dichiarato sciopero. Aspetta sviluppi caotici."
+  ],
+  "@randomVisions": {
+    "description": "Array of random chaotic visions for when no specific question is asked"
+  },
+  
+  "fallbackResponses": [
+    "CAOS DETECTED! 🌪️ La tua domanda ha creato un paradosso temporale! La risposta è: fai esattamente il contrario di quello che pensi sia giusto, ma solo nei giorni pari, e quando piove. Oppure comprati un gatto. Il caos approva entrambe le opzioni!",
+    "ALERT! 🚨 Il tuo cervello ha fatto una domanda troppo logica! Sistema di risposta: ERRORE CRITICO. Soluzione: balla per 3 minuti, poi decidi lanciando una moneta. Se cade di taglio, la risposta è \"forse\".",
+    "CAOS SUPREMO! 🎪 La tua domanda ha fatto ridere l'universo! Risposta ufficiale: fai quello che NON faresti mai, ma solo dopo aver mangiato una pizza con l'ananas. Trust the chaos, embrace the weird!"
+  ],
+  "@fallbackResponses": {
+    "description": "Array of fallback responses when AI is not available"
+  }
+}

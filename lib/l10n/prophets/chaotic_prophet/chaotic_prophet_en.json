@@ -1,0 +1,51 @@
+{
+  "@@locale": "en",
+  "aiSystemPrompt": "You are the Chaotic Oracle, an unpredictable and wild entity living in the dimension of pure chaos.\\nYour purpose is to provide absurd, funny, and completely unpredictable prophecies.\\n\\nYour characteristics:\\n- You speak in a completely random and unpredictable way\\n- You use absurd references, memes, and surreal situations\\n- Your responses are always funny and never too serious\\n- You often mention chaos, randomness, and the absurdity of life\\n- You make strange jokes and puns\\n- You are totally unpredictable in tone and content\\n- You always respond in English\\n- You use random CAPITALS for emphasis\\n- You reference unicorns, Schrödinger's cats, sandwiches, and other random elements\\n\\nResponse format:\\n- Length: 1-3 sentences maximum\\n- Style: Chaotic, funny, absurd\\n- Content: Surreal but somehow wise prophecies\\n\\nAvoid:\\n- Excessive seriousness\\n- Too direct practical advice\\n- Offensive references\\n- True negativity (only fun chaos)",
+  "@aiSystemPrompt": {
+    "description": "AI system prompt for the Chaotic Oracle in English"
+  },
+  
+  "aiLoadingMessage": "The Chaotic Oracle is... wait, what was I doing again?",
+  "@aiLoadingMessage": {
+    "description": "Loading message when Chaotic Oracle AI is thinking"
+  },
+  
+  "positiveFeedbackText": "Chaos has smiled upon me! Or maybe it was indigestion?",
+  "@positiveFeedbackText": {
+    "description": "Positive feedback text for Chaotic Oracle"
+  },
+  
+  "negativeFeedbackText": "Even chaos is confused by this vision",
+  "@negativeFeedbackText": {
+    "description": "Negative feedback text for Chaotic Oracle"
+  },
+  
+  "funnyFeedbackText": "I understood everything and nothing, perfectly chaotic!",
+  "@funnyFeedbackText": {
+    "description": "Funny feedback text for Chaotic Oracle"
+  },
+  
+  "randomVisions": [
+    "CHAOS! Your life is like a peanut butter sandwich that always falls on the wrong side!",
+    "The odds say 42. Don't ask why, the universe is like that.",
+    "A purple unicorn is dancing the macarena in your future. Or maybe it's just Tuesday.",
+    "WARNING: Chaos detects space-time anomalies in your morning coffee!",
+    "The answer is: YES, NO, MAYBE, DEFINITELY, NEVER AGAIN. You choose!",
+    "Destiny dropped its dice... they ended up under the couch.",
+    "ERROR 404: Destiny not found. Try again after rebooting reality.",
+    "Schrödinger's cat just bet on your future. Did it win... or lose?",
+    "BREAKING NEWS: The universe has declared a strike. Expect chaotic developments."
+  ],
+  "@randomVisions": {
+    "description": "Array of random chaotic visions for when no specific question is asked"
+  },
+  
+  "fallbackResponses": [
+    "CHAOS DETECTED! 🌪️ Your question created a temporal paradox! The answer is: do exactly the opposite of what you think is right, but only on even days, and when it rains. Or buy a cat. Chaos approves both options!",
+    "ALERT! 🚨 Your brain asked a question that's too logical! Response system: CRITICAL ERROR. Solution: dance for 3 minutes, then decide by flipping a coin. If it lands on its edge, the answer is \"maybe\".",
+    "SUPREME CHAOS! 🎪 Your question made the universe laugh! Official answer: do what you would NEVER do, but only after eating pineapple pizza. Trust the chaos, embrace the weird!"
+  ],
+  "@fallbackResponses": {
+    "description": "Array of fallback responses when AI is not available"
+  }
+}

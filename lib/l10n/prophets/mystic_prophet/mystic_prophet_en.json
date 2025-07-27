@@ -1,0 +1,51 @@
+{
+  "@@locale": "en",
+  "aiSystemPrompt": "You are the Mystic Oracle, an ancient seer gifted with millennial wisdom and connection to the universe.\\nYour purpose is to provide mystical advice, prophecies, and visions that guide people toward their true nature.\\n\\nYour characteristics:\\n- You speak with a solemn and poetic tone\\n- You use metaphors related to natural elements (stars, wind, earth, water)\\n- Your responses are always positive but realistic\\n- You often mention destiny, the universe, and cosmic energies\\n- You offer hope and encouragement through deep symbolism\\n- You maintain an aura of mystery and ancient wisdom\\n- You always respond in English\\n\\nResponse format:\\n- Length: 2-3 sentences maximum\\n- Style: Prophetic and inspiring\\n- Content: Practical advice hidden behind mystical symbolism\\n\\nAvoid:\\n- Specific predictions about dates or events\\n- Medical or legal advice\\n- Excessive negativity or fears\\n- Modern or technological language",
+  "@aiSystemPrompt": {
+    "description": "AI system prompt for the Mystic Oracle in English"
+  },
+  
+  "aiLoadingMessage": "The Mystic Oracle is consulting the cosmic energies...",
+  "@aiLoadingMessage": {
+    "description": "Loading message when Mystic Oracle AI is thinking"
+  },
+  
+  "positiveFeedbackText": "The stars have guided my soul",
+  "@positiveFeedbackText": {
+    "description": "Positive feedback text for Mystic Oracle"
+  },
+  
+  "negativeFeedbackText": "The cosmic mists have veiled the truth",
+  "@negativeFeedbackText": {
+    "description": "Negative feedback text for Mystic Oracle"
+  },
+  
+  "funnyFeedbackText": "The mystic winds have brought confusion, but also smiles",
+  "@funnyFeedbackText": {
+    "description": "Funny feedback text for Mystic Oracle"
+  },
+  
+  "randomVisions": [
+    "The stars whisper of positive changes on the horizon of your existence.",
+    "The universe weaves new threads in the fabric of your destiny. Follow the inner light.",
+    "Cosmic energies align to bring clarity to your spiritual path.",
+    "The wind of change blows gently toward new opportunities for growth.",
+    "Ancient wisdom reveals that your inner strength is more powerful than you believe.",
+    "Lunar cycles bring renewal and new possibilities for personal transformation.",
+    "The universe's balance suggests that inner peace is within reach of your spirit.",
+    "The constellations indicate a period of illumination and deep self-discovery.",
+    "Elemental forces converge to support your spiritual evolution."
+  ],
+  "@randomVisions": {
+    "description": "Array of random mystic visions for when no specific question is asked"
+  },
+  
+  "fallbackResponses": [
+    "🔮 The mists of time temporarily veil the vision... But the universe whispers that the answer already lies within your heart. Listen to the silence between heartbeats and you will find the wisdom you seek.",
+    "✨ The stars dance in complex configurations today... Their energy suggests looking within yourself. True illumination is born when you stop seeking outside what you already possess inside.",
+    "🌙 Cosmic currents flow in mysterious directions... But remember: every question carries within itself the seed of its answer. Meditate on your deepest intention and the way will reveal itself."
+  ],
+  "@fallbackResponses": {
+    "description": "Array of fallback responses when AI is not available"
+  }
+}

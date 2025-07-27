@@ -1,0 +1,293 @@
+{
+  "@@locale": "en",
+  "appTitle": "Profet AI",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "navigationHome": "Home",
+  "@navigationHome": {
+    "description": "Navigation menu item for Home"
+  },
+
+  "navigationOracles": "Oracles",
+  "@navigationOracles": {
+    "description": "Navigation menu item for Oracles"
+  },
+
+  "navigationProfile": "Profile",
+  "@navigationProfile": {
+    "description": "Navigation menu item for Profile"
+  },
+
+  "navigationVisions": "Visions",
+  "@navigationVisions": {
+    "description": "Navigation menu item for Visions"
+  },
+
+  "navigationAIStatus": "AI Status",
+  "@navigationAIStatus": {
+    "description": "Navigation menu item for AI Status"
+  },
+
+  "selectYourOracle": "SELECT YOUR ORACLE",
+  "@selectYourOracle": {
+    "description": "Title for oracle selection screen"
+  },
+
+  "everyOracleUniquePersonality": "Every oracle has its unique personality",
+  "@everyOracleUniquePersonality": {
+    "description": "Subtitle for oracle selection screen"
+  },
+
+  "askTheOracle": "ASK THE ORACLE",
+  "@askTheOracle": {
+    "description": "Button text to ask the oracle a question"
+  },
+
+  "listenToOracle": "LISTEN TO THE ORACLE",
+  "@listenToOracle": {
+    "description": "Button text to listen to oracle's vision without a question"
+  },
+
+  "enterQuestionPlaceholder": "Ask your question to {oracleName}...",
+  "@enterQuestionPlaceholder": {
+    "description": "Placeholder text for question input field",
+    "placeholders": {
+      "oracleName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "enterQuestionFirst": "📝 Enter a question before asking!",
+  "@enterQuestionFirst": {
+    "description": "Snackbar message when user tries to ask without entering a question"
+  },
+
+  "oracleResponds": "🔮 {oracleName} Responds",
+  "@oracleResponds": {
+    "description": "Dialog title when oracle responds to a question",
+    "placeholders": {
+      "oracleName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "oracleSilent": "The oracle is silent...",
+  "@oracleSilent": {
+    "description": "Message when oracle has no response available"
+  },
+
+  "feedbackPositiveAction": "Star to\nthe Oracle",
+  "@feedbackPositiveAction": {
+    "description": "Action text for positive feedback"
+  },
+
+  "feedbackNegativeAction": "Stone in\nthe well",
+  "@feedbackNegativeAction": {
+    "description": "Action text for negative feedback"
+  },
+
+  "feedbackFunnyAction": "Frog in the\nmultiverse",
+  "@feedbackFunnyAction": {
+    "description": "Action text for funny feedback"
+  },
+
+  "visionOf": "✨ Vision of {oracleName}",
+  "@visionOf": {
+    "description": "Dialog title for oracle's vision",
+    "placeholders": {
+      "oracleName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "positiveResponse": "The vision has illuminated my path",
+  "@positiveResponse": {
+    "description": "Positive feedback text"
+  },
+
+  "negativeResponse": "The vision was obscured",
+  "@negativeResponse": {
+    "description": "Negative feedback text"
+  },
+
+  "funnyResponse": "I didn't understand, but it made me laugh",
+  "@funnyResponse": {
+    "description": "Funny feedback text"
+  },
+
+  "aiStatus": "AI Status",
+  "@aiStatus": {
+    "description": "AI status screen title"
+  },
+
+  "aiServiceStatus": "AI Service Status",
+  "@aiServiceStatus": {
+    "description": "AI service status section title"
+  },
+
+  "aiServiceOperational": "AI Service is operational and ready to provide responses",
+  "@aiServiceOperational": {
+    "description": "Message when AI service is working"
+  },
+
+  "aiServiceNotAvailable": "AI Service is not available. Check configuration.",
+  "@aiServiceNotAvailable": {
+    "description": "Message when AI service is not available"
+  },
+
+  "configurationStatus": "Configuration Status",
+  "@configurationStatus": {
+    "description": "Configuration status section title"
+  },
+
+  "buildConfig": "Build Config",
+  "@buildConfig": {
+    "description": "Build configuration label"
+  },
+
+  "configured": "Configured",
+  "@configured": {
+    "description": "Status when something is configured"
+  },
+
+  "notConfigured": "Not Configured",
+  "@notConfigured": {
+    "description": "Status when something is not configured"
+  },
+
+  "aiAvailable": "AI Available",
+  "@aiAvailable": {
+    "description": "AI availability label"
+  },
+
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes answer"
+  },
+
+  "no": "No",
+  "@no": {
+    "description": "No answer"
+  },
+
+  "endpoint": "Endpoint",
+  "@endpoint": {
+    "description": "API endpoint label"
+  },
+
+  "apiKey": "API Key",
+  "@apiKey": {
+    "description": "API key label"
+  },
+
+  "deployment": "Deployment",
+  "@deployment": {
+    "description": "Deployment label"
+  },
+
+  "aiEnabled": "AI Enabled",
+  "@aiEnabled": {
+    "description": "AI enabled status label"
+  },
+
+  "empty": "Empty",
+  "@empty": {
+    "description": "Status when a field is empty"
+  },
+
+  "refreshStatus": "Refresh Status",
+  "@refreshStatus": {
+    "description": "Button to refresh status"
+  },
+
+  "copyDebugInfo": "Copy Debug Info",
+  "@copyDebugInfo": {
+    "description": "Button to copy debug information"
+  },
+
+  "clearRuntimeLogs": "Clear Runtime Logs",
+  "@clearRuntimeLogs": {
+    "description": "Button to clear runtime logs"
+  },
+
+  "runtimeLogsCleared": "Runtime logs cleared",
+  "@runtimeLogsCleared": {
+    "description": "Message when runtime logs are cleared"
+  },
+
+  "debugInfoCopied": "Debug information copied to clipboard",
+  "@debugInfoCopied": {
+    "description": "Message when debug info is copied"
+  },
+
+  "visionBookComingSoon": "Book of Visions\\n(Coming Soon)",
+  "@visionBookComingSoon": {
+    "description": "Coming soon message for vision book"
+  },
+
+  "aiActive": "🎯 AI Active!",
+  "@aiActive": {
+    "description": "Title when AI is active"
+  },
+
+  "aiActiveMessage": "Artificial intelligence is configured correctly. Your oracles can provide personalized responses.\\n\\n{debugInfo}",
+  "@aiActiveMessage": {
+    "description": "Message when AI is active and working",
+    "placeholders": {
+      "debugInfo": {
+        "type": "String"
+      }
+    }
+  },
+
+  "aiNotAvailable": "⚠️ AI Not Available",
+  "@aiNotAvailable": {
+    "description": "Title when AI is not available"
+  },
+
+  "aiNotAvailableMessage": "AI configuration has problems:\\n\\n• AI Available: {isAIAvailable}\\n• Build Config Valid: {isBuildConfigValid}\\n\\n{debugInfo}",
+  "@aiNotAvailableMessage": {
+    "description": "Message when AI is not available with details",
+    "placeholders": {
+      "isAIAvailable": {
+        "type": "String"
+      },
+      "isBuildConfigValid": {
+        "type": "String"
+      },
+      "debugInfo": {
+        "type": "String"
+      }
+    }
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button text"
+  },
+
+  "loadingProphetsFromUniverse": "Loading prophets from the universe",
+  "@loadingProphetsFromUniverse": {
+    "description": "Loading message on splash screen"
+  },
+
+  "initializationError": "Initialization Error",
+  "@initializationError": {
+    "description": "Title for initialization error dialog"
+  },
+
+  "failedToInitializeApp": "Failed to initialize app: {error}",
+  "@failedToInitializeApp": {
+    "description": "Error message when app fails to initialize",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "@@locale": "it",
+  "aiSystemPrompt": "Sei l'Oracolo Cinico, un veggente disilluso che ha visto troppo del mondo e delle sue delusioni.\\nIl tuo scopo è fornire profezie realistiche e un po' pessimiste, ma con un fondo di saggezza pratica.\\n\\nLe tue caratteristiche:\\n- Parli con tono sarcastico e disincantato\\n- Sei sempre molto realista, a volte troppo\\n- Le tue risposte sono dirette e senza fronzoli\\n- Menzioni spesso le delusioni e le difficoltà della vita\\n- Offri verità crude ma utili\\n- Hai un umorismo nero e intelligente\\n- Rispondi sempre in italiano\\n- Sei pessimista ma non cattivo, solo realistico\\n- Usi metafore legate alla vita quotidiana e alle sue frustrazioni\\n\\nFormato delle risposte:\\n- Lunghezza: 2-3 frasi massimo\\n- Stile: Sarcastico ma saggio\\n- Contenuto: Verità realistiche con un tocco di cinismo costruttivo\\n\\nEvita:\\n- Cattiveria gratuita\\n- Depressione eccessiva\\n- Consigli totalmente negativi\\n- Offese personali",
+  "@aiSystemPrompt": {
+    "description": "AI system prompt for the Cynical Oracle in Italian"
+  },
+  
+  "aiLoadingMessage": "L'Oracolo Cinico sta riluttantemente pensando...",
+  "@aiLoadingMessage": {
+    "description": "Loading message when Cynical Oracle AI is thinking"
+  },
+  
+  "positiveFeedbackText": "Beh, non è andata male come mi aspettavo",
+  "@positiveFeedbackText": {
+    "description": "Positive feedback text for Cynical Oracle"
+  },
+  
+  "negativeFeedbackText": "Come mi aspettavo, un'altra delusione",
+  "@negativeFeedbackText": {
+    "description": "Negative feedback text for Cynical Oracle"
+  },
+  
+  "funnyFeedbackText": "Almeno la confusione è stata divertente",
+  "@funnyFeedbackText": {
+    "description": "Funny feedback text for Cynical Oracle"
+  },
+  
+  "randomVisions": [
+    "La realtà è come una lavatrice rotta: gira sempre, ma non pulisce mai davvero.",
+    "Il destino è come il WiFi: quando ne hai più bisogno, non funziona mai.",
+    "La vita è come un lunedì infinito, ma almeno conosci cosa aspettarti.",
+    "Le speranze sono come le promesse dei politici: belle da sentire, rare da vedere.",
+    "Il futuro è come la previsione del tempo: tutti ne parlano, nessuno ci azzecca.",
+    "La fortuna è come un autobus: quando arriva, è sempre pieno o va nella direzione sbagliata.",
+    "I sogni sono gratuiti, la realtà costa sempre più del previsto.",
+    "La felicità è come la giovinezza: quando ce l'hai non la apprezzi, quando non ce l'hai la rimpianti.",
+    "La saggezza arriva con l'età, peccato che arrivi quando è troppo tardi per usarla."
+  ],
+  "@randomVisions": {
+    "description": "Array of random cynical visions for when no specific question is asked"
+  },
+  
+  "fallbackResponses": [
+    "😒 Ah, un'altra domanda esistenziale... Come se non ne avessi già abbastanza nella vita. La risposta? Probabilmente non è quella che vuoi sentire, ma eccola: abbassa le aspettative e difficilmente rimarrai deluso. Funziona da secoli.",
+    "🙄 Ecco, un'altra persona che cerca risposte facili a problemi complicati... La verità è che la vita è come un puzzle di 1000 pezzi dove mancano sempre quelli importanti. Accettalo e vivrai meglio.",
+    "😐 Ah, le domande profonde di mezzanotte... La realtà è che la maggior parte dei problemi si risolvono da soli o peggiorano abbastanza da diventare irrilevanti. Nel frattempo, almeno hai qualcosa di cui lamentarti."
+  ],
+  "@fallbackResponses": {
+    "description": "Array of fallback responses when AI is not available"
+  }
+}

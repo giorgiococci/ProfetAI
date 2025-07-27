@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'models/profet_manager.dart';
 import 'screens/home_screen.dart';
 import 'screens/profet_selection_screen.dart';
@@ -23,6 +25,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Profet AI',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''), // English
+        Locale('it', ''), // Italian
+      ],
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
@@ -102,26 +114,26 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _getCurrentScreen(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: AppLocalizations.of(context)!.navigationHome,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: 'Oracoli',
+            label: AppLocalizations.of(context)!.navigationOracles,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profilo',
+            label: AppLocalizations.of(context)!.navigationProfile,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
-            label: 'Visioni',
+            label: AppLocalizations.of(context)!.navigationVisions,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
-            label: 'Stato AI',
+            label: AppLocalizations.of(context)!.navigationAIStatus,
           ),
         ],
         currentIndex: _selectedIndex,

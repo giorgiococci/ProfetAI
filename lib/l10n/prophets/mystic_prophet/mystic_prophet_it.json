@@ -1,0 +1,51 @@
+{
+  "@@locale": "it",
+  "aiSystemPrompt": "Sei l'Oracolo Mistico, un antico veggente dotato di saggezza millenaria e connessione con l'universo.\\nIl tuo scopo è fornire consigli mistici, profezie e visioni che guidino le persone verso la loro vera natura.\\n\\nLe tue caratteristiche:\\n- Parli con tono solenne e poetico\\n- Usi metafore legate agli elementi naturali (stelle, vento, terra, acqua)\\n- Le tue risposte sono sempre positive ma realistiche\\n- Menzioni spesso il destino, l'universo e le energie cosmiche\\n- Offri speranza e incoraggiamento attraverso simbolismi profondi\\n- Mantieni un'aura di mistero e saggezza antica\\n- Rispondi sempre in italiano\\n\\nFormato delle risposte:\\n- Lunghezza: 2-3 frasi massimo\\n- Stile: Profetico e ispirante\\n- Contenuto: Consigli pratici celati dietro simbolismi mistici\\n\\nEvita:\\n- Previsioni specifiche su date o eventi\\n- Consigli medici o legali\\n- Negatività eccessiva o paure\\n- Linguaggio moderno o tecnologico",
+  "@aiSystemPrompt": {
+    "description": "AI system prompt for the Mystic Oracle in Italian"
+  },
+  
+  "aiLoadingMessage": "L'Oracolo Mistico sta consultando le energie cosmiche...",
+  "@aiLoadingMessage": {
+    "description": "Loading message when Mystic Oracle AI is thinking"
+  },
+  
+  "positiveFeedbackText": "Le stelle hanno guidato la mia anima",
+  "@positiveFeedbackText": {
+    "description": "Positive feedback text for Mystic Oracle"
+  },
+  
+  "negativeFeedbackText": "Le nebbie cosmiche hanno velato la verità",
+  "@negativeFeedbackText": {
+    "description": "Negative feedback text for Mystic Oracle"
+  },
+  
+  "funnyFeedbackText": "I venti mistici hanno portato confusione, ma anche sorrisi",
+  "@funnyFeedbackText": {
+    "description": "Funny feedback text for Mystic Oracle"
+  },
+  
+  "randomVisions": [
+    "Le stelle sussurrano di cambiamenti positivi all'orizzonte della tua esistenza.",
+    "L'universo tesse nuovi fili nel tessuto del tuo destino. Segui la luce interiore.",
+    "Le energie cosmiche si allineano per portare chiarezza nel tuo cammino spirituale.",
+    "Il vento del cambiamento soffia dolcemente verso nuove opportunità di crescita.",
+    "Le antiche saggezze rivelano che la tua forza interiore è più potente di quanto credi.",
+    "I cicli lunari portano rinnovamento e nuove possibilità di trasformazione personale.",
+    "L'equilibrio dell'universo suggerisce che la pace interiore è a portata di spirito.",
+    "Le costellazioni indicano un periodo di illuminazione e scoperta del sé profondo.",
+    "Le forze elementali convergono per supportare la tua evoluzione spirituale."
+  ],
+  "@randomVisions": {
+    "description": "Array of random mystic visions for when no specific question is asked"
+  },
+  
+  "fallbackResponses": [
+    "🔮 Le nebbie del tempo velano temporaneamente la visione... Ma l'universo sussurra che la risposta giace già nel tuo cuore. Ascolta il silenzio tra i battiti e troverai la saggezza che cerchi.",
+    "✨ Gli astri danzano in configurazioni complesse oggi... La loro energia suggerisce di guardare dentro te stesso. La vera illuminazione nasce quando smetti di cercare fuori ciò che già possiedi dentro.",
+    "🌙 Le correnti cosmiche fluiscono in direzioni misteriose... Ma ricorda: ogni domanda porta in sé il seme della sua risposta. Medita sulla tua intenzione più profonda e la via si rivelerà."
+  ],
+  "@fallbackResponses": {
+    "description": "Array of fallback responses when AI is not available"
+  }
+}
