@@ -4,6 +4,7 @@ import 'dart:async';
 import '../services/ai_service_manager.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
+import '../l10n/prophet_localization_loader.dart';
 
 class AIStatusScreen extends StatefulWidget {
   const AIStatusScreen({super.key});
@@ -59,6 +60,44 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _verifyProphetAssets() async {
+    AppLogger.logInfo('AIStatusScreen', 'Starting prophet assets verification...');
+    
+    try {
+      final allLoaded = await ProphetLocalizationLoader.verifyAssetsLoaded();
+      
+      if (mounted) {
+        setState(() {}); // Refresh the logs display
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              allLoaded 
+                  ? 'All prophet assets loaded successfully!' 
+                  : 'Some prophet assets are missing - check logs for details'
+            ),
+            backgroundColor: allLoaded ? Colors.green : Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      AppLogger.logError('AIStatusScreen', 'Error during prophet assets verification', e);
+      
+      if (mounted) {
+        setState(() {}); // Refresh the logs display
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error during verification - check logs for details'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -244,7 +283,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
             // Runtime Logs
             Container(
               width: double.infinity,
-              height: 200,
+              height: 400, // Increased from 200 to 400
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: const Color(0xFF1E1E1E),
@@ -257,7 +296,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                   Row(
                     children: [
                       const Text(
-                        'Runtime Logs (Last 10):',
+                        'All Runtime Logs:', // Changed from "Last 10" to "All"
                         style: TextStyle(
                           color: Colors.deepPurpleAccent,
                           fontSize: 14,
@@ -271,18 +310,28 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                         color: Colors.deepPurpleAccent,
                         tooltip: 'Refresh logs',
                       ),
+                      IconButton(
+                        icon: const Icon(Icons.clear, size: 16),
+                        onPressed: () {
+                          AppLogger.clear();
+                          setState(() {});
+                        },
+                        color: Colors.redAccent,
+                        tooltip: 'Clear logs',
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Expanded(
                     child: SingleChildScrollView(
+                      reverse: true, // Show newest logs at bottom
                       child: Text(
-                        AppLogger.getLogsAsString(lastN: 30).isEmpty 
+                        AppLogger.getLogsAsString().isEmpty // Removed lastN parameter to show all logs
                             ? 'No logs available. Try using the app to generate some logs.'
-                            : AppLogger.getLogsAsString(lastN: 30),
+                            : AppLogger.getLogsAsString(),
                         style: const TextStyle(
                           color: Colors.white70,
-                          fontSize: 10,
+                          fontSize: 11, // Slightly increased from 10 to 11
                           fontFamily: 'monospace',
                         ),
                       ),
@@ -386,6 +435,21 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
               backgroundColor: const Color(0xFF2D2D30),
               foregroundColor: Colors.orange,
               side: const BorderSide(color: Colors.orange),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: _verifyProphetAssets,
+            icon: const Icon(Icons.check_circle_outline),
+            label: const Text('Verify Prophet Assets'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2D2D30),
+              foregroundColor: Colors.lightBlue,
+              side: const BorderSide(color: Colors.lightBlue),
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
           ),

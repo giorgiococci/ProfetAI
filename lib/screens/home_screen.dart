@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Determina il titolo e il contenuto in base alla modalità
     String title;
-    String content;
+    String content = ''; // Initialize to avoid null errors
     IconData dialogIcon;
     bool isAIEnabled = Profet.isAIEnabled; // Check if AI is available
 
@@ -295,17 +295,27 @@ class _HomeScreenState extends State<HomeScreen> {
         await _showLoadingDialog(profet);
 
         try {
-          content = await profet.getAIPersonalizedResponse(question, context);
-          Navigator.of(context).pop(); // Close loading dialog
+          if (mounted) {
+            content = await profet.getAIPersonalizedResponse(question, context);
+          }
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
         } catch (e) {
-          Navigator.of(context).pop(); // Close loading dialog
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
           // Use localized fallback response
-          content = await profet.getLocalizedPersonalizedResponse(context, question);
-          isAIEnabled = false; // Fallback to regular response
+          if (mounted) {
+            content = await profet.getLocalizedPersonalizedResponse(context, question);
+            isAIEnabled = false; // Fallback to regular response
+          } else {
+            return; // Widget is no longer mounted, exit early
+          }
         }
       } else {
         // Use localized fallback response when AI is disabled
-        content = await profet.getLocalizedPersonalizedResponse(context, question);
+        if (mounted) {
+          content = await profet.getLocalizedPersonalizedResponse(context, question);
+        } else {
+          return; // Widget is no longer mounted, exit early
+        }
       }
     } else {
       title = '✨ Visione di ${ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet))}';
@@ -316,21 +326,36 @@ class _HomeScreenState extends State<HomeScreen> {
         await _showLoadingDialog(profet);
 
         try {
-          content = await profet.getAIRandomVision(context);
-          Navigator.of(context).pop(); // Close loading dialog
+          if (mounted) {
+            content = await profet.getAIRandomVision(context);
+          }
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
         } catch (e) {
-          Navigator.of(context).pop(); // Close loading dialog
+          if (mounted) Navigator.of(context).pop(); // Close loading dialog - check mounted first
           // Use localized random visions as fallback
-          final visions = await profet.getLocalizedRandomVisions(context);
-          content = visions.isNotEmpty ? visions.first : AppLocalizations.of(context)!.oracleSilent;
-          isAIEnabled = false; // Fallback to regular response
+          if (mounted) {
+            final visions = await profet.getLocalizedRandomVisions(context);
+            final fallbackText = mounted ? AppLocalizations.of(context)!.oracleSilent : 'Silent...';
+            content = visions.isNotEmpty ? visions.first : fallbackText;
+            isAIEnabled = false; // Fallback to regular response
+          } else {
+            return; // Widget is no longer mounted, exit early
+          }
         }
       } else {
         // Use localized random visions when AI is disabled
-        final visions = await profet.getLocalizedRandomVisions(context);
-        content = visions.isNotEmpty ? visions.first : AppLocalizations.of(context)!.oracleSilent;
+        if (mounted) {
+          final visions = await profet.getLocalizedRandomVisions(context);
+          final fallbackText = mounted ? AppLocalizations.of(context)!.oracleSilent : 'Silent...';
+          content = visions.isNotEmpty ? visions.first : fallbackText;
+        } else {
+          return; // Widget is no longer mounted, exit early
+        }
       }
     }
+
+    // Check mounted one more time before showing dialog
+    if (!mounted) return;
 
     showDialog(
       context: context,
@@ -605,6 +630,9 @@ class _HomeScreenState extends State<HomeScreen> {
       loadingMessage = 'Loading...'; // Fallback
     }
 
+    // Check if widget is still mounted before showing dialog
+    if (!mounted) return;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -804,6 +832,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Save feedback
     await FeedbackService().saveFeedback(feedback);
+
+    // Check mounted before using context
+    if (!mounted) return;
 
     // Close the current dialog
     Navigator.of(context).pop();

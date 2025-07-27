@@ -10,7 +10,7 @@ class AppLogger {
   
   static const String _appName = 'ProfetAI';
   static final List<LogEntry> _logs = [];
-  static const int _maxLogEntries = 100;
+  static const int _maxLogEntries = 500; // Increased from 100 to 500
 
   /// Log levels
   static const String info = 'INFO';
