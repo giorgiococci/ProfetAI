@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../models/profet.dart';
-import '../models/vision_feedback.dart';
-import '../services/feedback_service.dart';
 import '../l10n/app_localizations.dart';
-import '../prophet_localizations.dart';
 import '../widgets/common/common_widgets.dart';
 import '../widgets/home/home_widgets.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
+import '../utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -35,23 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadProphetName() async {
-    final name = await ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet));
+    final name = await ProphetUtils.getProphetName(context, widget.selectedProfet);
     if (mounted) {
       setState(() {
         _prophetName = name;
       });
-    }
-  }
-
-  // Helper function to get prophet type string for localization
-  String _getProphetTypeString(ProfetType profetType) {
-    switch (profetType) {
-      case ProfetType.mistico:
-        return 'mystic';
-      case ProfetType.caotico:
-        return 'chaotic';
-      case ProfetType.cinico:
-        return 'cynical';
     }
   }
 
@@ -71,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Prophet Header
               ProphetHeader(
                 profet: profet,
-                prophetTypeString: _getProphetTypeString(widget.selectedProfet),
+                prophetTypeString: ProphetUtils.prophetTypeToString(widget.selectedProfet),
               ),
 
               const Spacer(flex: 1),
@@ -102,13 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     primaryColor: profet.primaryColor,
                     onPressed: () {
                       final question = _questionController.text.trim();
-                      if (question.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(localizations.enterQuestionFirst),
-                            backgroundColor: Colors.red[700],
-                            duration: const Duration(seconds: 2),
-                          ),
+                      if (!ValidationUtils.isNotEmpty(question)) {
+                        NotificationUtils.showError(
+                          context: context,
+                          message: localizations.enterQuestionFirst,
+                          duration: const Duration(seconds: 2),
                         );
                         return;
                       }
@@ -212,13 +196,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final dialogData = hasQuestion && question != null && question.isNotEmpty
         ? VisionDialogData.questionResponse(
-            prophetName: await ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet)),
+            prophetName: await ProphetUtils.getProphetName(context, widget.selectedProfet),
             content: content,
             isAIEnabled: isAIEnabled,
             question: question,
           )
         : VisionDialogData.randomVision(
-            prophetName: await ProphetLocalizations.getName(context, _getProphetTypeString(widget.selectedProfet)),
+            prophetName: await ProphetUtils.getProphetName(context, widget.selectedProfet),
             content: content,
             isAIEnabled: isAIEnabled,
           );
@@ -231,163 +215,35 @@ class _HomeScreenState extends State<HomeScreen> {
       profet: profet,
       isAIEnabled: dialogData.isAIEnabled,
       question: dialogData.question,
-      onFeedbackSelected: (feedbackType) => _handleFeedback(
-        context,
-        profet,
-        feedbackType,
-        content,
-        question,
+      onFeedbackSelected: (feedbackType) => VisionUtils.handleFeedback(
+        context: context,
+        profet: profet,
+        feedbackType: feedbackType,
+        visionContent: content,
+        question: question,
+        onComplete: () {
+          Navigator.of(context).pop();
+          if (hasQuestion) _questionController.clear();
+        },
       ),
       onSave: () {
         Navigator.of(context).pop();
-        _showSavedMessage();
+        NotificationUtils.showSaveConfirmation(
+          context: context,
+          prophetColor: profet.primaryColor,
+        );
       },
       onShare: () {
         Navigator.of(context).pop();
-        _showShareMessage();
+        NotificationUtils.showShareConfirmation(
+          context: context,
+          prophetColor: profet.secondaryColor,
+        );
       },
       onClose: () {
         Navigator.of(context).pop();
         if (hasQuestion) _questionController.clear();
       },
-    );
-  }
-
-  void _showSavedMessage() {
-    final profet = ProfetManager.getProfet(widget.selectedProfet);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.bookmark_added, color: Colors.white, size: 24),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Visione salvata nel Libro delle Visioni',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: profet.primaryColor.withValues(alpha: 0.9),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-
-  void _showShareMessage() {
-    final profet = ProfetManager.getProfet(widget.selectedProfet);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.share, color: Colors.white, size: 24),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text(
-                'Preparando la condivisione della visione...',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: profet.secondaryColor.withValues(alpha: 0.9),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-
-  // Handle feedback selection
-  void _handleFeedback(
-    BuildContext context,
-    profet,
-    FeedbackType feedbackType,
-    String visionContent,
-    String? question,
-  ) async {
-    // Create feedback using the prophet's custom localized texts
-    final feedback = await profet.createFeedback(
-      context,
-      type: feedbackType,
-      visionContent: visionContent,
-      question: question,
-    );
-
-    // Save feedback
-    await FeedbackService().saveFeedback(feedback);
-
-    // Check mounted before using context
-    if (!mounted) return;
-
-    // Close the current dialog
-    Navigator.of(context).pop();
-
-    // Show feedback confirmation
-    _showFeedbackConfirmation(context, profet, feedback);
-
-    // Clear question if it was a question-based vision
-    if (question != null && question.isNotEmpty) {
-      _questionController.clear();
-    }
-  }
-
-  // Show feedback confirmation
-  void _showFeedbackConfirmation(
-    BuildContext context,
-    profet,
-    VisionFeedback feedback,
-  ) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Text(
-              feedback.icon,
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    feedback.action,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    feedback.thematicText,
-                    style: TextStyle(
-                      color: Colors.grey[200],
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: profet.primaryColor.withValues(alpha: 0.9),
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
     );
   }
 
