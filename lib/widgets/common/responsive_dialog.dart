@@ -61,10 +61,10 @@ class ResponsiveDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: backgroundColor ?? const Color(0xFF1A1A1A),
+      backgroundColor: backgroundColor ?? Colors.black.withOpacity(0.85),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: primaryColor.withValues(alpha: 0.3)),
+        side: BorderSide(color: primaryColor.withValues(alpha: 0.8), width: 2),
       ),
       title: titleWidget ?? _buildTitle(),
       content: scrollable

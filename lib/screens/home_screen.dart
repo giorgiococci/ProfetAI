@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../models/profet.dart';
+import '../models/vision_feedback.dart';
+import '../services/feedback_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/home/home_widgets.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
@@ -52,141 +54,29 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
-    final localizations = AppLocalizations.of(context)!;
 
     return Container(
-      decoration: ThemeUtils.getProphetGradientDecoration(widget.selectedProfet),
-      child: Container(
-        decoration: BoxDecoration(
-          image: profet.backgroundImagePath != null
-              ? DecorationImage(
-                  image: AssetImage(profet.backgroundImagePath!),
-                  fit: BoxFit.cover,
-                  opacity: 0.3,
-                )
-              : null,
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: ThemeUtils.paddingLG,
-            child: Column(
-              children: [
-                // Prophet Header with theme styling
-                Container(
-                  decoration: ThemeUtils.getProphetCardDecoration(widget.selectedProfet),
-                  padding: ThemeUtils.paddingMD,
-                  child: ProphetHeader(
-                    profet: profet,
-                    prophetTypeString: ProphetUtils.prophetTypeToString(widget.selectedProfet),
-                  ),
-                ),
-
-                ThemeUtils.spacerLG,
-
-                // Oracle Avatar with loading state
-                if (isLoading)
-                  Column(
-                    children: [
-                      CircularProgressIndicator(
-                        color: ThemeUtils.getProphetColor(widget.selectedProfet),
-                      ),
-                      ThemeUtils.spacerSM,
-                      Text(
-                        'Loading...',
-                        style: ThemeUtils.getProphetTextStyle(widget.selectedProfet),
-                      ),
-                    ],
-                  )
-                else
-                  OracleAvatar(profet: profet),
-
-                ThemeUtils.spacerLG,
-
-                // Question Input Field with theme styling
-                Container(
-                  decoration: ThemeUtils.getCardDecoration(),
-                  padding: ThemeUtils.paddingMD,
-                  child: TextFormField(
-                    controller: _questionController,
-                    decoration: ThemeUtils.getProphetInputDecoration(
-                      widget.selectedProfet,
-                      labelText: localizations.enterQuestionPlaceholder(
-                        _prophetName.isNotEmpty ? _prophetName : 'Oracle'
-                      ),
-                      prefixIcon: Icons.help_outline,
-                    ),
-                    maxLines: 3,
-                    validator: ValidationUtils.validateQuestion,
-                  ),
-                ),
-
-                ThemeUtils.spacerXL,
-
-                // Action buttons with theme styling
-                Column(
-                  children: [
-                    // Ask Oracle Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        style: ThemeUtils.getProphetButtonStyle(widget.selectedProfet),
-                        onPressed: _handleAskOracle,
-                        icon: const Icon(Icons.help_outline),
-                        label: Text(
-                          localizations.askTheOracle,
-                          style: ThemeUtils.buttonTextStyle,
-                        ),
-                      ),
-                    ),
-
-                    ThemeUtils.spacerMD,
-
-                    // Listen to Oracle Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        style: ThemeUtils.getSecondaryButtonStyle(
-                          borderColor: ThemeUtils.getProphetColor(widget.selectedProfet),
-                        ),
-                        onPressed: _handleListenToOracle,
-                        icon: Icon(
-                          Icons.hearing,
-                          color: ThemeUtils.getProphetColor(widget.selectedProfet),
-                        ),
-                        label: Text(
-                          localizations.listenToOracle,
-                          style: ThemeUtils.getProphetTextStyle(widget.selectedProfet),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Error display
-                if (hasError)
-                  Container(
-                    margin: ThemeUtils.verticalPaddingMD,
-                    padding: ThemeUtils.paddingMD,
-                    decoration: ThemeUtils.getCardDecoration(
-                      backgroundColor: Colors.red.shade50,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.error, color: Colors.red),
-                        ThemeUtils.horizontalSpacerSM,
-                        Expanded(
-                          child: Text(
-                            error!,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                const Spacer(),
-              ],
-            ),
+      decoration: BoxDecoration(
+        image: profet.backgroundImagePath != null
+            ? DecorationImage(
+                image: AssetImage(profet.backgroundImagePath!),
+                fit: BoxFit.cover,
+                opacity: 0.7,
+              )
+            : null,
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: ThemeUtils.paddingLG,
+          child: HomeContentWidget(
+            selectedProphet: widget.selectedProfet,
+            questionController: _questionController,
+            prophetName: _prophetName,
+            isLoading: isLoading,
+            hasError: hasError,
+            error: error,
+            onAskOracle: _handleAskOracle,
+            onListenToOracle: _handleListenToOracle,
           ),
         ),
       ),
@@ -253,86 +143,124 @@ class _HomeScreenState extends State<HomeScreen>
         }
       }
 
-      _visionState.setVision(content, aiEnabled: isAIEnabled);
-      
-    } catch (e) {
-      _visionState.setError(e.toString());
-      if (mounted) ProphetLoadingDialog.dismiss(context);
-      
-      // Fallback to localized content
-      if (hasQuestion && question != null) {
-        if (mounted) {
-          content = await profet.getLocalizedPersonalizedResponse(context, question);
-        }
-      } else {
-        if (mounted) {
-          final visions = await profet.getLocalizedRandomVisions(context);
-          final fallbackText = mounted ? AppLocalizations.of(context)!.oracleSilent : 'Silent...';
-          content = visions.isNotEmpty ? visions.first : fallbackText;
-        }
+      _visionState.setVision(content);
+      _visionState.setLoading(false);
+
+      if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
+        final title = hasQuestion 
+            ? localizations.oracleResponds(_prophetName)
+            : localizations.visionOf(_prophetName);
+        
+        await VisionDialog.show(
+          context: context,
+          title: title,
+          titleIcon: Icons.auto_awesome,
+          content: content,
+          profet: profet,
+          isAIEnabled: isAIEnabled,
+          question: question,
+          onFeedbackSelected: (feedbackType) {
+            if (mounted) {
+              _showFeedbackDialog(
+                profet: profet,
+                feedbackType: feedbackType,
+                question: question,
+                hasQuestion: hasQuestion,
+              );
+            }
+          },
+          onSave: () {
+            if (mounted) {
+              NotificationUtils.showSaveConfirmation(
+                context: context,
+                prophetColor: ThemeUtils.getProphetColor(widget.selectedProfet),
+              );
+            }
+          },
+          onShare: () {
+            if (mounted) {
+              NotificationUtils.showShareConfirmation(
+                context: context,
+                prophetColor: ThemeUtils.getProphetColor(widget.selectedProfet),
+              );
+            }
+          },
+          onClose: () {
+            if (hasQuestion) {
+              _questionController.clear();
+              _visionState.clearAll();
+            }
+          },
+        );
       }
-      _visionState.setVision(content, aiEnabled: false);
+    } catch (e) {
+      _visionState.setLoading(false);
+      if (mounted) {
+        NotificationUtils.showError(
+          context: context,
+          message: 'Error: ${e.toString()}',
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
+
+  void _showFeedbackDialog({
+    required Profet profet,
+    required FeedbackType feedbackType,
+    String? question,
+    required bool hasQuestion,
+  }) async {
+    // For now, show a simple confirmation and save the feedback
+    final localizations = AppLocalizations.of(context)!;
+    String feedbackMessage;
+    
+    switch (feedbackType) {
+      case FeedbackType.positive:
+        feedbackMessage = localizations.positiveResponse;
+        break;
+      case FeedbackType.negative:
+        feedbackMessage = localizations.negativeResponse;
+        break;
+      case FeedbackType.funny:
+        feedbackMessage = "Feedback funny ricevuto!"; // Fallback
+        break;
     }
 
-    if (!mounted) return;
-
-    final dialogData = hasQuestion && question != null && question.isNotEmpty
-        ? VisionDialogData.questionResponse(
-            prophetName: await ProphetUtils.getProphetName(context, widget.selectedProfet),
-            content: _visionState.currentVision,
-            isAIEnabled: _visionState.isAIEnabled,
-            question: question,
-          )
-        : VisionDialogData.randomVision(
-            prophetName: await ProphetUtils.getProphetName(context, widget.selectedProfet),
-            content: _visionState.currentVision,
-            isAIEnabled: _visionState.isAIEnabled,
-          );
-
-    await VisionDialog.show(
-      context: context,
-      title: dialogData.title,
-      titleIcon: dialogData.titleIcon,
-      content: dialogData.content,
-      profet: profet,
-      isAIEnabled: dialogData.isAIEnabled,
-      question: dialogData.question,
-      onFeedbackSelected: (feedbackType) => VisionUtils.handleFeedback(
-        context: context,
-        profet: profet,
-        feedbackType: feedbackType,
-        visionContent: _visionState.currentVision,
-        question: question,
-        onComplete: () {
-          Navigator.of(context).pop();
-          if (hasQuestion) {
-            _questionController.clear();
-            _visionState.clearAll();
-          }
-        },
-      ),
-      onSave: () {
-        Navigator.of(context).pop();
-        NotificationUtils.showSaveConfirmation(
-          context: context,
-          prophetColor: ThemeUtils.getProphetColor(widget.selectedProfet),
-        );
-      },
-      onShare: () {
-        Navigator.of(context).pop();
-        NotificationUtils.showShareConfirmation(
-          context: context,
-          prophetColor: ThemeUtils.getProphetColor(widget.selectedProfet),
-        );
-      },
-      onClose: () {
-        Navigator.of(context).pop();
-        if (hasQuestion) {
-          _questionController.clear();
-          _visionState.clearAll();
-        }
-      },
+    // Save the feedback
+    final feedback = VisionFeedback(
+      type: feedbackType,
+      icon: feedbackType == FeedbackType.positive ? '🌟' : 
+            feedbackType == FeedbackType.negative ? '👎' : '😄',
+      action: 'Feedback received',
+      thematicText: feedbackMessage,
+      timestamp: DateTime.now(),
+      visionContent: _visionState.currentVision,
+      question: question,
     );
+
+    // Save feedback using the service
+    final feedbackService = FeedbackService();
+    await feedbackService.saveFeedback(feedback);
+
+    // Show confirmation
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Feedback saved: $feedbackMessage'),
+          backgroundColor: profet.primaryColor,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      
+      // Close the vision dialog and clear form if needed
+      Navigator.of(context).pop();
+      if (hasQuestion) {
+        _questionController.clear();
+        _visionState.clearAll();
+      }
+    }
   }
 
   @override

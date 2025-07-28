@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../models/vision_feedback.dart';
 import '../../l10n/app_localizations.dart';
+import '../../utils/theme_utils.dart';
 
 /// A widget that displays feedback options for oracle visions.
 /// Includes emoji buttons with localized text labels.
@@ -61,10 +62,8 @@ class FeedbackSection extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: ThemeUtils.captionStyle.copyWith(
               color: Colors.grey[300],
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 12),
@@ -131,9 +130,8 @@ class FeedbackButton extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               feedbackData.label,
-              style: TextStyle(
+              style: ThemeUtils.captionStyle.copyWith(
                 color: profet.primaryColor,
-                fontSize: fontSize,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
@@ -312,7 +310,7 @@ class CompactFeedbackSection extends StatelessWidget {
             ),
             child: Text(
               option.icon,
-              style: const TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24),
             ),
           ),
         );

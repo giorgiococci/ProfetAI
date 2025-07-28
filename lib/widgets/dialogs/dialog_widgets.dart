@@ -135,7 +135,11 @@ class StatusDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: const Color(0xFF2D2D30),
+      backgroundColor: Colors.black.withOpacity(0.85),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: iconColor.withValues(alpha: 0.8), width: 2),
+      ),
       title: Row(
         children: [
           Icon(icon, color: iconColor, size: 28),
@@ -348,11 +352,16 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dialogColor = confirmColor ?? Colors.deepPurpleAccent;
     return AlertDialog(
-      backgroundColor: const Color(0xFF2D2D30),
+      backgroundColor: Colors.black.withOpacity(0.85),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: dialogColor.withValues(alpha: 0.8), width: 2),
+      ),
       title: Text(
         title,
-        style: const TextStyle(color: Colors.white, fontSize: 18),
+        style: TextStyle(color: dialogColor, fontSize: 18),
       ),
       content: Text(
         message,

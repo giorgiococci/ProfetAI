@@ -15,16 +15,16 @@ class ThemeUtils {
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color cardBackgroundDark = Color(0xFF1E1E1E);
   
-  // Prophet-specific colors
-  static const Map<ProfetType, Color> prophetColors = {
-    ProfetType.mistico: mysticPurple,
-    ProfetType.caotico: Color(0xFF2E7D32),
-    ProfetType.cinico: Color(0xFFE65100),
-  };
-
-  /// Gets theme color for specific prophet
+  /// Gets theme color for specific prophet using the actual prophet model colors
   static Color getProphetColor(ProfetType prophet) {
-    return prophetColors[prophet] ?? primaryBlue;
+    final profet = ProfetManager.getProfet(prophet);
+    return profet.primaryColor;
+  }
+
+  /// Gets secondary theme color for specific prophet
+  static Color getProphetSecondaryColor(ProfetType prophet) {
+    final profet = ProfetManager.getProfet(prophet);
+    return profet.secondaryColor;
   }
 
   /// Gets theme color with opacity
@@ -32,15 +32,16 @@ class ThemeUtils {
     return getProphetColor(prophet).withOpacity(opacity);
   }
 
-  /// Creates gradient for prophet-specific backgrounds
+  /// Creates gradient for prophet-specific backgrounds using actual prophet colors
   static LinearGradient getProphetGradient(ProfetType prophet) {
-    final baseColor = getProphetColor(prophet);
+    final primaryColor = getProphetColor(prophet);
+    final secondaryColor = getProphetSecondaryColor(prophet);
     return LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        baseColor.withOpacity(0.1),
-        baseColor.withOpacity(0.3),
+        primaryColor.withOpacity(0.1),
+        secondaryColor.withOpacity(0.3),
       ],
     );
   }
@@ -49,31 +50,31 @@ class ThemeUtils {
   static const TextStyle headlineStyle = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.bold,
-    color: primaryBlue,
+    color: Colors.white,
   );
 
   static const TextStyle titleStyle = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w600,
-    color: primaryBlue,
+    color: Colors.white,
   );
 
   static const TextStyle subtitleStyle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
-    color: secondaryBlue,
+    color: Colors.white70,
   );
 
   static const TextStyle bodyStyle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
-    color: Colors.black87,
+    color: Colors.white,
   );
 
   static const TextStyle captionStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: Colors.grey,
+    color: Colors.white70,
   );
 
   static const TextStyle buttonTextStyle = TextStyle(
@@ -101,7 +102,7 @@ class ThemeUtils {
     bool hasShadow = true,
   }) {
     return BoxDecoration(
-      color: backgroundColor ?? cardBackground,
+      color: backgroundColor ?? cardBackgroundDark,
       borderRadius: BorderRadius.circular(borderRadius),
       boxShadow: hasShadow ? [
         BoxShadow(
@@ -119,7 +120,7 @@ class ThemeUtils {
     bool hasShadow = true,
   }) {
     return BoxDecoration(
-      color: cardBackground,
+      color: cardBackgroundDark,
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: getProphetColor(prophet).withOpacity(0.3),
@@ -192,8 +193,10 @@ class ThemeUtils {
     return InputDecoration(
       labelText: labelText,
       hintText: hintText,
-      prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+      labelStyle: const TextStyle(color: Colors.white70),
+      hintStyle: const TextStyle(color: Colors.white54),
+      prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: borderColor ?? Colors.white70) : null,
+      suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: borderColor ?? Colors.white70) : null,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(
@@ -218,7 +221,7 @@ class ThemeUtils {
         borderSide: const BorderSide(color: Colors.red),
       ),
       filled: true,
-      fillColor: Colors.grey.shade50,
+      fillColor: Colors.white.withOpacity(0.1),
     );
   }
 

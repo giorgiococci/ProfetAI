@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../models/vision_feedback.dart';
 import '../../widgets/common/common_widgets.dart';
+import '../../utils/theme_utils.dart';
 import 'feedback_section.dart';
 
 /// A comprehensive dialog widget for displaying oracle visions and responses.
@@ -68,10 +69,10 @@ class VisionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: Colors.black.withOpacity(0.85),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: profet.primaryColor.withValues(alpha: 0.3)),
+        side: BorderSide(color: profet.primaryColor.withValues(alpha: 0.8), width: 2),
       ),
       title: _buildTitle(),
       content: _buildContent(),
@@ -87,10 +88,8 @@ class VisionDialog extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: TextStyle(
+            style: ThemeUtils.titleStyle.copyWith(
               color: profet.primaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -141,7 +140,7 @@ class VisionDialog extends StatelessWidget {
 
   Widget _buildQuestionContainer() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: ThemeUtils.paddingSM,
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
@@ -154,9 +153,8 @@ class VisionDialog extends StatelessWidget {
           Expanded(
             child: Text(
               '"$question"',
-              style: TextStyle(
+              style: ThemeUtils.bodyStyle.copyWith(
                 color: profet.secondaryColor,
-                fontSize: 14,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -172,9 +170,7 @@ class VisionDialog extends StatelessWidget {
       secondaryColor: profet.secondaryColor,
       child: Text(
         content,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
+        style: ThemeUtils.bodyStyle.copyWith(
           height: 1.5,
         ),
       ),

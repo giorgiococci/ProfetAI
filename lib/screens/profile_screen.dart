@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/user_profile.dart';
 import '../services/user_profile_service.dart';
+import '../utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback? onLanguageChanged;
@@ -15,7 +16,7 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with FormStateMixin, LoadingStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final UserProfileService _profileService = UserProfileService();
@@ -25,7 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Gender? _selectedGender;
   AppLanguage? _selectedLanguage; // Changed from List to single selection
   List<Interest> _selectedInterests = [];
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } finally {
       if (mounted) {
         setState(() {
-          _isLoading = false;
+          // Loading handled by LoadingStateMixin
         });
       }
     }
@@ -162,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     
-    if (_isLoading) {
+    if (isLoading) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),

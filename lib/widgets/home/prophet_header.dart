@@ -36,7 +36,9 @@ class ProphetHeader extends StatelessWidget {
               return Text(
                 snapshot.data ?? 'Temple of Wisdom',
                 style: titleStyle ??
-                    ThemeUtils.headlineStyle.copyWith(
+                    TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                       color: profet.primaryColor,
                       letterSpacing: 2.0,
                     ),
@@ -52,8 +54,10 @@ class ProphetHeader extends StatelessWidget {
                 return Text(
                   snapshot.data ?? 'An ancient oracle with wisdom',
                   style: descriptionStyle ??
-                      ThemeUtils.subtitleStyle.copyWith(
-                        color: Colors.grey[300],
+                      TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: profet.secondaryColor,
                         fontStyle: FontStyle.italic,
                       ),
                   textAlign: TextAlign.center,
@@ -197,7 +201,7 @@ class _AnimatedProphetHeaderState extends State<AnimatedProphetHeader>
                     snapshot.data ?? 'An ancient oracle with wisdom',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey[300],
+                      color: widget.profet.secondaryColor,
                       fontStyle: FontStyle.italic,
                     ),
                     textAlign: TextAlign.center,
