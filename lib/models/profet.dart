@@ -38,6 +38,12 @@ abstract class Profet {
   Future<String> getLocalizedPersonalizedResponse(BuildContext context, String question);
   Future<String> getLocalizedAISystemPrompt(BuildContext context);
   
+  // Abstract method for generating AI-powered vision titles
+  Future<String> generateVisionTitle(BuildContext context, {
+    String? question,
+    required String answer,
+  });
+  
   // Abstract method for AI system prompt - each profet defines its personality (will be deprecated)
   String get aiSystemPrompt;
   
