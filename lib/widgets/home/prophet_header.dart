@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../prophet_localizations.dart';
+import '../../utils/theme_utils.dart';
 
 /// A header widget that displays the prophet's temple/location name and description
-/// with proper localization support.
+/// with proper localization support and themed styling.
 class ProphetHeader extends StatelessWidget {
   final Profet profet;
   final String prophetTypeString;
@@ -25,19 +26,17 @@ class ProphetHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 20),
+      padding: padding ?? ThemeUtils.horizontalPaddingLG,
       child: Column(
         children: [
-          const SizedBox(height: 20),
+          ThemeUtils.spacerLG,
           FutureBuilder<String>(
             future: ProphetLocalizations.getLocation(context, prophetTypeString),
             builder: (context, snapshot) {
               return Text(
                 snapshot.data ?? 'Temple of Wisdom',
                 style: titleStyle ??
-                    TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                    ThemeUtils.headlineStyle.copyWith(
                       color: profet.primaryColor,
                       letterSpacing: 2.0,
                     ),
@@ -46,15 +45,14 @@ class ProphetHeader extends StatelessWidget {
             },
           ),
           if (showDescription) ...[
-            const SizedBox(height: 10),
+            ThemeUtils.spacerSM,
             FutureBuilder<String>(
               future: ProphetLocalizations.getDescription(context, prophetTypeString),
               builder: (context, snapshot) {
                 return Text(
                   snapshot.data ?? 'An ancient oracle with wisdom',
                   style: descriptionStyle ??
-                      TextStyle(
-                        fontSize: 16,
+                      ThemeUtils.subtitleStyle.copyWith(
                         color: Colors.grey[300],
                         fontStyle: FontStyle.italic,
                       ),
