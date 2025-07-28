@@ -187,9 +187,12 @@ class _HomeScreenState extends State<HomeScreen>
             }
           },
           onClose: () {
-            if (hasQuestion) {
-              _questionController.clear();
-              _visionState.clearAll();
+            if (mounted) {
+              Navigator.of(context).pop(); // Actually close the dialog
+              if (hasQuestion) {
+                _questionController.clear();
+                _visionState.clearAll();
+              }
             }
           },
         );
@@ -254,12 +257,8 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       );
       
-      // Close the vision dialog and clear form if needed
-      Navigator.of(context).pop();
-      if (hasQuestion) {
-        _questionController.clear();
-        _visionState.clearAll();
-      }
+      // Don't close the dialog here - let the user use the close button
+      // The VisionDialog will remain open for the user to close manually
     }
   }
 
