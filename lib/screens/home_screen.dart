@@ -4,13 +4,10 @@ import '../models/profet.dart';
 import '../models/vision_feedback.dart';
 import '../services/feedback_service.dart';
 import '../l10n/app_localizations.dart';
-import '../models/oracolo_caotico.dart';
-import '../models/oracolo_mistico.dart';
-import '../models/oracolo_cinico.dart';
 import '../prophet_localizations.dart';
-import '../l10n/prophet_localization_loader.dart';
 import '../widgets/common/common_widgets.dart';
 import '../widgets/home/home_widgets.dart';
+import '../widgets/dialogs/dialog_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -151,15 +148,15 @@ class _HomeScreenState extends State<HomeScreen> {
     if (hasQuestion && question != null && question.isNotEmpty) {
       if (isAIEnabled) {
         // Show loading dialog first
-        await _showLoadingDialog(profet);
+        await ProphetLoadingDialog.show(context: context, profet: profet);
 
         try {
           if (mounted) {
             content = await profet.getAIPersonalizedResponse(question, context);
           }
-          if (mounted) LoadingDialog.dismiss(context); // Close loading dialog - check mounted first
+          if (mounted) ProphetLoadingDialog.dismiss(context); // Close loading dialog - check mounted first
         } catch (e) {
-          if (mounted) LoadingDialog.dismiss(context); // Close loading dialog - check mounted first
+          if (mounted) ProphetLoadingDialog.dismiss(context); // Close loading dialog - check mounted first
           // Use localized fallback response
           if (mounted) {
             content = await profet.getLocalizedPersonalizedResponse(context, question);
@@ -179,15 +176,15 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       if (isAIEnabled) {
         // Show loading dialog first
-        await _showLoadingDialog(profet);
+        await ProphetLoadingDialog.show(context: context, profet: profet);
 
         try {
           if (mounted) {
             content = await profet.getAIRandomVision(context);
           }
-          if (mounted) LoadingDialog.dismiss(context); // Close loading dialog - check mounted first
+          if (mounted) ProphetLoadingDialog.dismiss(context); // Close loading dialog - check mounted first
         } catch (e) {
-          if (mounted) LoadingDialog.dismiss(context); // Close loading dialog - check mounted first
+          if (mounted) ProphetLoadingDialog.dismiss(context); // Close loading dialog - check mounted first
           // Use localized random visions as fallback
           if (mounted) {
             final visions = await profet.getLocalizedRandomVisions(context);
@@ -253,29 +250,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.of(context).pop();
         if (hasQuestion) _questionController.clear();
       },
-    );
-  }
-
-  Future<void> _showLoadingDialog(profet) async {
-    // Get localized loading message based on prophet type
-    String loadingMessage;
-    if (profet is OracoloCaotico) {
-      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'chaotic');
-    } else if (profet is OracoloMistico) {
-      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'mystic');
-    } else if (profet is OracoloCinico) {
-      loadingMessage = await ProphetLocalizationLoader.getAILoadingMessage(context, 'cynical');
-    } else {
-      loadingMessage = 'Loading...'; // Fallback
-    }
-
-    // Check if widget is still mounted before showing dialog
-    if (!mounted) return;
-
-    await LoadingDialog.show(
-      context: context,
-      primaryColor: profet.primaryColor,
-      message: loadingMessage,
     );
   }
 

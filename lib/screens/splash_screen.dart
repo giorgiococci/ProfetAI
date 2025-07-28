@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import '../services/ai_service_manager.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
+import '../widgets/dialogs/dialog_widgets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -86,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
       AppLogger.logError('SplashScreen', 'App initialization failed', e);
       // Show error dialog if initialization fails
       if (mounted) {
-        _showErrorDialog('Initialization Error', 'Failed to initialize app: $e');
+        await ErrorDialog.show(context: context, title: 'Initialization Error', message: 'Failed to initialize app: $e');
       }
     }
   }
@@ -119,89 +120,12 @@ class _SplashScreenState extends State<SplashScreen>
       icon = Icons.warning;
     }
     
-    await _showStatusDialog(title, message, icon, iconColor);
-  }
-
-  Future<void> _showStatusDialog(String title, String message, IconData icon, Color iconColor) async {
-    return showDialog<void>(
+    await StatusDialog.show(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF2D2D30),
-          title: Row(
-            children: [
-              Icon(icon, color: iconColor, size: 28),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          content: Container(
-            constraints: const BoxConstraints(maxHeight: 400),
-            child: SingleChildScrollView(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white70, fontSize: 14, fontFamily: 'monospace'),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.deepPurpleAccent),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _showErrorDialog(String title, String message) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF2D2D30),
-          title: Row(
-            children: [
-              const Icon(Icons.error, color: Colors.red, size: 28),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            message,
-            style: const TextStyle(color: Colors.white70, fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.deepPurpleAccent),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      title: title,
+      message: message,
+      icon: icon,
+      iconColor: iconColor,
     );
   }
 
