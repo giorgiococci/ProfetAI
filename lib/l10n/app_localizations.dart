@@ -170,6 +170,24 @@ abstract class AppLocalizations {
   /// **'📝 Enter a question before asking!'**
   String get enterQuestionFirst;
 
+  /// Tooltip for marking an oracle as favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as favorite oracle'**
+  String get markAsFavoriteOracle;
+
+  /// Tooltip for removing an oracle from favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorite oracles'**
+  String get removeFromFavoriteOracle;
+
+  /// Snackbar message when an oracle is set as favorite
+  ///
+  /// In en, this message translates to:
+  /// **'✨ {oracleName} is now your favorite oracle!'**
+  String favoriteOracleSet(String oracleName);
+
   /// Dialog title when oracle responds to a question
   ///
   /// In en, this message translates to:
@@ -407,6 +425,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to initialize app: {error}'**
   String failedToInitializeApp(String error);
+
+  /// Title for the profile page
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profilePageTitle;
+
+  /// Section title for personal information
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// Section title for preferences and languages
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences & Languages'**
+  String get preferencesAndLanguages;
+
+  /// Section title for interests and topics
+  ///
+  /// In en, this message translates to:
+  /// **'Interests & Topics'**
+  String get interestsAndTopics;
+
+  /// Label for name field
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameLabel;
+
+  /// Hint text for name field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get nameHint;
+
+  /// Label for country field
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get countryLabel;
+
+  /// Hint text for country field
+  ///
+  /// In en, this message translates to:
+  /// **'Select your country'**
+  String get countryHint;
+
+  /// Label for gender field
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get genderLabel;
+
+  /// Hint text for gender field
+  ///
+  /// In en, this message translates to:
+  /// **'Select your gender'**
+  String get genderHint;
+
+  /// Label for languages field
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get languagesLabel;
+
+  /// Hint text for languages field
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred language'**
+  String get languagesHint;
+
+  /// Label for interests field
+  ///
+  /// In en, this message translates to:
+  /// **'Interests'**
+  String get interestsLabel;
+
+  /// Hint text for interests field
+  ///
+  /// In en, this message translates to:
+  /// **'Select your interests'**
+  String get interestsHint;
+
+  /// Button text for saving profile
+  ///
+  /// In en, this message translates to:
+  /// **'Save Profile'**
+  String get saveProfile;
+
+  /// Success message when profile is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved successfully!'**
+  String get profileSaved;
+
+  /// Male gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// Female gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// Non-binary gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Non-binary'**
+  String get genderNonBinary;
+
+  /// Prefer not to say gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get genderPreferNotToSay;
+
+  /// English language option
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// Italian language option
+  ///
+  /// In en, this message translates to:
+  /// **'Italian'**
+  String get languageItalian;
+
+  /// Spirituality interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Spirituality'**
+  String get interestSpirituality;
+
+  /// Meditation interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Meditation'**
+  String get interestMeditation;
+
+  /// Philosophy interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Philosophy'**
+  String get interestPhilosophy;
+
+  /// Mysticism interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Mysticism'**
+  String get interestMysticism;
+
+  /// Divination interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Divination'**
+  String get interestDivination;
+
+  /// Ancient Wisdom interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Ancient Wisdom'**
+  String get interestWisdom;
+
+  /// Dream Interpretation interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Dream Interpretation'**
+  String get interestDreams;
+
+  /// Tarot interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Tarot'**
+  String get interestTarot;
+
+  /// Astrology interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Astrology'**
+  String get interestAstrology;
+
+  /// Numerology interest option
+  ///
+  /// In en, this message translates to:
+  /// **'Numerology'**
+  String get interestNumerology;
+
+  /// Message shown when app language is updated
+  ///
+  /// In en, this message translates to:
+  /// **'App language updated to {language}'**
+  String languageUpdated(String language);
 }
 
 class _AppLocalizationsDelegate

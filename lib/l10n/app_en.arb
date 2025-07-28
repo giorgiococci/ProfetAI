@@ -65,6 +65,26 @@
     "description": "Snackbar message when user tries to ask without entering a question"
   },
 
+  "markAsFavoriteOracle": "Mark as favorite oracle",
+  "@markAsFavoriteOracle": {
+    "description": "Tooltip for marking an oracle as favorite"
+  },
+
+  "removeFromFavoriteOracle": "Remove from favorite oracles",
+  "@removeFromFavoriteOracle": {
+    "description": "Tooltip for removing an oracle from favorites"
+  },
+
+  "favoriteOracleSet": "✨ {oracleName} is now your favorite oracle!",
+  "@favoriteOracleSet": {
+    "description": "Snackbar message when an oracle is set as favorite",
+    "placeholders": {
+      "oracleName": {
+        "type": "String"
+      }
+    }
+  },
+
   "oracleResponds": "🔮 {oracleName} Responds",
   "@oracleResponds": {
     "description": "Dialog title when oracle responds to a question",
@@ -287,6 +307,177 @@
     "placeholders": {
       "error": {
         "type": "String"
+      }
+    }
+  },
+
+  "profilePageTitle": "Profile",
+  "@profilePageTitle": {
+    "description": "Title for the profile page"
+  },
+
+  "personalInformation": "Personal Information",
+  "@personalInformation": {
+    "description": "Section title for personal information"
+  },
+
+  "preferencesAndLanguages": "Preferences & Languages",
+  "@preferencesAndLanguages": {
+    "description": "Section title for preferences and languages"
+  },
+
+  "interestsAndTopics": "Interests & Topics",
+  "@interestsAndTopics": {
+    "description": "Section title for interests and topics"
+  },
+
+  "nameLabel": "Name",
+  "@nameLabel": {
+    "description": "Label for name field"
+  },
+
+  "nameHint": "Enter your name",
+  "@nameHint": {
+    "description": "Hint text for name field"
+  },
+
+  "countryLabel": "Country",
+  "@countryLabel": {
+    "description": "Label for country field"
+  },
+
+  "countryHint": "Select your country",
+  "@countryHint": {
+    "description": "Hint text for country field"
+  },
+
+  "genderLabel": "Gender",
+  "@genderLabel": {
+    "description": "Label for gender field"
+  },
+
+  "genderHint": "Select your gender",
+  "@genderHint": {
+    "description": "Hint text for gender field"
+  },
+
+  "languagesLabel": "Languages",
+  "@languagesLabel": {
+    "description": "Label for languages field"
+  },
+
+  "languagesHint": "Select your preferred language",
+  "@languagesHint": {
+    "description": "Hint text for languages field"
+  },
+
+  "interestsLabel": "Interests",
+  "@interestsLabel": {
+    "description": "Label for interests field"
+  },
+
+  "interestsHint": "Select your interests",
+  "@interestsHint": {
+    "description": "Hint text for interests field"
+  },
+
+  "saveProfile": "Save Profile",
+  "@saveProfile": {
+    "description": "Button text for saving profile"
+  },
+
+  "profileSaved": "Profile saved successfully!",
+  "@profileSaved": {
+    "description": "Success message when profile is saved"
+  },
+
+  "genderMale": "Male",
+  "@genderMale": {
+    "description": "Male gender option"
+  },
+
+  "genderFemale": "Female",
+  "@genderFemale": {
+    "description": "Female gender option"
+  },
+
+  "genderNonBinary": "Non-binary",
+  "@genderNonBinary": {
+    "description": "Non-binary gender option"
+  },
+
+  "genderPreferNotToSay": "Prefer not to say",
+  "@genderPreferNotToSay": {
+    "description": "Prefer not to say gender option"
+  },
+
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language option"
+  },
+
+  "languageItalian": "Italian",
+  "@languageItalian": {
+    "description": "Italian language option"
+  },
+
+  "interestSpirituality": "Spirituality",
+  "@interestSpirituality": {
+    "description": "Spirituality interest option"
+  },
+
+  "interestMeditation": "Meditation",
+  "@interestMeditation": {
+    "description": "Meditation interest option"
+  },
+
+  "interestPhilosophy": "Philosophy",
+  "@interestPhilosophy": {
+    "description": "Philosophy interest option"
+  },
+
+  "interestMysticism": "Mysticism",
+  "@interestMysticism": {
+    "description": "Mysticism interest option"
+  },
+
+  "interestDivination": "Divination",
+  "@interestDivination": {
+    "description": "Divination interest option"
+  },
+
+  "interestWisdom": "Ancient Wisdom",
+  "@interestWisdom": {
+    "description": "Ancient Wisdom interest option"
+  },
+
+  "interestDreams": "Dream Interpretation",
+  "@interestDreams": {
+    "description": "Dream Interpretation interest option"
+  },
+
+  "interestTarot": "Tarot",
+  "@interestTarot": {
+    "description": "Tarot interest option"
+  },
+
+  "interestAstrology": "Astrology",
+  "@interestAstrology": {
+    "description": "Astrology interest option"
+  },
+
+  "interestNumerology": "Numerology",
+  "@interestNumerology": {
+    "description": "Numerology interest option"
+  },
+
+  "languageUpdated": "App language updated to {language}",
+  "@languageUpdated": {
+    "description": "Message shown when app language is updated",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The name of the selected language"
       }
     }
   }
