@@ -1,3 +1,4 @@
+import 'package:sqflite/sqflite.dart';
 import '../models/vision.dart';
 import '../models/vision_feedback.dart';
 import '../utils/app_logger.dart';
@@ -133,36 +134,91 @@ class VisionStorageService {
       
       final db = await _databaseService.database;
       
-      // Use FTS for text search combined with additional filters
-      String baseQuery = '''
-        SELECT v.* FROM visions v
-        JOIN visions_fts fts ON v.id = fts.rowid
-        WHERE visions_fts MATCH ?
-      ''';
-      
-      List<dynamic> args = [searchQuery];
-      
-      // Add additional filters if provided
-      if (additionalFilters != null) {
-        final filterBuilder = _buildAdditionalFilters(additionalFilters);
-        if (filterBuilder['where'].isNotEmpty) {
-          baseQuery += ' AND ${filterBuilder['where']}';
-          args.addAll(filterBuilder['args']);
-        }
+      // Use FTS5 if available, otherwise fallback to LIKE queries
+      if (_databaseService.isFts5Available) {
+        return _searchWithFts5(db, searchQuery, additionalFilters, offset, limit);
+      } else {
+        return _searchWithLike(db, searchQuery, additionalFilters, offset, limit);
       }
-      
-      baseQuery += ' ORDER BY timestamp DESC LIMIT $limit OFFSET $offset';
-      
-      final result = await db.rawQuery(baseQuery, args);
-      final visions = result.map((map) => Vision.fromMap(map)).toList();
-      
-      AppLogger.logInfo(_component, 'Found ${visions.length} visions matching search');
-      return visions;
       
     } catch (e) {
       AppLogger.logError(_component, 'Failed to search visions', e);
       return [];
     }
+  }
+
+  /// Search using FTS5 (when available)
+  Future<List<Vision>> _searchWithFts5(
+    Database db,
+    String searchQuery,
+    VisionFilter? additionalFilters,
+    int offset,
+    int limit,
+  ) async {
+    String baseQuery = '''
+      SELECT v.* FROM visions v
+      JOIN visions_fts fts ON v.id = fts.rowid
+      WHERE visions_fts MATCH ?
+    ''';
+    
+    List<dynamic> args = [searchQuery];
+    
+    // Add additional filters if provided
+    if (additionalFilters != null) {
+      final filterBuilder = _buildAdditionalFilters(additionalFilters);
+      if (filterBuilder['where'].isNotEmpty) {
+        baseQuery += ' AND ${filterBuilder['where']}';
+        args.addAll(filterBuilder['args']);
+      }
+    }
+    
+    baseQuery += ' ORDER BY timestamp DESC LIMIT $limit OFFSET $offset';
+    
+    final result = await db.rawQuery(baseQuery, args);
+    final visions = result.map((map) => Vision.fromMap(map)).toList();
+    
+    AppLogger.logInfo(_component, 'Found ${visions.length} visions using FTS5 search');
+    return visions;
+  }
+
+  /// Search using LIKE queries (fallback when FTS5 not available)
+  Future<List<Vision>> _searchWithLike(
+    Database db,
+    String searchQuery,
+    VisionFilter? additionalFilters,
+    int offset,
+    int limit,
+  ) async {
+    // Use safe LIKE operations for mobile compatibility
+    final safeQuery = '%$searchQuery%';
+    
+    String baseQuery = '''
+      SELECT * FROM visions 
+      WHERE (
+        title LIKE ?
+        OR question LIKE ?
+        OR answer LIKE ?
+      )
+    ''';
+    
+    List<dynamic> args = [safeQuery, safeQuery, safeQuery];
+    
+    // Add additional filters if provided
+    if (additionalFilters != null) {
+      final filterBuilder = _buildAdditionalFilters(additionalFilters);
+      if (filterBuilder['where'].isNotEmpty) {
+        baseQuery += ' AND ${filterBuilder['where']}';
+        args.addAll(filterBuilder['args']);
+      }
+    }
+    
+    baseQuery += ' ORDER BY timestamp DESC LIMIT $limit OFFSET $offset';
+    
+    final result = await db.rawQuery(baseQuery, args);
+    final visions = result.map((map) => Vision.fromMap(map)).toList();
+    
+    AppLogger.logInfo(_component, 'Found ${visions.length} visions using LIKE fallback search');
+    return visions;
   }
 
   /// Update vision feedback
@@ -274,13 +330,8 @@ class VisionStorageService {
         ORDER BY count DESC
       ''');
       
-      // Count with/without questions
-      final questionStats = await db.rawQuery('''
-        SELECT 
-          SUM(CASE WHEN question IS NOT NULL AND question != '' THEN 1 ELSE 0 END) as with_question,
-          SUM(CASE WHEN question IS NULL OR question = '' THEN 1 ELSE 0 END) as without_question
-        FROM visions
-      ''');
+      // Count with/without questions using mobile-compatible queries
+      final questionStats = await _getQuestionStatsSafe(db);
       
       // Most recent visions
       final recentVisions = await db.rawQuery('''
@@ -312,14 +363,16 @@ class VisionStorageService {
     List<String> conditions = [];
     List<dynamic> args = [];
     
-    if (filter.prophetType != null) {
-      conditions.add('prophet_type = ?');
-      args.add(filter.prophetType);
+    if (filter.prophetTypes.isNotEmpty) {
+      final placeholders = List.filled(filter.prophetTypes.length, '?').join(',');
+      conditions.add('prophet_type IN ($placeholders)');
+      args.addAll(filter.prophetTypes);
     }
     
-    if (filter.feedbackType != null) {
-      conditions.add('feedback_type = ?');
-      args.add(filter.feedbackType!.name);
+    if (filter.feedbackTypes.isNotEmpty) {
+      final placeholders = List.filled(filter.feedbackTypes.length, '?').join(',');
+      conditions.add('feedback_type IN ($placeholders)');
+      args.addAll(filter.feedbackTypes.map((type) => type.name));
     }
     
     if (filter.startDate != null) {
@@ -350,14 +403,16 @@ class VisionStorageService {
     List<String> conditions = [];
     List<dynamic> args = [];
     
-    if (filter.prophetType != null) {
-      conditions.add('v.prophet_type = ?');
-      args.add(filter.prophetType);
+    if (filter.prophetTypes.isNotEmpty) {
+      final placeholders = List.filled(filter.prophetTypes.length, '?').join(',');
+      conditions.add('v.prophet_type IN ($placeholders)');
+      args.addAll(filter.prophetTypes);
     }
     
-    if (filter.feedbackType != null) {
-      conditions.add('v.feedback_type = ?');
-      args.add(filter.feedbackType!.name);
+    if (filter.feedbackTypes.isNotEmpty) {
+      final placeholders = List.filled(filter.feedbackTypes.length, '?').join(',');
+      conditions.add('v.feedback_type IN ($placeholders)');
+      args.addAll(filter.feedbackTypes.map((type) => type.name));
     }
     
     if (filter.startDate != null) {
@@ -390,6 +445,40 @@ class VisionStorageService {
     } catch (e) {
       AppLogger.logError(_component, 'Service health check failed', e);
       return false;
+    }
+  }
+
+  /// Get question statistics using mobile-compatible queries
+  Future<List<Map<String, Object?>>> _getQuestionStatsSafe(Database db) async {
+    try {
+      // Try using CASE WHEN (works on most SQLite versions)
+      return await db.rawQuery('''
+        SELECT 
+          SUM(CASE WHEN question IS NOT NULL AND question != '' THEN 1 ELSE 0 END) as with_question,
+          SUM(CASE WHEN question IS NULL OR question = '' THEN 1 ELSE 0 END) as without_question
+        FROM visions
+      ''');
+    } catch (e) {
+      AppLogger.logWarning(_component, 'CASE WHEN not supported, using fallback queries: $e');
+      
+      // Fallback: Use separate queries for mobile compatibility
+      final withQuestionResult = await db.rawQuery('''
+        SELECT COUNT(*) as count FROM visions 
+        WHERE question IS NOT NULL AND question != ''
+      ''');
+      
+      final withoutQuestionResult = await db.rawQuery('''
+        SELECT COUNT(*) as count FROM visions 
+        WHERE question IS NULL OR question = ''
+      ''');
+      
+      final withQuestion = withQuestionResult.first['count'] as int;
+      final withoutQuestion = withoutQuestionResult.first['count'] as int;
+      
+      return [{
+        'with_question': withQuestion,
+        'without_question': withoutQuestion,
+      }];
     }
   }
 

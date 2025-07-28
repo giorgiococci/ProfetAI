@@ -83,7 +83,23 @@ class LoadingDialog extends StatelessWidget {
 
   /// Dismisses the currently shown loading dialog
   static void dismiss(BuildContext context) {
-    Navigator.of(context).pop();
+    try {
+      // Check if we can safely pop the navigation stack
+      final navigator = Navigator.maybeOf(context);
+      if (navigator != null && navigator.canPop()) {
+        navigator.pop();
+      } else if (navigator == null) {
+        // Navigator is null - context might be invalid
+        print('LoadingDialog.dismiss: Navigator is null, cannot dismiss dialog');
+      } else {
+        // Navigator exists but can't pop - no dialog to dismiss
+        print('LoadingDialog.dismiss: No dialog to dismiss (canPop returned false)');
+      }
+    } catch (e) {
+      // Silently handle any dismiss errors to prevent crashes
+      // This can happen if the dialog was already dismissed or context is invalid
+      print('LoadingDialog.dismiss: Error dismissing dialog: $e');
+    }
   }
 
   @override

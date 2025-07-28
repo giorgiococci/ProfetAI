@@ -18,7 +18,7 @@ class OracoloMistico extends Profet {
     ],
     icon: Icons.visibility,
     backgroundImagePath: 'assets/images/backgrounds/mystic_profet_background.png', // Percorso immagine
-    // profetImagePath: 'assets/images/prophets/mystic_prophet.png', // Opzionale
+    profetImagePath: 'assets/images/prophets/mystic_prophet.png', // Opzionale
   );
 
   @override

@@ -37,57 +37,60 @@ class HomeContentWidget extends StatelessWidget {
     final profet = ProfetManager.getProfet(selectedProphet);
     final localizations = AppLocalizations.of(context)!;
 
-    return Column(
-      children: [
-        // Prophet Header with transparent background
-        ProphetHeader(
-          profet: profet,
-          prophetTypeString: ProphetUtils.prophetTypeToString(selectedProphet),
-        ),
-
-        ThemeUtils.spacerLG,
-
-        // Oracle Avatar with loading state
-        if (isLoading)
-          LoadingStateWidget(selectedProphet: selectedProphet)
-        else
-          OracleAvatar(profet: profet),
-
-        ThemeUtils.spacerLG,
-
-        // Question Input Field with theme styling
-        Container(
-          decoration: ThemeUtils.getProphetCardDecoration(selectedProphet),
-          padding: ThemeUtils.paddingMD,
-          child: TextFormField(
-            controller: questionController,
-            decoration: ThemeUtils.getProphetInputDecoration(
-              selectedProphet,
-              labelText: localizations.enterQuestionPlaceholder(
-                prophetName.isNotEmpty ? prophetName : 'Oracle'
-              ),
-              prefixIcon: Icons.help_outline,
-            ),
-            maxLines: 3,
-            validator: ValidationUtils.validateQuestion,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Prophet Header with transparent background
+          ProphetHeader(
+            profet: profet,
+            prophetTypeString: ProphetUtils.prophetTypeToString(selectedProphet),
           ),
-        ),
 
-        ThemeUtils.spacerXL,
+          ThemeUtils.spacerLG,
 
-        // Action buttons with theme styling
-        OracleActionButtons(
-          selectedProphet: selectedProphet,
-          onAskOracle: onAskOracle,
-          onListenToOracle: onListenToOracle,
-        ),
+          // Oracle Avatar with loading state
+          if (isLoading)
+            LoadingStateWidget(selectedProphet: selectedProphet)
+          else
+            OracleAvatar(profet: profet),
 
-        // Error display
-        if (hasError && error != null)
-          ErrorDisplayWidget(errorMessage: error!),
+          ThemeUtils.spacerLG,
 
-        const Spacer(),
-      ],
+          // Question Input Field with theme styling - reduced height
+          Container(
+            decoration: ThemeUtils.getProphetCardDecoration(selectedProphet),
+            padding: ThemeUtils.paddingMD,
+            child: TextFormField(
+              controller: questionController,
+              decoration: ThemeUtils.getProphetInputDecoration(
+                selectedProphet,
+                labelText: localizations.enterQuestionPlaceholder(
+                  prophetName.isNotEmpty ? prophetName : 'Oracle'
+                ),
+                prefixIcon: Icons.help_outline,
+              ),
+              maxLines: 2, // Reduced from 3 to 2 lines
+              validator: ValidationUtils.validateQuestion,
+            ),
+          ),
+
+          ThemeUtils.spacerXL,
+
+          // Action buttons with theme styling
+          OracleActionButtons(
+            selectedProphet: selectedProphet,
+            onAskOracle: onAskOracle,
+            onListenToOracle: onListenToOracle,
+          ),
+
+          // Error display
+          if (hasError && error != null)
+            ErrorDisplayWidget(errorMessage: error!),
+
+          // Bottom spacing instead of Spacer for scrollable content
+          ThemeUtils.spacerXL,
+        ],
+      ),
     );
   }
 }

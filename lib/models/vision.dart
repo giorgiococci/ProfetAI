@@ -1,5 +1,14 @@
 import 'vision_feedback.dart';
 
+/// Enum for sorting options in vision list
+enum VisionSortBy {
+  dateDesc,
+  dateAsc,
+  titleAsc,
+  titleDesc,
+  prophetType,
+}
+
 /// Data model representing a stored vision from the oracles
 /// 
 /// This model stores complete vision information including the question,
@@ -195,49 +204,54 @@ class Vision {
 
 /// Filter criteria for vision queries
 class VisionFilter {
-  final String? prophetType;
-  final FeedbackType? feedbackType;
+  final Set<String> prophetTypes;
+  final Set<FeedbackType> feedbackTypes;
   final DateTime? startDate;
   final DateTime? endDate;
   final String? searchQuery;
   final bool? hasQuestion;
+  final VisionSortBy sortBy;
 
   const VisionFilter({
-    this.prophetType,
-    this.feedbackType,
+    this.prophetTypes = const {},
+    this.feedbackTypes = const {},
     this.startDate,
     this.endDate,
     this.searchQuery,
     this.hasQuestion,
+    this.sortBy = VisionSortBy.dateDesc,
   });
 
   /// Create a copy with updated filter values
   VisionFilter copyWith({
-    String? prophetType,
-    FeedbackType? feedbackType,
+    Set<String>? prophetTypes,
+    Set<FeedbackType>? feedbackTypes,
     DateTime? startDate,
     DateTime? endDate,
     String? searchQuery,
     bool? hasQuestion,
+    VisionSortBy? sortBy,
   }) {
     return VisionFilter(
-      prophetType: prophetType ?? this.prophetType,
-      feedbackType: feedbackType ?? this.feedbackType,
+      prophetTypes: prophetTypes ?? this.prophetTypes,
+      feedbackTypes: feedbackTypes ?? this.feedbackTypes,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       searchQuery: searchQuery ?? this.searchQuery,
       hasQuestion: hasQuestion ?? this.hasQuestion,
+      sortBy: sortBy ?? this.sortBy,
     );
   }
 
   /// Check if any filters are active
   bool get hasActiveFilters {
-    return prophetType != null ||
-        feedbackType != null ||
+    return prophetTypes.isNotEmpty ||
+        feedbackTypes.isNotEmpty ||
         startDate != null ||
         endDate != null ||
         (searchQuery != null && searchQuery!.isNotEmpty) ||
-        hasQuestion != null;
+        hasQuestion != null ||
+        sortBy != VisionSortBy.dateDesc;
   }
 
   /// Clear all filters
