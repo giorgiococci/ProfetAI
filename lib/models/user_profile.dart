@@ -4,6 +4,7 @@ class UserProfile {
   final Gender? gender;
   final List<String> languages;
   final List<String> interests;
+  final String? favoriteProphet; // Added favorite prophet field
 
   const UserProfile({
     this.name,
@@ -11,6 +12,7 @@ class UserProfile {
     this.gender,
     this.languages = const [],
     this.interests = const [],
+    this.favoriteProphet,
   });
 
   UserProfile copyWith({
@@ -19,6 +21,7 @@ class UserProfile {
     Gender? gender,
     List<String>? languages,
     List<String>? interests,
+    String? favoriteProphet,
   }) {
     return UserProfile(
       name: name ?? this.name,
@@ -26,6 +29,7 @@ class UserProfile {
       gender: gender ?? this.gender,
       languages: languages ?? this.languages,
       interests: interests ?? this.interests,
+      favoriteProphet: favoriteProphet ?? this.favoriteProphet,
     );
   }
 
@@ -36,6 +40,7 @@ class UserProfile {
       'gender': gender?.toString(),
       'languages': languages,
       'interests': interests,
+      'favoriteProphet': favoriteProphet,
     };
   }
 
@@ -49,12 +54,13 @@ class UserProfile {
       ) : null,
       languages: List<String>.from(json['languages'] ?? []),
       interests: List<String>.from(json['interests'] ?? []),
+      favoriteProphet: json['favoriteProphet'] as String?,
     );
   }
 
   @override
   String toString() {
-    return 'UserProfile(name: $name, country: $country, gender: $gender, languages: $languages, interests: $interests)';
+    return 'UserProfile(name: $name, country: $country, gender: $gender, languages: $languages, interests: $interests, favoriteProphet: $favoriteProphet)';
   }
 }
 

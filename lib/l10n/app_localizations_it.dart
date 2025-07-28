@@ -49,6 +49,17 @@ class AppLocalizationsIt extends AppLocalizations {
       '📝 Inserisci una domanda prima di chiedere!';
 
   @override
+  String get markAsFavoriteOracle => 'Segna come oracolo preferito';
+
+  @override
+  String get removeFromFavoriteOracle => 'Rimuovi dagli oracoli preferiti';
+
+  @override
+  String favoriteOracleSet(String oracleName) {
+    return '✨ $oracleName è ora il tuo oracolo preferito!';
+  }
+
+  @override
   String oracleResponds(String oracleName) {
     return '🔮 $oracleName Risponde';
   }

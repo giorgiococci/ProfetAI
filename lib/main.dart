@@ -131,6 +131,46 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   ProfetType _currentProfetType = ProfetType.mistico;
+  final UserProfileService _profileService = UserProfileService();
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteProphet();
+  }
+  
+  /// Load the favorite prophet from user profile and set it as default
+  Future<void> _loadFavoriteProphet() async {
+    try {
+      await _profileService.loadProfile();
+      final favoriteProphet = _profileService.getFavoriteProphet();
+      
+      if (favoriteProphet != null) {
+        final prophetType = _stringToProfetType(favoriteProphet);
+        if (prophetType != null && mounted) {
+          setState(() {
+            _currentProfetType = prophetType;
+          });
+        }
+      }
+    } catch (e) {
+      // If there's an error loading favorites, keep the default (mystic)
+    }
+  }
+  
+  /// Convert prophet string to ProfetType enum
+  ProfetType? _stringToProfetType(String prophetString) {
+    switch (prophetString) {
+      case 'mystic':
+        return ProfetType.mistico;
+      case 'chaotic':
+        return ProfetType.caotico;
+      case 'cynical':
+        return ProfetType.cinico;
+      default:
+        return null;
+    }
+  }
   
   void _onItemTapped(int index) {
     setState(() {

@@ -65,6 +65,26 @@
     "description": "Snackbar message when user tries to ask without entering a question"
   },
 
+  "markAsFavoriteOracle": "Mark as favorite oracle",
+  "@markAsFavoriteOracle": {
+    "description": "Tooltip for marking an oracle as favorite"
+  },
+
+  "removeFromFavoriteOracle": "Remove from favorite oracles",
+  "@removeFromFavoriteOracle": {
+    "description": "Tooltip for removing an oracle from favorites"
+  },
+
+  "favoriteOracleSet": "✨ {oracleName} is now your favorite oracle!",
+  "@favoriteOracleSet": {
+    "description": "Snackbar message when an oracle is set as favorite",
+    "placeholders": {
+      "oracleName": {
+        "type": "String"
+      }
+    }
+  },
+
   "oracleResponds": "🔮 {oracleName} Responds",
   "@oracleResponds": {
     "description": "Dialog title when oracle responds to a question",

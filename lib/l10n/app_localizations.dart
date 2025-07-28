@@ -170,6 +170,24 @@ abstract class AppLocalizations {
   /// **'📝 Enter a question before asking!'**
   String get enterQuestionFirst;
 
+  /// Tooltip for marking an oracle as favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as favorite oracle'**
+  String get markAsFavoriteOracle;
+
+  /// Tooltip for removing an oracle from favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorite oracles'**
+  String get removeFromFavoriteOracle;
+
+  /// Snackbar message when an oracle is set as favorite
+  ///
+  /// In en, this message translates to:
+  /// **'✨ {oracleName} is now your favorite oracle!'**
+  String favoriteOracleSet(String oracleName);
+
   /// Dialog title when oracle responds to a question
   ///
   /// In en, this message translates to:

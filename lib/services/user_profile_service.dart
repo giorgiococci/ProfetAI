@@ -70,6 +70,26 @@ class UserProfileService {
     _currentProfile = const UserProfile();
   }
 
+  /// Set favorite prophet for the current user
+  Future<void> setFavoriteProphet(String? prophetType) async {
+    if (_currentProfile != null) {
+      final updatedProfile = _currentProfile!.copyWith(
+        favoriteProphet: prophetType?.isEmpty == true ? null : prophetType,
+      );
+      await saveProfile(updatedProfile);
+    }
+  }
+
+  /// Get the current favorite prophet
+  String? getFavoriteProphet() {
+    return _currentProfile?.favoriteProphet;
+  }
+
+  /// Check if a prophet is the favorite
+  bool isFavoriteProphet(String prophetType) {
+    return _currentProfile?.favoriteProphet == prophetType;
+  }
+
   // Static data for countries (commonly used ones)
   static List<Country> getCountries() {
     return const [

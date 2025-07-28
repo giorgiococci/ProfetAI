@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../l10n/app_localizations.dart';
 import '../prophet_localizations.dart';
+import '../services/user_profile_service.dart';
 
-class ProfetSelectionScreen extends StatelessWidget {
+class ProfetSelectionScreen extends StatefulWidget {
   final ProfetType selectedProfet;
   final Function(ProfetType) onProfetChange;
 
@@ -14,9 +15,88 @@ class ProfetSelectionScreen extends StatelessWidget {
   });
 
   @override
+  State<ProfetSelectionScreen> createState() => _ProfetSelectionScreenState();
+}
+
+class _ProfetSelectionScreenState extends State<ProfetSelectionScreen> {
+  final UserProfileService _profileService = UserProfileService();
+  String? _favoriteProphet;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteProphet();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload favorite prophet data when the screen becomes active again
+    _loadFavoriteProphet();
+  }
+
+  Future<void> _loadFavoriteProphet() async {
+    await _profileService.loadProfile();
+    if (mounted) {
+      setState(() {
+        _favoriteProphet = _profileService.getFavoriteProphet();
+      });
+    }
+  }
+
+  Future<void> _toggleFavorite(ProfetType profetType) async {
+    final prophetTypeString = _getProphetTypeString(profetType);
+    
+    if (_favoriteProphet == prophetTypeString) {
+      // Remove from favorites
+      await _profileService.setFavoriteProphet(null);
+      setState(() {
+        _favoriteProphet = null;
+      });
+    } else {
+      // Set as favorite
+      await _profileService.setFavoriteProphet(prophetTypeString);
+      setState(() {
+        _favoriteProphet = prophetTypeString;
+      });
+      
+      // Show confirmation message
+      if (mounted) {
+        final profet = ProfetManager.getProfet(profetType);
+        final prophetName = await _getProphetName(profetType);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.favoriteOracleSet(prophetName),
+            ),
+            backgroundColor: profet.primaryColor,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  String _getProphetTypeString(ProfetType profetType) {
+    switch (profetType) {
+      case ProfetType.mistico:
+        return 'mystic';
+      case ProfetType.caotico:
+        return 'chaotic';
+      case ProfetType.cinico:
+        return 'cynical';
+    }
+  }
+
+  Future<String> _getProphetName(ProfetType profetType) async {
+    final prophetTypeString = _getProphetTypeString(profetType);
+    return await ProphetLocalizations.getName(context, prophetTypeString);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final currentProfet = ProfetManager.getProfet(selectedProfet);
-    final localizations = AppLocalizations.of(context)!;
+    final currentProfet = ProfetManager.getProfet(widget.selectedProfet);
+    final localizations = AppLocalizations.of(context)!;;
     
     return Container(
       decoration: BoxDecoration(
@@ -60,21 +140,9 @@ class ProfetSelectionScreen extends StatelessWidget {
                 child: ListView(
                   children: ProfetManager.getAllTypes().map((profetType) {
                     final profet = ProfetManager.getProfet(profetType);
-                    final isSelected = profetType == selectedProfet;
-                    
-                    // Get the prophet type string for localization
-                    String prophetTypeString;
-                    switch (profetType) {
-                      case ProfetType.mistico:
-                        prophetTypeString = 'mystic';
-                        break;
-                      case ProfetType.caotico:
-                        prophetTypeString = 'chaotic';
-                        break;
-                      case ProfetType.cinico:
-                        prophetTypeString = 'cynical';
-                        break;
-                    }
+                    final isSelected = profetType == widget.selectedProfet;
+                    final prophetTypeString = _getProphetTypeString(profetType);
+                    final isFavorite = _favoriteProphet == prophetTypeString;
                     
                     return Container(
                       margin: const EdgeInsets.only(bottom: 20),
@@ -82,7 +150,7 @@ class ProfetSelectionScreen extends StatelessWidget {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
-                            onProfetChange(profetType);
+                            widget.onProfetChange(profetType);
                             // Navigazione rimossa - gestiamo tutto dal main.dart
                           },
                           borderRadius: BorderRadius.circular(15),
@@ -185,12 +253,20 @@ class ProfetSelectionScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                if (isSelected)
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: profet.primaryColor,
-                                    size: 24,
+                                // Favorite Icon
+                                GestureDetector(
+                                  onTap: () => _toggleFavorite(profetType),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Icon(
+                                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                                      color: isFavorite 
+                                          ? Colors.red[400] 
+                                          : Colors.grey[400],
+                                      size: 24,
+                                    ),
                                   ),
+                                ),
                               ],
                             ),
                           ),
