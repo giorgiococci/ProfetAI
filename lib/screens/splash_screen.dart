@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import '../services/ai_service_manager.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
+import '../widgets/dialogs/dialog_widgets.dart';
+import '../utils/utils.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, LoadingStateMixin {
   late AnimationController _rotationController;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -53,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _initializeApp() async {
-    try {
+    await executeWithLoading(() async {
       AppLogger.logInfo('SplashScreen', 'Starting app initialization...');
       
       // Initialize AI service (this handles config and setup)
@@ -82,13 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/home');
       }
-    } catch (e) {
-      AppLogger.logError('SplashScreen', 'App initialization failed', e);
-      // Show error dialog if initialization fails
-      if (mounted) {
-        _showErrorDialog('Initialization Error', 'Failed to initialize app: $e');
-      }
-    }
+    });
   }
 
   Future<void> _checkAndShowAIStatus() async {
@@ -119,89 +115,12 @@ class _SplashScreenState extends State<SplashScreen>
       icon = Icons.warning;
     }
     
-    await _showStatusDialog(title, message, icon, iconColor);
-  }
-
-  Future<void> _showStatusDialog(String title, String message, IconData icon, Color iconColor) async {
-    return showDialog<void>(
+    await StatusDialog.show(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF2D2D30),
-          title: Row(
-            children: [
-              Icon(icon, color: iconColor, size: 28),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          content: Container(
-            constraints: const BoxConstraints(maxHeight: 400),
-            child: SingleChildScrollView(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white70, fontSize: 14, fontFamily: 'monospace'),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.deepPurpleAccent),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _showErrorDialog(String title, String message) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF2D2D30),
-          title: Row(
-            children: [
-              const Icon(Icons.error, color: Colors.red, size: 28),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            message,
-            style: const TextStyle(color: Colors.white70, fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.deepPurpleAccent),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      title: title,
+      message: message,
+      icon: icon,
+      iconColor: iconColor,
     );
   }
 
@@ -220,17 +139,8 @@ class _SplashScreenState extends State<SplashScreen>
         width: double.infinity,
         height: double.infinity,
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF1A1A2E), // Dark blue mystic
-                Color(0xFF16213E), // Darker blue
-                Color(0xFF0F0F23), // Almost black with blue hint
-                Color(0xFF121212), // App background
-              ],
-            ),
+          decoration: ThemeUtils.getGradientDecoration(
+            colors: [Color(0xFF1A1A2E), Color(0xFF16213E), Color(0xFF0F0F23), Color(0xFF121212)]
           ),
           child: SafeArea(
             child: FadeTransition(
@@ -268,20 +178,18 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                   
-                  const SizedBox(height: 60),
+                  SizedBox(height: ThemeUtils.spacingXL),
                   
                   // Loading text
-                  const Text(
+                  Text(
                     'Loading prophets from the universe',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white70,
+                    style: ThemeUtils.titleStyle.copyWith(
                       letterSpacing: 1.2,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   
-                  const SizedBox(height: 30),
+                  SizedBox(height: ThemeUtils.spacingLG),
                   
                   // Progress indicator
                   SizedBox(

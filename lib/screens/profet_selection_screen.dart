@@ -3,6 +3,7 @@ import '../models/profet_manager.dart';
 import '../l10n/app_localizations.dart';
 import '../prophet_localizations.dart';
 import '../services/user_profile_service.dart';
+import '../utils/utils.dart';
 
 class ProfetSelectionScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -18,13 +19,17 @@ class ProfetSelectionScreen extends StatefulWidget {
   State<ProfetSelectionScreen> createState() => _ProfetSelectionScreenState();
 }
 
-class _ProfetSelectionScreenState extends State<ProfetSelectionScreen> {
+class _ProfetSelectionScreenState extends State<ProfetSelectionScreen> 
+    with LoadingStateMixin {
   final UserProfileService _profileService = UserProfileService();
+  late ProphetSelectionState _prophetState;
   String? _favoriteProphet;
 
   @override
   void initState() {
     super.initState();
+    _prophetState = ProphetSelectionState();
+    _prophetState.selectProphet(widget.selectedProfet);
     _loadFavoriteProphet();
   }
 
@@ -36,12 +41,14 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen> {
   }
 
   Future<void> _loadFavoriteProphet() async {
-    await _profileService.loadProfile();
-    if (mounted) {
-      setState(() {
-        _favoriteProphet = _profileService.getFavoriteProphet();
-      });
-    }
+    executeWithLoading(() async {
+      await _profileService.loadProfile();
+      if (mounted) {
+        setState(() {
+          _favoriteProphet = _profileService.getFavoriteProphet();
+        });
+      }
+    });
   }
 
   Future<void> _toggleFavorite(ProfetType profetType) async {
@@ -99,41 +106,32 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen> {
     final localizations = AppLocalizations.of(context)!;;
     
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: currentProfet.backgroundGradient,
-        ),
-      ),
+      decoration: ThemeUtils.getProphetGradientDecoration(widget.selectedProfet),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: ThemeUtils.paddingLG,
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              ThemeUtils.spacerLG,
               Text(
                 localizations.selectYourOracle,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                style: ThemeUtils.headlineStyle.copyWith(
                   color: currentProfet.primaryColor,
                   letterSpacing: 2.0,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
+              ThemeUtils.spacerSM,
               Text(
                 localizations.everyOracleUniquePersonality,
-                style: TextStyle(
-                  fontSize: 16,
+                style: ThemeUtils.subtitleStyle.copyWith(
                   color: Colors.grey[300],
                   fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,
               ),
               
-              const SizedBox(height: 40),
+              ThemeUtils.spacerXL,
               
               // Lista degli oracoli
               Expanded(

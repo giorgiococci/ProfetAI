@@ -5,6 +5,7 @@ import '../services/ai_service_manager.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
 import '../l10n/prophet_localization_loader.dart';
+import '../utils/utils.dart';
 
 class AIStatusScreen extends StatefulWidget {
   const AIStatusScreen({super.key});
@@ -13,9 +14,8 @@ class AIStatusScreen extends StatefulWidget {
   State<AIStatusScreen> createState() => _AIStatusScreenState();
 }
 
-class _AIStatusScreenState extends State<AIStatusScreen> {
+class _AIStatusScreenState extends State<AIStatusScreen> with LoadingStateMixin {
   bool _isAIEnabled = false;
-  bool _isLoading = false;
   Timer? _refreshTimer;
 
   @override
@@ -42,25 +42,15 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
   }
 
   Future<void> _checkAIStatus() async {
-    setState(() {
-      _isLoading = true;
-    });
-    
-    try {
+    await executeWithLoading(() async {
       final isInitialized = await AIServiceManager.initialize();
       
       setState(() {
         _isAIEnabled = AIServiceManager.isAIAvailable;
-        _isLoading = false;
       });
       
       AppLogger.logInfo('AIStatusScreen', 'AI Status Check - Available: $_isAIEnabled, Initialized: $isInitialized');
-    } catch (e) {
-      AppLogger.logError('AIStatusScreen', 'Failed to check AI status', e);
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    });
   }
 
   Future<void> _verifyProphetAssets() async {
@@ -106,47 +96,38 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'AI Status',
-          style: TextStyle(color: Colors.white),
+          style: ThemeUtils.headlineStyle,
         ),
         backgroundColor: const Color(0xFF1A1A2E),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F0F23),
-              Color(0xFF121212),
-            ],
-          ),
+        decoration: ThemeUtils.getGradientDecoration(
+          colors: [Color(0xFF1A1A2E), Color(0xFF16213E), Color(0xFF0F0F23)]
         ),
         child: SafeArea(
-          child: _isLoading
-              ? const Center(
+          child: isLoading
+              ? Center(
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent),
                   ),
                 )
               : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: ThemeUtils.paddingMD,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildStatusCard(),
-                      const SizedBox(height: 20),
+                      SizedBox(height: ThemeUtils.spacingLG),
                       _buildConfigurationCard(),
-                      const SizedBox(height: 20),
+                      SizedBox(height: ThemeUtils.spacingLG),
                       // Always show debug card if there are logs or if debug mode is on
                       if (AppConfig.isDebugMode || AppLogger.getLogsAsString(lastN: 1).isNotEmpty) 
                         _buildDebugCard(),
-                      const SizedBox(height: 20),
+                      SizedBox(height: ThemeUtils.spacingLG),
                       _buildActionButtons(),
                     ],
                   ),
@@ -160,7 +141,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
     return Card(
       color: const Color(0xFF2D2D30),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: ThemeUtils.paddingMD,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -171,24 +152,19 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                   color: _isAIEnabled ? Colors.green : Colors.red,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: ThemeUtils.spacingXS),
                 Text(
                   'AI Service Status',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: ThemeUtils.titleStyle,
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: ThemeUtils.spacingMD),
             Text(
               _isAIEnabled 
                   ? 'AI Service is operational and ready to provide responses'
                   : 'AI Service is not available. Check configuration.',
-              style: TextStyle(
-                fontSize: 16,
+              style: ThemeUtils.bodyStyle.copyWith(
                 color: _isAIEnabled ? Colors.green[300] : Colors.red[300],
               ),
             ),
@@ -202,19 +178,15 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
     return Card(
       color: const Color(0xFF2D2D30),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: ThemeUtils.paddingMD,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Configuration Status',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: ThemeUtils.subtitleStyle,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: ThemeUtils.spacingMD),
             _buildConfigRow('Build Config', AppConfig.isAIConfigured ? 'Configured' : 'Not Configured'),
             _buildConfigRow('AI Available', AIServiceManager.isAIAvailable ? 'Yes' : 'No'),
             _buildConfigRow('Endpoint', AppConfig.azureEndpoint.isNotEmpty ? 'Configured' : 'Empty'),
@@ -231,7 +203,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
     return Card(
       color: const Color(0xFF2D2D30),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: ThemeUtils.paddingMD,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -352,13 +324,13 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
                    value.toLowerCase().contains('operational');
     
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: ThemeUtils.verticalPaddingSM,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: const TextStyle(color: Colors.white70),
+            style: ThemeUtils.bodyStyle.copyWith(color: Colors.white70),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -372,9 +344,8 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
             ),
             child: Text(
               value,
-              style: TextStyle(
+              style: ThemeUtils.captionStyle.copyWith(
                 color: isGood ? Colors.green[300] : Colors.orange[300],
-                fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -393,29 +364,20 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
             onPressed: _checkAIStatus,
             icon: const Icon(Icons.refresh),
             label: const Text('Refresh Status'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurpleAccent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
+            style: ThemeUtils.getPrimaryButtonStyle(),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ThemeUtils.spacingSM),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: _copyDebugInfo,
             icon: const Icon(Icons.copy),
             label: const Text('Copy Debug Info'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2D2D30),
-              foregroundColor: Colors.white,
-              side: const BorderSide(color: Colors.deepPurpleAccent),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
+            style: ThemeUtils.getSecondaryButtonStyle(),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: ThemeUtils.spacingXS),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -431,27 +393,17 @@ class _AIStatusScreenState extends State<AIStatusScreen> {
             },
             icon: const Icon(Icons.clear_all),
             label: const Text('Clear Runtime Logs'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2D2D30),
-              foregroundColor: Colors.orange,
-              side: const BorderSide(color: Colors.orange),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
+            style: ThemeUtils.getSecondaryButtonStyle(),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: ThemeUtils.spacingXS),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: _verifyProphetAssets,
             icon: const Icon(Icons.check_circle_outline),
             label: const Text('Verify Prophet Assets'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2D2D30),
-              foregroundColor: Colors.lightBlue,
-              side: const BorderSide(color: Colors.lightBlue),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-            ),
+            style: ThemeUtils.getSecondaryButtonStyle(),
           ),
         ),
       ],
