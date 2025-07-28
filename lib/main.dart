@@ -75,7 +75,6 @@ class _MyAppState extends State<MyApp> {
     if (mounted) {
       setState(() {
         _currentLocale = _localeService.currentLocale;
-        print('DEBUG: Locale changed to: ${_currentLocale.languageCode}'); // Debug print
       });
     }
   }

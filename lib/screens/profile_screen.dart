@@ -98,10 +98,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       await _profileService.saveProfile(updatedProfile);
       
-      // Check if language changed and trigger immediate refresh
-      bool languageChanged = _selectedLanguage != null && 
-          (_currentProfile.languages.isEmpty || 
-           _currentProfile.languages.first != _selectedLanguage!.code);
+      // Check if language actually changed from the previous profile
+      String? previousLanguage = _currentProfile.languages.isNotEmpty ? _currentProfile.languages.first : null;
+      String? newLanguage = _selectedLanguage?.code;
+      bool languageChanged = previousLanguage != newLanguage;
       
       if (languageChanged) {
         // Trigger immediate app refresh BEFORE showing messages
@@ -120,8 +120,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         );
         
-        // Show language change notification if language was changed
-        if (languageChanged && _selectedLanguage != null) {
+        // Show language change notification ONLY if language actually changed
+        if (languageChanged && newLanguage != null) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -363,22 +363,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        Column(
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: UserProfileService.getAppLanguages().map((language) {
-            return RadioListTile<AppLanguage>(
-              title: Text(
-                _getLanguageDisplayName(language, localizations),
-                style: const TextStyle(color: Colors.white),
-              ),
-              value: language,
-              groupValue: _selectedLanguage,
-              onChanged: (AppLanguage? value) {
+            final isSelected = _selectedLanguage == language;
+            return FilterChip(
+              label: Text(_getLanguageDisplayName(language, localizations)),
+              selected: isSelected,
+              onSelected: (bool selected) {
                 setState(() {
-                  _selectedLanguage = value;
+                  if (selected) {
+                    // Single selection: set this language as the only selected one
+                    _selectedLanguage = language;
+                  } else {
+                    // If deselecting, clear selection
+                    _selectedLanguage = null;
+                  }
                 });
               },
-              activeColor: Colors.deepPurpleAccent,
-              contentPadding: EdgeInsets.zero,
+              selectedColor: Colors.deepPurpleAccent.withValues(alpha: 0.3),
+              backgroundColor: const Color(0xFF2A2D3A),
+              labelStyle: TextStyle(
+                color: isSelected ? Colors.deepPurpleAccent : Colors.white,
+              ),
+              showCheckmark: true,
+              checkmarkColor: Colors.deepPurpleAccent,
             );
           }).toList(),
         ),
