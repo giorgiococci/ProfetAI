@@ -346,7 +346,7 @@
     "description": "Label for languages field"
   },
 
-  "languagesHint": "Select your preferred languages",
+  "languagesHint": "Select your preferred language",
   "@languagesHint": {
     "description": "Hint text for languages field"
   },
@@ -449,5 +449,16 @@
   "interestNumerology": "Numerology",
   "@interestNumerology": {
     "description": "Numerology interest option"
+  },
+
+  "languageUpdated": "App language updated to {language}",
+  "@languageUpdated": {
+    "description": "Message shown when app language is updated",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The name of the selected language"
+      }
+    }
   }
 }

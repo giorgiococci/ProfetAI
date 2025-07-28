@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_profile.dart';
 import '../l10n/app_localizations.dart';
+import 'locale_service.dart';
 
 class UserProfileService {
   static const String _profileKey = 'user_profile';
@@ -34,8 +36,32 @@ class UserProfileService {
       final profileJson = jsonEncode(profile.toJson());
       await _storage.write(key: _profileKey, value: profileJson);
       _currentProfile = profile;
+      
+      // Auto-update app locale if user has selected a preferred language
+      await _syncProfileLanguageWithAppLocale(profile);
     } catch (e) {
       throw Exception('Failed to save profile: $e');
+    }
+  }
+
+  /// Automatically updates the app locale based on user's preferred language
+  Future<void> _syncProfileLanguageWithAppLocale(UserProfile profile) async {
+    if (profile.languages.isNotEmpty) {
+      try {
+        final localeService = LocaleService();
+        await localeService.loadSavedLocale();
+        
+        final preferredLanguage = profile.languages.first;
+        final preferredLocale = Locale(preferredLanguage);
+        
+        // Only change if it's different from current and supported
+        if (LocaleService.supportedLocales.contains(preferredLocale) &&
+            localeService.currentLocale != preferredLocale) {
+          await localeService.setLocale(preferredLocale);
+        }
+      } catch (e) {
+        // Silently handle locale update errors to not affect profile saving
+      }
     }
   }
 
@@ -296,6 +322,37 @@ class UserProfileService {
       Country(code: 'ZA', name: 'South Africa'),
       Country(code: 'ZM', name: 'Zambia'),
       Country(code: 'ZW', name: 'Zimbabwe'),
+    ];
+  }
+
+  // Static methods for getting available options without localization
+  static List<AppLanguage> getAppLanguages() {
+    return const [
+      AppLanguage(
+        code: 'en',
+        name: 'English',
+        localizedKey: 'languageEnglish',
+      ),
+      AppLanguage(
+        code: 'it',
+        name: 'Italiano',
+        localizedKey: 'languageItalian',
+      ),
+    ];
+  }
+
+  static List<Interest> getInterests() {
+    return const [
+      Interest(key: 'spirituality', localizedKey: 'interestSpirituality'),
+      Interest(key: 'meditation', localizedKey: 'interestMeditation'),
+      Interest(key: 'philosophy', localizedKey: 'interestPhilosophy'),
+      Interest(key: 'mysticism', localizedKey: 'interestMysticism'),
+      Interest(key: 'divination', localizedKey: 'interestDivination'),
+      Interest(key: 'wisdom', localizedKey: 'interestWisdom'),
+      Interest(key: 'dreams', localizedKey: 'interestDreams'),
+      Interest(key: 'tarot', localizedKey: 'interestTarot'),
+      Interest(key: 'astrology', localizedKey: 'interestAstrology'),
+      Interest(key: 'numerology', localizedKey: 'interestNumerology'),
     ];
   }
 

@@ -62,7 +62,7 @@
   "genderLabel": "Genere",
   "genderHint": "Seleziona il tuo genere",
   "languagesLabel": "Lingue",
-  "languagesHint": "Seleziona le tue lingue preferite",
+  "languagesHint": "Seleziona la tua lingua preferita",
   "interestsLabel": "Interessi",
   "interestsHint": "Seleziona i tuoi interessi",
   "saveProfile": "Salva Profilo",
@@ -82,5 +82,6 @@
   "interestDreams": "Interpretazione dei Sogni",
   "interestTarot": "Tarocchi",
   "interestAstrology": "Astrologia",
-  "interestNumerology": "Numerologia"
+  "interestNumerology": "Numerologia",
+  "languageUpdated": "Lingua dell'app aggiornata a {language}"
 }

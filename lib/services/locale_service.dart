@@ -5,6 +5,11 @@ class LocaleService extends ChangeNotifier {
   static const _storage = FlutterSecureStorage();
   static const _localeKey = 'selected_locale';
   
+  // Singleton pattern
+  static final LocaleService _instance = LocaleService._internal();
+  factory LocaleService() => _instance;
+  LocaleService._internal();
+  
   Locale _currentLocale = const Locale('it'); // Default to Italian
   
   Locale get currentLocale => _currentLocale;

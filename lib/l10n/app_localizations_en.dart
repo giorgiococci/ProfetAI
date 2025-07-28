@@ -215,7 +215,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languagesLabel => 'Languages';
 
   @override
-  String get languagesHint => 'Select your preferred languages';
+  String get languagesHint => 'Select your preferred language';
 
   @override
   String get interestsLabel => 'Interests';
@@ -276,4 +276,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get interestNumerology => 'Numerology';
+
+  @override
+  String languageUpdated(String language) {
+    return 'App language updated to $language';
+  }
 }

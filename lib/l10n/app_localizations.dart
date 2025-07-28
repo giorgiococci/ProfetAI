@@ -477,7 +477,7 @@ abstract class AppLocalizations {
   /// Hint text for languages field
   ///
   /// In en, this message translates to:
-  /// **'Select your preferred languages'**
+  /// **'Select your preferred language'**
   String get languagesHint;
 
   /// Label for interests field
@@ -599,6 +599,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Numerology'**
   String get interestNumerology;
+
+  /// Message shown when app language is updated
+  ///
+  /// In en, this message translates to:
+  /// **'App language updated to {language}'**
+  String languageUpdated(String language);
 }
 
 class _AppLocalizationsDelegate
