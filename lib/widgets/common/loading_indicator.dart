@@ -61,46 +61,59 @@ class LoadingDialog extends StatelessWidget {
     this.isDismissible = false,
   });
 
-  /// Shows a loading dialog and returns a Future that can be used to dismiss it
+  // Static reference to track active dialog
+  static OverlayEntry? _currentOverlay;
+  static bool _isDialogShowing = false;
+
+  /// Shows a loading dialog using Overlay instead of showDialog
   static Future<void> show({
     required BuildContext context,
     required Color primaryColor,
     required String message,
     bool isDismissible = false,
-  }) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: isDismissible,
-      builder: (BuildContext context) {
-        return LoadingDialog(
-          primaryColor: primaryColor,
-          message: message,
-          isDismissible: isDismissible,
-        );
-      },
+  }) async {
+    // Dismiss any existing dialog first
+    dismiss(context);
+    
+    _isDialogShowing = true;
+    
+    _currentOverlay = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.black54,
+        child: Center(
+          child: LoadingDialog(
+            primaryColor: primaryColor,
+            message: message,
+            isDismissible: isDismissible,
+          ),
+        ),
+      ),
     );
+    
+    Overlay.of(context).insert(_currentOverlay!);
   }
 
   /// Dismisses the currently shown loading dialog
   static void dismiss(BuildContext context) {
     try {
-      // Check if we can safely pop the navigation stack
-      final navigator = Navigator.maybeOf(context);
-      if (navigator != null && navigator.canPop()) {
-        navigator.pop();
-      } else if (navigator == null) {
-        // Navigator is null - context might be invalid
-        print('LoadingDialog.dismiss: Navigator is null, cannot dismiss dialog');
+      if (_isDialogShowing && _currentOverlay != null) {
+        _currentOverlay!.remove();
+        _currentOverlay = null;
+        _isDialogShowing = false;
+        print('LoadingDialog.dismiss: Dialog dismissed successfully using Overlay');
       } else {
-        // Navigator exists but can't pop - no dialog to dismiss
-        print('LoadingDialog.dismiss: No dialog to dismiss (canPop returned false)');
+        print('LoadingDialog.dismiss: No dialog to dismiss');
       }
     } catch (e) {
-      // Silently handle any dismiss errors to prevent crashes
-      // This can happen if the dialog was already dismissed or context is invalid
       print('LoadingDialog.dismiss: Error dismissing dialog: $e');
+      // Force reset state even if removal failed
+      _currentOverlay = null;
+      _isDialogShowing = false;
     }
   }
+
+  /// Check if dialog is currently showing
+  static bool get isShowing => _isDialogShowing;
 
   @override
   Widget build(BuildContext context) {

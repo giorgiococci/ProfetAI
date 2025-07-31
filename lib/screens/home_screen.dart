@@ -161,15 +161,21 @@ class _HomeScreenState extends State<HomeScreen>
       if (isAIEnabled) {
         AppLogger.logDebug('HomeScreen', 'Dismissing loading dialog immediately');
         try {
-          // Check if context is still valid before dismissing
-          if (context.mounted) {
-            ProphetLoadingDialog.dismiss(context);
-            AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed successfully');
-          } else {
-            AppLogger.logWarning('HomeScreen', 'Context not mounted, skipping dialog dismiss');
-          }
+          ProphetLoadingDialog.dismiss(context);
+          AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed successfully');
+          
+          // Double-check that dialog was dismissed
+          await Future.delayed(const Duration(milliseconds: 100));
+          
         } catch (e) {
-          AppLogger.logWarning('HomeScreen', 'Failed to dismiss loading dialog: $e');
+          AppLogger.logError('HomeScreen', 'Failed to dismiss loading dialog: $e');
+          // Force dismiss by trying multiple approaches
+          try {
+            Navigator.of(context).pop();
+            AppLogger.logDebug('HomeScreen', 'Force dismissed with Navigator.pop()');
+          } catch (e2) {
+            AppLogger.logError('HomeScreen', 'Force dismiss also failed: $e2');
+          }
         }
       }
 
@@ -186,14 +192,35 @@ class _HomeScreenState extends State<HomeScreen>
       // Add a small delay to ensure UI updates properly
       await Future.delayed(const Duration(milliseconds: 50));
 
+      // FORCE SHOW VISION DIALOG - This is the critical part!
       if (mounted) {
-        AppLogger.logDebug('HomeScreen', 'About to show vision dialog');
+        AppLogger.logInfo('HomeScreen', 'FORCE SHOWING VISION DIALOG - Vision: ${visionResult.content.substring(0, 30)}...');
+        
         final localizations = AppLocalizations.of(context)!;
         final title = hasQuestion 
             ? localizations.oracleResponds(_prophetName)
             : localizations.visionOf(_prophetName);
         
         try {
+          // One final force dismiss before showing vision dialog
+          if (isAIEnabled) {
+            try {
+              ProphetLoadingDialog.dismiss(context);
+            } catch (e) {
+              // Ignore dismiss errors at this point
+            }
+            
+            try {
+              Navigator.of(context).pop();
+            } catch (e) {
+              // Ignore Navigator errors at this point  
+            }
+          }
+          
+          // Wait a bit more to ensure loading dialog is gone
+          await Future.delayed(const Duration(milliseconds: 100));
+          
+          AppLogger.logInfo('HomeScreen', 'Calling VisionDialog.show with title: $title');
           await VisionDialog.show(
             context: context,
             title: title,
@@ -262,16 +289,20 @@ class _HomeScreenState extends State<HomeScreen>
       AppLogger.logError('HomeScreen', 'Error in _showVisionDialog', e);
       AppLogger.logError('HomeScreen', 'Stack trace: ${StackTrace.current}');
       
-      // Always try to dismiss loading dialog on error, even if widget is unmounted
+      // Always try to dismiss loading dialog on error
       if (isAIEnabled) {
         try {
-          // Check if context is still valid before dismissing
-          if (context.mounted) {
-            ProphetLoadingDialog.dismiss(context);
-            AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed after error');
-          } else {
-            AppLogger.logWarning('HomeScreen', 'Context not mounted, skipping dialog dismiss after error');
+          ProphetLoadingDialog.dismiss(context);
+          AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed after error');
+          
+          // Also try force dismiss with Navigator
+          try {
+            Navigator.of(context).pop();
+            AppLogger.logDebug('HomeScreen', 'Force dismissed with Navigator after error');
+          } catch (navError) {
+            AppLogger.logDebug('HomeScreen', 'Navigator force dismiss failed: $navError');
           }
+          
         } catch (dismissError) {
           AppLogger.logWarning('HomeScreen', 'Failed to dismiss loading dialog after error: $dismissError');
         }
