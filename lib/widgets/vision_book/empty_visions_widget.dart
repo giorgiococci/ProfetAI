@@ -50,7 +50,7 @@ class EmptyVisionsWidget extends StatelessWidget {
               ElevatedButton(
                 onPressed: onClearFilters,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple.withOpacity(0.3),
+                  backgroundColor: Colors.purple.withValues(alpha: 0.3),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),

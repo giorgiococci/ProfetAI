@@ -57,7 +57,7 @@ class FeedbackSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       child: Column(
         children: [
           Text(
@@ -66,18 +66,19 @@ class FeedbackSection extends StatelessWidget {
               color: Colors.grey[300],
             ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          const SizedBox(height: 16),
+          // Use Wrap instead of Row for better responsiveness
+          Wrap(
+            alignment: WrapAlignment.spaceEvenly,
+            spacing: 8.0, // Space between buttons horizontally
+            runSpacing: 8.0, // Space between buttons vertically if they wrap
             children: feedbackOptions.map((option) {
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: FeedbackButton(
-                    profet: profet,
-                    feedbackData: option,
-                    onPressed: () => onFeedbackSelected(option.type),
-                  ),
+              return SizedBox(
+                width: 80, // Fixed width for consistent button sizes
+                child: FeedbackButton(
+                  profet: profet,
+                  feedbackData: option,
+                  onPressed: () => onFeedbackSelected(option.type),
                 ),
               );
             }).toList(),
@@ -102,9 +103,9 @@ class FeedbackButton extends StatelessWidget {
     required this.profet,
     required this.feedbackData,
     required this.onPressed,
-    this.iconSize = 20,
-    this.fontSize = 9,
-    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    this.iconSize = 18,
+    this.fontSize = 8,
+    this.padding = const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
   });
 
   @override
@@ -127,14 +128,19 @@ class FeedbackButton extends StatelessWidget {
               feedbackData.icon,
               style: TextStyle(fontSize: iconSize),
             ),
-            const SizedBox(height: 2),
-            Text(
-              feedbackData.label,
-              style: ThemeUtils.captionStyle.copyWith(
-                color: profet.primaryColor,
-                fontWeight: FontWeight.w600,
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                feedbackData.label,
+                style: ThemeUtils.captionStyle.copyWith(
+                  color: profet.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: fontSize,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2, // Allow text to wrap to 2 lines if needed
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),

@@ -69,13 +69,13 @@ class VisionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.black.withOpacity(0.85),
+      backgroundColor: Colors.black.withValues(alpha: 0.85),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(color: profet.primaryColor.withValues(alpha: 0.8), width: 2),
       ),
       title: _buildTitle(),
-      content: _buildContent(),
+      content: _buildContent(context),
       actions: [_buildActions(context)],
     );
   }
@@ -124,17 +124,24 @@ class VisionDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContent() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (question != null && question!.isNotEmpty) ...[
-          _buildQuestionContainer(),
-          const SizedBox(height: 15),
-        ],
-        _buildContentContainer(),
-      ],
+  Widget _buildContent(BuildContext context) {
+    return SizedBox(
+      width: double.maxFinite,
+      height: MediaQuery.of(context).size.height * 0.6, // Limit dialog height to 60% of screen
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (question != null && question!.isNotEmpty) ...[
+              _buildQuestionContainer(),
+              const SizedBox(height: 15),
+            ],
+            _buildContentContainer(),
+            const SizedBox(height: 20), // Add spacing before feedback section
+          ],
+        ),
+      ),
     );
   }
 
@@ -168,28 +175,43 @@ class VisionDialog extends StatelessWidget {
     return ProphetContentContainer(
       primaryColor: profet.primaryColor,
       secondaryColor: profet.secondaryColor,
-      child: Text(
-        content,
-        style: ThemeUtils.bodyStyle.copyWith(
-          height: 1.5,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 200, // Limit content text height
+        ),
+        child: SingleChildScrollView(
+          child: Text(
+            content,
+            style: ThemeUtils.bodyStyle.copyWith(
+              height: 1.5,
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildActions(BuildContext context) {
-    return Column(
-      children: [
-        FeedbackSection.defaultOptions(
-          profet: profet,
-          onFeedbackSelected: onFeedbackSelected,
-          context: context,
-        ),
-        const SizedBox(height: 8),
-        _buildDivider(),
-        const SizedBox(height: 8),
-        _buildActionButtons(),
-      ],
+    return SizedBox(
+      width: double.maxFinite,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Feedback section with proper spacing
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FeedbackSection.defaultOptions(
+              profet: profet,
+              onFeedbackSelected: onFeedbackSelected,
+              context: context,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildDivider(),
+          const SizedBox(height: 16),
+          _buildActionButtons(),
+        ],
+      ),
     );
   }
 

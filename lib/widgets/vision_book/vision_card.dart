@@ -36,8 +36,8 @@ class VisionCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                ThemeUtils.getProphetColor(prophetType).withOpacity(0.1),
-                ThemeUtils.getProphetColor(prophetType).withOpacity(0.05),
+                ThemeUtils.getProphetColor(prophetType).withValues(alpha: 0.1),
+                ThemeUtils.getProphetColor(prophetType).withValues(alpha: 0.05),
               ],
             ),
           ),
@@ -68,7 +68,7 @@ class VisionCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: ThemeUtils.getProphetColor(prophetType).withOpacity(0.2),
+            color: ThemeUtils.getProphetColor(prophetType).withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
@@ -129,10 +129,10 @@ class VisionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -242,7 +242,7 @@ class VisionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         shape: BoxShape.circle,
       ),
       child: Icon(
@@ -290,7 +290,7 @@ class VisionCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           shape: BoxShape.circle,
           border: Border.all(
             color: isSelected ? color : Colors.white54,
