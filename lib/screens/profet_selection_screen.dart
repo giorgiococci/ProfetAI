@@ -103,7 +103,9 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
   @override
   Widget build(BuildContext context) {
     final currentProfet = ProfetManager.getProfet(widget.selectedProfet);
-    final localizations = AppLocalizations.of(context)!;;
+    final localizations = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400; // Detect smartphones
     
     return Container(
       decoration: ThemeUtils.getProphetGradientDecoration(widget.selectedProfet),
@@ -115,16 +117,20 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
               ThemeUtils.spacerLG,
               Text(
                 localizations.selectYourOracle,
-                style: ThemeUtils.headlineStyle.copyWith(
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 20 : 28, // Match home screen title sizing
+                  fontWeight: FontWeight.bold,
                   color: currentProfet.primaryColor,
-                  letterSpacing: 2.0,
+                  letterSpacing: isSmallScreen ? 1.0 : 2.0,
                 ),
                 textAlign: TextAlign.center,
               ),
               ThemeUtils.spacerSM,
               Text(
                 localizations.everyOracleUniquePersonality,
-                style: ThemeUtils.subtitleStyle.copyWith(
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 14 : 18, // Match home screen description sizing
+                  fontWeight: FontWeight.w500,
                   color: Colors.grey[300],
                   fontStyle: FontStyle.italic,
                 ),
@@ -143,7 +149,7 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
                     final isFavorite = _favoriteProphet == prophetTypeString;
                     
                     return Container(
-                      margin: const EdgeInsets.only(bottom: 20),
+                      margin: const EdgeInsets.only(bottom: 12), // Reduced from 20
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
@@ -153,7 +159,7 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
                           },
                           borderRadius: BorderRadius.circular(15),
                           child: Container(
-                            padding: const EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(16), // Reduced from 20
                             decoration: BoxDecoration(
                               color: isSelected 
                                   ? profet.primaryColor.withValues(alpha: 0.2)
@@ -166,104 +172,120 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
                                 width: isSelected ? 3 : 1,
                               ),
                             ),
-                            child: Row(
+                            child: Column(
                               children: [
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: profet.primaryColor.withValues(alpha: 0.2),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: profet.primaryColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: profet.profetImagePath != null
-                                      ? ClipOval(
-                                          child: Image.asset(
-                                            profet.profetImagePath!,
-                                            width: 56,
-                                            height: 56,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              // Fallback all'icona se l'immagine non carica
-                                              return Icon(
-                                                profet.icon,
-                                                color: profet.primaryColor,
-                                                size: 30,
-                                              );
-                                            },
-                                          ),
-                                        )
-                                      : Icon(
-                                          profet.icon,
+                                // Top row with icon, prophet name, and favorite
+                                Row(
+                                  children: [
+                                    // Prophet icon - top left
+                                    Container(
+                                      width: 40, // Reduced from 60
+                                      height: 40, // Reduced from 60
+                                      decoration: BoxDecoration(
+                                        color: profet.primaryColor.withValues(alpha: 0.2),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
                                           color: profet.primaryColor,
-                                          size: 30,
+                                          width: 2,
                                         ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      FutureBuilder<String>(
+                                      ),
+                                      child: profet.profetImagePath != null
+                                          ? ClipOval(
+                                              child: Image.asset(
+                                                profet.profetImagePath!,
+                                                width: 36,
+                                                height: 36,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  // Fallback all'icona se l'immagine non carica
+                                                  return Icon(
+                                                    profet.icon,
+                                                    color: profet.primaryColor,
+                                                    size: 20, // Reduced from 30
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                          : Icon(
+                                              profet.icon,
+                                              color: profet.primaryColor,
+                                              size: 20, // Reduced from 30
+                                            ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    // Prophet name - centered in top row
+                                    Expanded(
+                                      child: FutureBuilder<String>(
                                         future: ProphetLocalizations.getName(context, prophetTypeString),
                                         builder: (context, snapshot) {
                                           return Text(
                                             snapshot.data ?? 'Oracle',
                                             style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 16, // Reduced from 18
                                               fontWeight: FontWeight.bold,
                                               color: profet.primaryColor,
                                             ),
+                                            textAlign: TextAlign.center,
                                           );
                                         },
                                       ),
-                                      const SizedBox(height: 5),
-                                      FutureBuilder<String>(
-                                        future: ProphetLocalizations.getDescription(context, prophetTypeString),
-                                        builder: (context, snapshot) {
-                                          return Text(
-                                            snapshot.data ?? 'An ancient oracle',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[300],
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      const SizedBox(height: 8),
-                                      FutureBuilder<String>(
-                                        future: ProphetLocalizations.getLocation(context, prophetTypeString),
-                                        builder: (context, snapshot) {
-                                          return Text(
-                                            snapshot.data ?? 'Temple of Wisdom',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey[400],
-                                              letterSpacing: 1.0,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Favorite Icon
-                                GestureDetector(
-                                  onTap: () => _toggleFavorite(profetType),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Icon(
-                                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                                      color: isFavorite 
-                                          ? Colors.red[400] 
-                                          : Colors.grey[400],
-                                      size: 24,
                                     ),
-                                  ),
+                                    const SizedBox(width: 12),
+                                    // Favorite Icon - top right
+                                    GestureDetector(
+                                      onTap: () => _toggleFavorite(profetType),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4), // Reduced padding
+                                        child: Icon(
+                                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                                          color: isFavorite 
+                                              ? Colors.red[400] 
+                                              : Colors.grey[400],
+                                          size: 20, // Reduced from 24
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12), // Space between top row and text
+                                // Text content - only description and location now
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Description
+                                    FutureBuilder<String>(
+                                      future: ProphetLocalizations.getDescription(context, prophetTypeString),
+                                      builder: (context, snapshot) {
+                                        return Text(
+                                          snapshot.data ?? 'An ancient oracle',
+                                          style: TextStyle(
+                                            fontSize: 13, // Reduced from 14
+                                            color: Colors.grey[300],
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2, // Limit to 2 lines
+                                          overflow: TextOverflow.ellipsis,
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 4), // Reduced spacing
+                                    // Location
+                                    FutureBuilder<String>(
+                                      future: ProphetLocalizations.getLocation(context, prophetTypeString),
+                                      builder: (context, snapshot) {
+                                        return Text(
+                                          snapshot.data ?? 'Temple of Wisdom',
+                                          style: TextStyle(
+                                            fontSize: 11, // Reduced from 12
+                                            color: Colors.grey[400],
+                                            letterSpacing: 1.0,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
