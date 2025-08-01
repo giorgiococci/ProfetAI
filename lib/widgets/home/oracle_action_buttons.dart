@@ -42,20 +42,20 @@ class OracleActionButtons extends StatelessWidget {
         // Listen to Oracle Button
         SizedBox(
           width: double.infinity,
-          child: OutlinedButton.icon(
-            style: ThemeUtils.getSecondaryButtonStyle(
-              borderColor: ThemeUtils.getProphetSecondaryColor(selectedProphet),
+          child: ElevatedButton.icon(
+            style: ThemeUtils.getProphetButtonStyle(selectedProphet).copyWith(
+              backgroundColor: WidgetStateProperty.all(
+                ThemeUtils.getProphetColor(selectedProphet).withOpacity(0.8),
+              ),
             ),
             onPressed: onListenToOracle,
-            icon: Icon(
+            icon: const Icon(
               Icons.hearing,
-              color: ThemeUtils.getProphetSecondaryColor(selectedProphet),
+              color: Colors.white,
             ),
             label: Text(
               localizations.listenToOracle,
-              style: ThemeUtils.getProphetTextStyle(selectedProphet).copyWith(
-                color: ThemeUtils.getProphetSecondaryColor(selectedProphet),
-              ),
+              style: ThemeUtils.buttonTextStyle,
             ),
           ),
         ),

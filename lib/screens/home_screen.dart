@@ -57,28 +57,33 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
 
-    return Container(
-      decoration: BoxDecoration(
-        image: profet.backgroundImagePath != null
-            ? DecorationImage(
-                image: AssetImage(profet.backgroundImagePath!),
-                fit: BoxFit.cover,
-                opacity: 0.7,
-              )
-            : null,
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: ThemeUtils.paddingLG,
-          child: HomeContentWidget(
-            selectedProphet: widget.selectedProfet,
-            questionController: _questionController,
-            prophetName: _prophetName,
-            isLoading: isLoading,
-            hasError: hasError,
-            error: error,
-            onAskOracle: _handleAskOracle,
-            onListenToOracle: _handleListenToOracle,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          image: profet.backgroundImagePath != null
+              ? DecorationImage(
+                  image: AssetImage(profet.backgroundImagePath!),
+                  fit: BoxFit.cover,
+                  opacity: 0.7,
+                )
+              : null,
+        ),
+        child: SafeArea(
+          bottom: false, // Allow background to extend to bottom
+          child: Padding(
+            padding: ThemeUtils.paddingLG,
+            child: HomeContentWidget(
+              selectedProphet: widget.selectedProfet,
+              questionController: _questionController,
+              prophetName: _prophetName,
+              isLoading: isLoading,
+              hasError: hasError,
+              error: error,
+              onAskOracle: _handleAskOracle,
+              onListenToOracle: _handleListenToOracle,
+            ),
           ),
         ),
       ),

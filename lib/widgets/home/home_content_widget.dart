@@ -58,22 +58,20 @@ class HomeContentWidget extends StatelessWidget {
 
           isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
 
-          // Question Input Field with theme styling - reduced height
-          Container(
-            decoration: ThemeUtils.getProphetCardDecoration(selectedProphet),
-            padding: ThemeUtils.paddingMD,
-            child: TextFormField(
-              controller: questionController,
-              decoration: ThemeUtils.getProphetInputDecoration(
-                selectedProphet,
-                labelText: localizations.enterQuestionPlaceholder(
-                  prophetName.isNotEmpty ? prophetName : 'Oracle'
-                ),
-                prefixIcon: Icons.help_outline,
+          // Question Input Field with single container styling
+          TextFormField(
+            controller: questionController,
+            decoration: ThemeUtils.getProphetInputDecoration(
+              selectedProphet,
+              labelText: localizations.enterQuestionPlaceholder(
+                prophetName.isNotEmpty ? prophetName : 'Oracle'
               ),
-              maxLines: 2, // Reduced from 3 to 2 lines
-              validator: ValidationUtils.validateQuestion,
+            ).copyWith(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              fillColor: ThemeUtils.getProphetColor(selectedProphet).withValues(alpha: 0.1),
             ),
+            maxLines: 3,
+            validator: ValidationUtils.validateQuestion,
           ),
 
           isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
