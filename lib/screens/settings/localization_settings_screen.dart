@@ -57,13 +57,13 @@ class _LocalizationSettingsScreenState extends State<LocalizationSettingsScreen>
     }
   }
 
-  Future<void> _saveLanguage() async {
+  Future<void> _saveLanguage(AppLanguage? newLanguage) async {
     try {
       final updatedProfile = UserProfile(
         name: _currentProfile.name,
         country: _currentProfile.country,
         gender: _currentProfile.gender,
-        languages: _selectedLanguage != null ? [_selectedLanguage!.code] : [],
+        languages: newLanguage != null ? [newLanguage.code] : [],
         interests: _currentProfile.interests,
       );
 
@@ -71,51 +71,33 @@ class _LocalizationSettingsScreenState extends State<LocalizationSettingsScreen>
       
       // Check if language actually changed from the previous profile
       String? previousLanguage = _currentProfile.languages.isNotEmpty ? _currentProfile.languages.first : null;
-      String? newLanguage = _selectedLanguage?.code;
-      bool languageChanged = previousLanguage != newLanguage;
+      String? newLanguageCode = newLanguage?.code;
+      bool languageChanged = previousLanguage != newLanguageCode;
       
       if (languageChanged) {
+        // Update current profile to reflect the change
+        _currentProfile = updatedProfile;
+        
         // Trigger immediate app refresh BEFORE showing messages
         _triggerAppRefresh();
         
         // Small delay to allow the rebuild to complete
         await Future.delayed(const Duration(milliseconds: 100));
-      }
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.profileSaved),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 1),
-          ),
-        );
         
-        // Show language change notification ONLY if language actually changed
-        if (languageChanged && newLanguage != null) {
-          Future.delayed(const Duration(milliseconds: 1200), () {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    AppLocalizations.of(context)!.languageUpdated(
-                      _getLanguageDisplayName(_selectedLanguage!, AppLocalizations.of(context)!)
-                    ),
-                  ),
-                  backgroundColor: Colors.blue,
-                  duration: const Duration(seconds: 2),
+        // Show language change notification
+        if (mounted && newLanguageCode != null && newLanguage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.languageUpdated(
+                  _getLanguageDisplayName(newLanguage, AppLocalizations.of(context)!)
                 ),
-              );
-            }
-          });
+              ),
+              backgroundColor: Colors.blue,
+              duration: const Duration(seconds: 2),
+            ),
+          );
         }
-        
-        // Go back to settings screen after a short delay
-        Future.delayed(const Duration(milliseconds: 1500), () {
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        });
       }
     } catch (e) {
       if (mounted) {
@@ -163,11 +145,6 @@ class _LocalizationSettingsScreenState extends State<LocalizationSettingsScreen>
               _buildLanguagesField(localizations),
             ],
           ),
-          
-          const SizedBox(height: 24),
-          
-          // Save Button
-          _buildSaveButton(localizations),
           
           const SizedBox(height: 32),
         ],
@@ -217,31 +194,6 @@ class _LocalizationSettingsScreenState extends State<LocalizationSettingsScreen>
     );
   }
 
-  Widget _buildSaveButton(AppLocalizations localizations) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _saveLanguage,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ThemeUtils.mysticPurple,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 4,
-        ),
-        child: Text(
-          localizations.saveProfile,
-          style: const TextStyle(
-            fontSize: 16, 
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildLanguagesField(AppLocalizations localizations) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,7 +221,7 @@ class _LocalizationSettingsScreenState extends State<LocalizationSettingsScreen>
             return FilterChip(
               label: Text(_getLanguageDisplayName(language, localizations)),
               selected: isSelected,
-              onSelected: (bool selected) {
+              onSelected: (bool selected) async {
                 setState(() {
                   if (selected) {
                     // Single selection: set this language as the only selected one
@@ -279,6 +231,9 @@ class _LocalizationSettingsScreenState extends State<LocalizationSettingsScreen>
                     _selectedLanguage = null;
                   }
                 });
+                
+                // Save the language immediately when changed
+                await _saveLanguage(_selectedLanguage);
               },
               selectedColor: ThemeUtils.mysticPurple.withValues(alpha: 0.3),
               backgroundColor: Colors.white.withValues(alpha: 0.05),

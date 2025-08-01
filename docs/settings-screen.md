@@ -51,10 +51,9 @@ Configure the app's language and regional settings.
 
 1. Tap "Localization" from the settings menu
 2. Select your preferred language using the chip selector
-3. Tap "Save Profile" to apply the language change
-4. The app will refresh automatically with the new language
-5. You'll receive confirmation that the language has been updated
-6. You'll be automatically returned to the settings screen
+3. The language change is saved automatically and the app refreshes immediately
+4. You'll receive confirmation that the language has been updated
+5. You remain on the localization screen to make additional changes if needed
 
 ### Delete Data
 
@@ -120,6 +119,7 @@ The Settings screen follows the app's established design language, matching the 
 - Language changes take effect immediately throughout the entire app
 - All oracle responses, navigation, and interface text will update to your selected language
 - You can switch languages at any time without losing your other settings
+- You remain on the localization screen after changing languages to make additional adjustments
 
 ## Troubleshooting
 

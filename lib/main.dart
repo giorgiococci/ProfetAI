@@ -214,9 +214,9 @@ class _MyHomePageState extends State<MyHomePage> {
           onProfetChange: _changeProfetType,
         );
       case 2:
-        return SettingsScreen(onLanguageChanged: _refreshApp);
-      case 3:
         return const VisionBookScreen();
+      case 3:
+        return SettingsScreen(onLanguageChanged: _refreshApp);
       case 4:
         return const AIStatusScreen();
       default:
@@ -242,12 +242,12 @@ class _MyHomePageState extends State<MyHomePage> {
             label: AppLocalizations.of(context)!.navigationOracles,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: AppLocalizations.of(context)!.settingsPageTitle,
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
             label: AppLocalizations.of(context)!.navigationVisions,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: AppLocalizations.of(context)!.settingsPageTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
