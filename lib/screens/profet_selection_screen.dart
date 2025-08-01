@@ -250,7 +250,7 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
                                 const SizedBox(height: 12), // Space between top row and text
                                 // Text content - only description and location now
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center, // Changed from start to center
                                   children: [
                                     // Description
                                     FutureBuilder<String>(
