@@ -156,7 +156,7 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(localizations.deleteVision),
-        content: Text('Are you sure you want to delete "${vision.title}"?'),
+        content: Text(localizations.deleteVisionConfirm(vision.title)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
