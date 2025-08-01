@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:profet_ai/models/vision.dart';
 import 'package:profet_ai/l10n/app_localizations.dart';
+import 'package:profet_ai/prophet_localizations.dart';
 
 class VisionFilterBar extends StatelessWidget {
   final VisionFilter currentFilter;
@@ -105,14 +106,14 @@ class VisionFilterBar extends StatelessWidget {
         onFilterChanged(currentFilter.copyWith(prophetTypes: newTypes));
       },
       itemBuilder: (context) => [
-        _buildProphetMenuItem('mystic_prophet', 'Mystic Oracle'),
-        _buildProphetMenuItem('chaotic_prophet', 'Chaotic Oracle'),
-        _buildProphetMenuItem('cynical_prophet', 'Cynical Oracle'),
+        _buildProphetMenuItemAsync(context, 'mystic_prophet', 'mystic'),
+        _buildProphetMenuItemAsync(context, 'chaotic_prophet', 'chaotic'),
+        _buildProphetMenuItemAsync(context, 'cynical_prophet', 'cynical'),
       ],
     );
   }
 
-  PopupMenuItem<String> _buildProphetMenuItem(String value, String label) {
+  PopupMenuItem<String> _buildProphetMenuItemAsync(BuildContext context, String value, String prophetKey) {
     final isSelected = currentFilter.prophetTypes.contains(value);
     return PopupMenuItem<String>(
       value: value,
@@ -124,15 +125,34 @@ class VisionFilterBar extends StatelessWidget {
             size: 18,
           ),
           const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.purple : Colors.white,
-            ),
+          FutureBuilder<String>(
+            future: ProphetLocalizations.getName(context, prophetKey),
+            builder: (context, snapshot) {
+              final label = snapshot.data ?? _getProphetFallbackName(value);
+              return Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? Colors.purple : Colors.white,
+                ),
+              );
+            },
           ),
         ],
       ),
     );
+  }
+
+  String _getProphetFallbackName(String prophetType) {
+    switch (prophetType) {
+      case 'mystic_prophet':
+        return 'Mystic Oracle';
+      case 'chaotic_prophet':
+        return 'Chaotic Oracle';
+      case 'cynical_prophet':
+        return 'Cynical Oracle';
+      default:
+        return 'Oracle';
+    }
   }
 
   Widget _buildSortButton(BuildContext context) {
@@ -216,14 +236,11 @@ class VisionFilterBar extends StatelessWidget {
       children: [
         if (currentFilter.prophetTypes.isNotEmpty)
           for (String prophetType in currentFilter.prophetTypes)
-            _buildFilterChip(
-              _getProphetDisplayName(prophetType),
-              () {
-                final newTypes = Set<String>.from(currentFilter.prophetTypes);
-                newTypes.remove(prophetType);
-                onFilterChanged(currentFilter.copyWith(prophetTypes: newTypes));
-              },
-            ),
+            _buildFilterChipAsync(context, prophetType, () {
+              final newTypes = Set<String>.from(currentFilter.prophetTypes);
+              newTypes.remove(prophetType);
+              onFilterChanged(currentFilter.copyWith(prophetTypes: newTypes));
+            }),
         if (currentFilter.sortBy != VisionSortBy.dateDesc)
           _buildFilterChip(
             'Sort: ${_getSortLabel(context, currentFilter.sortBy)}',
@@ -231,6 +248,29 @@ class VisionFilterBar extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  Widget _buildFilterChipAsync(BuildContext context, String prophetType, VoidCallback onRemove) {
+    return FutureBuilder<String>(
+      future: ProphetLocalizations.getName(context, _getProphetKey(prophetType)),
+      builder: (context, snapshot) {
+        final label = snapshot.data ?? _getProphetDisplayName(prophetType);
+        return _buildFilterChip(label, onRemove);
+      },
+    );
+  }
+
+  String _getProphetKey(String prophetType) {
+    switch (prophetType) {
+      case 'mystic_prophet':
+        return 'mystic';
+      case 'chaotic_prophet':
+        return 'chaotic';
+      case 'cynical_prophet':
+        return 'cynical';
+      default:
+        return 'mystic';
+    }
   }
 
   Widget _buildFilterChip(String label, VoidCallback onRemove) {
