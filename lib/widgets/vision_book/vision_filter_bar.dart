@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:profet_ai/models/vision.dart';
+import 'package:profet_ai/l10n/app_localizations.dart';
 
 class VisionFilterBar extends StatelessWidget {
   final VisionFilter currentFilter;
@@ -30,30 +31,30 @@ class VisionFilterBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              _buildProphetFilter(),
+              _buildProphetFilter(context),
               const SizedBox(width: 8),
-              _buildSortButton(),
+              _buildSortButton(context),
               const Spacer(),
               if (currentFilter.hasActiveFilters)
                 TextButton(
                   onPressed: () => onFilterChanged(VisionFilter()),
-                  child: const Text(
-                    'Clear',
-                    style: TextStyle(color: Colors.purple),
+                  child: Text(
+                    AppLocalizations.of(context)!.clearFilters,
+                    style: const TextStyle(color: Colors.purple),
                   ),
                 ),
             ],
           ),
           if (currentFilter.hasActiveFilters) ...[
             const SizedBox(height: 8),
-            _buildActiveFilters(),
+            _buildActiveFilters(context),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildProphetFilter() {
+  Widget _buildProphetFilter(BuildContext context) {
     return PopupMenuButton<String>(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -78,8 +79,8 @@ class VisionFilterBar extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               currentFilter.prophetTypes.isEmpty 
-                  ? 'All Oracles'
-                  : '${currentFilter.prophetTypes.length} Selected',
+                  ? AppLocalizations.of(context)!.allOracles
+                  : AppLocalizations.of(context)!.oraclesSelected(currentFilter.prophetTypes.length),
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 12,
@@ -134,7 +135,7 @@ class VisionFilterBar extends StatelessWidget {
     );
   }
 
-  Widget _buildSortButton() {
+  Widget _buildSortButton(BuildContext context) {
     return PopupMenuButton<VisionSortBy>(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -158,7 +159,7 @@ class VisionFilterBar extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              _getSortLabel(currentFilter.sortBy),
+              _getSortLabel(context, currentFilter.sortBy),
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 12,
@@ -177,16 +178,16 @@ class VisionFilterBar extends StatelessWidget {
         onFilterChanged(currentFilter.copyWith(sortBy: sortBy));
       },
       itemBuilder: (context) => [
-        _buildSortMenuItem(VisionSortBy.dateDesc, 'Newest First'),
-        _buildSortMenuItem(VisionSortBy.dateAsc, 'Oldest First'),
-        _buildSortMenuItem(VisionSortBy.titleAsc, 'Title A-Z'),
-        _buildSortMenuItem(VisionSortBy.titleDesc, 'Title Z-A'),
-        _buildSortMenuItem(VisionSortBy.prophetType, 'By Oracle'),
+        _buildSortMenuItem(context, VisionSortBy.dateDesc, AppLocalizations.of(context)!.newestFirst),
+        _buildSortMenuItem(context, VisionSortBy.dateAsc, AppLocalizations.of(context)!.oldestFirst),
+        _buildSortMenuItem(context, VisionSortBy.titleAsc, AppLocalizations.of(context)!.titleAZ),
+        _buildSortMenuItem(context, VisionSortBy.titleDesc, AppLocalizations.of(context)!.titleZA),
+        _buildSortMenuItem(context, VisionSortBy.prophetType, AppLocalizations.of(context)!.byOracle),
       ],
     );
   }
 
-  PopupMenuItem<VisionSortBy> _buildSortMenuItem(VisionSortBy sortBy, String label) {
+  PopupMenuItem<VisionSortBy> _buildSortMenuItem(BuildContext context, VisionSortBy sortBy, String label) {
     final isSelected = currentFilter.sortBy == sortBy;
     return PopupMenuItem<VisionSortBy>(
       value: sortBy,
@@ -209,7 +210,7 @@ class VisionFilterBar extends StatelessWidget {
     );
   }
 
-  Widget _buildActiveFilters() {
+  Widget _buildActiveFilters(BuildContext context) {
     return Wrap(
       spacing: 8,
       children: [
@@ -225,7 +226,7 @@ class VisionFilterBar extends StatelessWidget {
             ),
         if (currentFilter.sortBy != VisionSortBy.dateDesc)
           _buildFilterChip(
-            'Sort: ${_getSortLabel(currentFilter.sortBy)}',
+            'Sort: ${_getSortLabel(context, currentFilter.sortBy)}',
             () => onFilterChanged(currentFilter.copyWith(sortBy: VisionSortBy.dateDesc)),
           ),
       ],
@@ -267,18 +268,19 @@ class VisionFilterBar extends StatelessWidget {
     );
   }
 
-  String _getSortLabel(VisionSortBy sortBy) {
+  String _getSortLabel(BuildContext context, VisionSortBy sortBy) {
+    final localizations = AppLocalizations.of(context)!;
     switch (sortBy) {
       case VisionSortBy.dateDesc:
-        return 'Newest';
+        return localizations.newestFirst;
       case VisionSortBy.dateAsc:
-        return 'Oldest';
+        return localizations.oldestFirst;
       case VisionSortBy.titleAsc:
-        return 'A-Z';
+        return localizations.titleAZ;
       case VisionSortBy.titleDesc:
-        return 'Z-A';
+        return localizations.titleZA;
       case VisionSortBy.prophetType:
-        return 'Oracle';
+        return localizations.byOracle;
     }
   }
 

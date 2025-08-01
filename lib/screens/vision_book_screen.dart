@@ -7,6 +7,7 @@ import 'package:profet_ai/widgets/vision_book/vision_filter_bar.dart';
 import 'package:profet_ai/widgets/vision_book/vision_card.dart';
 import 'package:profet_ai/widgets/vision_book/empty_visions_widget.dart';
 import 'package:profet_ai/widgets/vision_book/vision_search_delegate.dart';
+import 'package:profet_ai/l10n/app_localizations.dart';
 
 class VisionBookScreen extends StatefulWidget {
   const VisionBookScreen({super.key});
@@ -56,9 +57,10 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
         _isLoading = false;
       });
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading visions: $e'),
+            content: Text('${localizations.errorLoadingVisions}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -149,20 +151,21 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
   }
 
   Future<void> _deleteVision(Vision vision) async {
+    final localizations = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Vision'),
+        title: Text(localizations.deleteVision),
         content: Text('Are you sure you want to delete "${vision.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(localizations.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(localizations.delete),
           ),
         ],
       ),
@@ -173,18 +176,20 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
         await _storageService.deleteVision(vision.id!);
         await _loadVisions(); // Reload the list
         if (mounted) {
+          final localizations = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Vision deleted successfully'),
+            SnackBar(
+              content: Text(localizations.visionDeletedSuccessfully),
               backgroundColor: Colors.green,
             ),
           );
         }
       } catch (e) {
         if (mounted) {
+          final localizations = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error deleting vision: $e'),
+              content: Text('${localizations.errorDeletingVision}: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -198,18 +203,20 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
       await _storageService.updateVisionFeedback(vision.id!, feedbackType);
       await _loadVisions(); // Reload to get updated feedback
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Feedback updated successfully'),
+          SnackBar(
+            content: Text(localizations.feedbackUpdatedSuccessfully),
             backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error updating feedback: $e'),
+            content: Text('${localizations.errorUpdatingFeedback}: $e'),
             backgroundColor: Colors.red,
           ),
         );

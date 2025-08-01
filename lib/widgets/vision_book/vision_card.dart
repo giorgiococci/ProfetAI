@@ -3,6 +3,8 @@ import 'package:profet_ai/models/vision.dart';
 import 'package:profet_ai/models/vision_feedback.dart';
 import 'package:profet_ai/models/profet_manager.dart';
 import 'package:profet_ai/utils/theme_utils.dart';
+import 'package:profet_ai/prophet_localizations.dart';
+import 'package:profet_ai/l10n/app_localizations.dart';
 
 class VisionCard extends StatelessWidget {
   final Vision vision;
@@ -71,13 +73,18 @@ class VisionCard extends StatelessWidget {
             color: ThemeUtils.getProphetColor(prophetType).withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Text(
-            _getDisplayName(vision.prophetType),
-            style: TextStyle(
-              color: ThemeUtils.getProphetColor(prophetType),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+          child: FutureBuilder<String>(
+            future: _getProphetLocalizedName(context, vision.prophetType),
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.data ?? _getDisplayName(vision.prophetType),
+                style: TextStyle(
+                  color: ThemeUtils.getProphetColor(prophetType),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
         ),
         const Spacer(),
@@ -96,13 +103,16 @@ class VisionCard extends StatelessWidget {
             }
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'delete',
               child: Row(
                 children: [
-                  Icon(Icons.delete, color: Colors.red, size: 18),
-                  SizedBox(width: 8),
-                  Text('Delete', style: TextStyle(color: Colors.red)),
+                  const Icon(Icons.delete, color: Colors.red, size: 18),
+                  const SizedBox(width: 8),
+                  Text(
+                    AppLocalizations.of(context)!.delete, 
+                    style: const TextStyle(color: Colors.red)
+                  ),
                 ],
               ),
             ),
@@ -177,26 +187,27 @@ class VisionCard extends StatelessWidget {
   Widget _buildFooter(BuildContext context, ProfetType prophetType) {
     return Row(
       children: [
-        _buildTimestamp(),
+        _buildTimestamp(context),
         const Spacer(),
         _buildFeedbackButtons(),
       ],
     );
   }
 
-  Widget _buildTimestamp() {
+  Widget _buildTimestamp(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final difference = now.difference(vision.timestamp);
     
     String timeString;
     if (difference.inDays > 0) {
-      timeString = '${difference.inDays}d ago';
+      timeString = localizations.timeAgo('${difference.inDays}d');
     } else if (difference.inHours > 0) {
-      timeString = '${difference.inHours}h ago';
+      timeString = localizations.timeAgo('${difference.inHours}h');
     } else if (difference.inMinutes > 0) {
-      timeString = '${difference.inMinutes}m ago';
+      timeString = localizations.timeAgo('${difference.inMinutes}m');
     } else {
-      timeString = 'Just now';
+      timeString = localizations.justNow;
     }
 
     return Row(
@@ -329,6 +340,28 @@ class VisionCard extends StatelessWidget {
         return 'Cynical Oracle';
       default:
         return 'Oracle';
+    }
+  }
+
+  Future<String> _getProphetLocalizedName(BuildContext context, String prophetType) async {
+    final prophetKey = _getProphetLocalizationKey(prophetType);
+    try {
+      return await ProphetLocalizations.getName(context, prophetKey);
+    } catch (e) {
+      return _getDisplayName(prophetType); // Fallback to hardcoded names
+    }
+  }
+
+  String _getProphetLocalizationKey(String prophetType) {
+    switch (prophetType.toLowerCase()) {
+      case 'mystic_prophet':
+        return 'mystic';
+      case 'chaotic_prophet':
+        return 'chaotic';
+      case 'cynical_prophet':
+        return 'cynical';
+      default:
+        return 'mystic';
     }
   }
 }

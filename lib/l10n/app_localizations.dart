@@ -671,6 +671,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete visions. Please try again.'**
   String get failedToDeleteVisions;
+
+  /// Title for the vision book screen
+  ///
+  /// In en, this message translates to:
+  /// **'Vision Book'**
+  String get visionBookTitle;
+
+  /// Tooltip text for search visions button
+  ///
+  /// In en, this message translates to:
+  /// **'Search visions'**
+  String get searchVisions;
+
+  /// Tooltip text for refresh visions button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refreshVisions;
+
+  /// Text showing number of visions
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No visions} =1{1 vision} other{{count} visions}}'**
+  String visionsCount(int count);
+
+  /// Text showing filtered visions count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} visions'**
+  String visionsFiltered(int count, int total);
+
+  /// Badge text indicating filtered results
+  ///
+  /// In en, this message translates to:
+  /// **'Filtered'**
+  String get filtered;
+
+  /// Title for delete vision dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Vision'**
+  String get deleteVision;
+
+  /// Confirmation message for deleting a vision
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{title}\"?'**
+  String deleteVisionConfirm(String title);
+
+  /// Error message when visions fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading visions'**
+  String get errorLoadingVisions;
+
+  /// Success message when vision is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Vision deleted successfully'**
+  String get visionDeletedSuccessfully;
+
+  /// Error message when vision deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting vision'**
+  String get errorDeletingVision;
+
+  /// Success message when feedback is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback updated successfully'**
+  String get feedbackUpdatedSuccessfully;
+
+  /// Error message when feedback update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating feedback'**
+  String get errorUpdatingFeedback;
+
+  /// Message when no visions match the current filters
+  ///
+  /// In en, this message translates to:
+  /// **'No visions match your filters'**
+  String get noVisionsMatchFilters;
+
+  /// Message when no visions have been stored
+  ///
+  /// In en, this message translates to:
+  /// **'No visions stored yet'**
+  String get noVisionsStoredYet;
+
+  /// Suggestion text when no visions match filters
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search criteria or clear filters to see all visions.'**
+  String get tryAdjustingFilters;
+
+  /// Encouraging text when no visions exist
+  ///
+  /// In en, this message translates to:
+  /// **'Start your mystical journey by asking the oracles for guidance.'**
+  String get startMysticalJourney;
+
+  /// Button text to clear all filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filters'**
+  String get clearFilters;
+
+  /// Text for showing all oracles filter option
+  ///
+  /// In en, this message translates to:
+  /// **'All Oracles'**
+  String get allOracles;
+
+  /// Text showing number of selected oracles
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Selected'**
+  String oraclesSelected(int count);
+
+  /// Sort option for newest first
+  ///
+  /// In en, this message translates to:
+  /// **'Newest First'**
+  String get newestFirst;
+
+  /// Sort option for oldest first
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest First'**
+  String get oldestFirst;
+
+  /// Sort option for title A to Z
+  ///
+  /// In en, this message translates to:
+  /// **'Title A-Z'**
+  String get titleAZ;
+
+  /// Sort option for title Z to A
+  ///
+  /// In en, this message translates to:
+  /// **'Title Z-A'**
+  String get titleZA;
+
+  /// Sort option by oracle type
+  ///
+  /// In en, this message translates to:
+  /// **'By Oracle'**
+  String get byOracle;
+
+  /// Active sort filter label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort: {sortType}'**
+  String sortFilter(String sortType);
+
+  /// Clear button text for filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// Time ago format
+  ///
+  /// In en, this message translates to:
+  /// **'{time} ago'**
+  String timeAgo(String time);
+
+  /// Short format for days
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d'**
+  String daysShort(int count);
+
+  /// Short format for hours
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h'**
+  String hoursShort(int count);
+
+  /// Short format for minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m'**
+  String minutesShort(int count);
+
+  /// Text for very recent time
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
 }
 
 class _AppLocalizationsDelegate
