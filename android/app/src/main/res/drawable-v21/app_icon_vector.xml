@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    
+    <!-- Background -->
+    <path
+        android:pathData="M0,0L512,0L512,512L0,512Z"
+        android:fillColor="#FF1E1B4B" />
+    
+    <!-- Triangle -->
+    <path
+        android:pathData="M256,80L400,350L112,350Z"
+        android:fillColor="#FF3B82F6"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"/>
+    
+    <!-- Question mark -->
+    <path
+        android:pathData="M240,65Q260,50 270,70Q270,85 255,90L250,95L250,110M250,125L250,135"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Eye outline -->
+    <path
+        android:pathData="M150,256Q200,200 256,200Q312,200 362,256Q312,312 256,312Q200,312 150,256Z"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Pupil circle -->
+    <path
+        android:pathData="M256,221A35,35 0 1,1 256,291A35,35 0 1,1 256,221Z"
+        android:fillColor="#FFFDE047"/>
+    
+    <!-- Smiley eyes -->
+    <path
+        android:pathData="M245,242A3,3 0 1,1 245,248A3,3 0 1,1 245,242Z"
+        android:fillColor="#FF1E1B4B"/>
+    
+    <path
+        android:pathData="M267,242A3,3 0 1,1 267,248A3,3 0 1,1 267,242Z"
+        android:fillColor="#FF1E1B4B"/>
+    
+    <!-- Smiley mouth -->
+    <path
+        android:pathData="M240,265Q256,275 272,265"
+        android:strokeColor="#FF1E1B4B"
+        android:strokeWidth="3"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"/>
+    
+    <!-- Radiating lines -->
+    <path
+        android:pathData="M100,150L140,180"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M70,200L110,220"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M70,312L110,292"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M100,362L140,332"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M412,150L372,180"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M442,200L402,220"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M442,312L402,292"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M412,362L372,332"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M256,400L256,360"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M200,380L220,340"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+    <path
+        android:pathData="M312,380L292,340"
+        android:strokeColor="#FFFDE047"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"/>
+    
+</vector>
