@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../models/vision_feedback.dart';
 import '../../widgets/common/common_widgets.dart';
-import '../../widgets/common/action_button.dart';
 import '../../utils/theme_utils.dart';
 import 'feedback_section.dart';
 
 /// A comprehensive dialog widget for displaying oracle visions and responses.
 /// Includes AI indicator, question display, content, feedback section, and action buttons.
-class VisionDialog extends StatelessWidget {
+class VisionDialog extends StatefulWidget {
   final String title;
   final IconData titleIcon;
   final String content;
@@ -33,6 +32,9 @@ class VisionDialog extends StatelessWidget {
     required this.onShare,
     required this.onClose,
   });
+
+  @override
+  State<VisionDialog> createState() => _VisionDialogState();
 
   /// Shows the vision dialog
   static Future<void> show({
@@ -69,6 +71,18 @@ class VisionDialog extends StatelessWidget {
       },
     );
   }
+}
+
+class _VisionDialogState extends State<VisionDialog> {
+  FeedbackType? selectedFeedback;
+
+  void _handleFeedbackSelected(FeedbackType feedbackType) {
+    setState(() {
+      selectedFeedback = feedbackType;
+    });
+    // Call the original callback but don't close the dialog
+    widget.onFeedbackSelected(feedbackType);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +94,7 @@ class VisionDialog extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: profet.primaryColor.withValues(alpha: 0.8), width: 2),
+          border: Border.all(color: widget.profet.primaryColor.withValues(alpha: 0.8), width: 2),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -108,9 +122,9 @@ class VisionDialog extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            title,
+            widget.title,
             style: ThemeUtils.titleStyle.copyWith(
-              color: profet.primaryColor,
+              color: widget.profet.primaryColor,
               fontSize: 16, // Further reduced font size for better fit
             ),
             maxLines: 2, // Allow title to wrap to 2 lines if needed
@@ -128,7 +142,7 @@ class VisionDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (question != null && question!.isNotEmpty) ...[
+          if (widget.question != null && widget.question!.isNotEmpty) ...[
             _buildQuestionContainer(),
             const SizedBox(height: 15),
           ],
@@ -146,17 +160,17 @@ class VisionDialog extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: profet.secondaryColor.withValues(alpha: 0.5)),
+        border: Border.all(color: widget.profet.secondaryColor.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [
-          Icon(Icons.help_outline, color: profet.secondaryColor, size: 20),
+          Icon(Icons.help_outline, color: widget.profet.secondaryColor, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '"$question"',
+              '"${widget.question}"',
               style: ThemeUtils.bodyStyle.copyWith(
-                color: profet.secondaryColor,
+                color: widget.profet.secondaryColor,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -168,15 +182,15 @@ class VisionDialog extends StatelessWidget {
 
   Widget _buildContentContainer() {
     return ProphetContentContainer(
-      primaryColor: profet.primaryColor,
-      secondaryColor: profet.secondaryColor,
+      primaryColor: widget.profet.primaryColor,
+      secondaryColor: widget.profet.secondaryColor,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
           maxHeight: 300, // Increased from 200 to 300 for more content space
         ),
         child: SingleChildScrollView(
           child: Text(
-            content,
+            widget.content,
             style: ThemeUtils.bodyStyle.copyWith(
               height: 1.5,
             ),
@@ -194,9 +208,10 @@ class VisionDialog extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduced from 8.0
           child: FeedbackSection.defaultOptions(
-            profet: profet,
-            onFeedbackSelected: onFeedbackSelected,
+            profet: widget.profet,
+            onFeedbackSelected: _handleFeedbackSelected,
             context: context,
+            selectedFeedback: selectedFeedback,
           ),
         ),
         const SizedBox(height: 8), // Reduced from 16
@@ -210,7 +225,7 @@ class VisionDialog extends StatelessWidget {
   Widget _buildDivider() {
     return Container(
       height: 1,
-      color: profet.primaryColor.withValues(alpha: 0.2),
+      color: widget.profet.primaryColor.withValues(alpha: 0.2),
       margin: const EdgeInsets.symmetric(horizontal: 16),
     );
   }
@@ -225,8 +240,8 @@ class VisionDialog extends StatelessWidget {
             child: ActionButton(
               icon: Icons.bookmark_add,
               label: 'Salva',
-              color: profet.primaryColor,
-              onPressed: onSave,
+              color: widget.profet.primaryColor,
+              onPressed: widget.onSave,
             ),
           ),
         ),
@@ -236,8 +251,8 @@ class VisionDialog extends StatelessWidget {
             child: ActionButton(
               icon: Icons.share,
               label: 'Condividi',
-              color: profet.secondaryColor,
-              onPressed: onShare,
+              color: widget.profet.secondaryColor,
+              onPressed: widget.onShare,
             ),
           ),
         ),
@@ -248,7 +263,7 @@ class VisionDialog extends StatelessWidget {
               icon: Icons.close,
               label: 'Chiudi',
               color: Colors.grey,
-              onPressed: onClose,
+              onPressed: widget.onClose,
             ),
           ),
         ),
