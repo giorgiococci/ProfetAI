@@ -88,7 +88,6 @@ class VisionCard extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        _buildFeedbackIndicator(),
         PopupMenuButton<String>(
           icon: Icon(
             Icons.more_vert,
@@ -229,59 +228,24 @@ class VisionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildFeedbackIndicator() {
-    if (vision.feedbackType == null) return const SizedBox.shrink();
-
-    IconData icon;
-    Color color;
-    
-    switch (vision.feedbackType!) {
-      case FeedbackType.positive:
-        icon = Icons.thumb_up;
-        color = Colors.green;
-        break;
-      case FeedbackType.negative:
-        icon = Icons.thumb_down;
-        color = Colors.red;
-        break;
-      case FeedbackType.funny:
-        icon = Icons.sentiment_very_satisfied;
-        color = Colors.orange;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 16,
-      ),
-    );
-  }
-
   Widget _buildFeedbackButtons() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _feedbackButton(
-          icon: Icons.thumb_up,
+          text: '🌟',
           type: FeedbackType.positive,
           color: Colors.green,
         ),
         const SizedBox(width: 4),
         _feedbackButton(
-          icon: Icons.thumb_down,
+          text: '🪨',
           type: FeedbackType.negative,
           color: Colors.red,
         ),
         const SizedBox(width: 4),
         _feedbackButton(
-          icon: Icons.sentiment_very_satisfied,
+          text: '🐸',
           type: FeedbackType.funny,
           color: Colors.orange,
         ),
@@ -290,7 +254,7 @@ class VisionCard extends StatelessWidget {
   }
 
   Widget _feedbackButton({
-    required IconData icon,
+    required String text,
     required FeedbackType type,
     required Color color,
   }) {
@@ -308,10 +272,12 @@ class VisionCard extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Icon(
-          icon,
-          color: isSelected ? color : Colors.white54,
-          size: 16,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 16,
+            color: isSelected ? color : Colors.white54,
+          ),
         ),
       ),
     );
