@@ -26,12 +26,12 @@ class VisionCard extends StatelessWidget {
     
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             gradient: LinearGradient(
@@ -47,15 +47,15 @@ class VisionCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(context, prophetType),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               _buildTitle(),
               if (vision.question != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 _buildQuestion(),
               ],
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               _buildPreview(),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               _buildFooter(context, prophetType),
             ],
           ),
@@ -68,10 +68,10 @@ class VisionCard extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
             color: ThemeUtils.getProphetColor(prophetType).withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: FutureBuilder<String>(
             future: _getProphetLocalizedName(context, vision.prophetType),
@@ -80,7 +80,7 @@ class VisionCard extends StatelessWidget {
                 snapshot.data ?? _getDisplayName(vision.prophetType),
                 style: TextStyle(
                   color: ThemeUtils.getProphetColor(prophetType),
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
               );
@@ -136,7 +136,7 @@ class VisionCard extends StatelessWidget {
 
   Widget _buildQuestion() {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
@@ -150,14 +150,14 @@ class VisionCard extends StatelessWidget {
           Icon(
             Icons.help_outline,
             color: Colors.white70,
-            size: 16,
+            size: 14,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           Expanded(
             child: Text(
               vision.question!,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: Colors.white70,
                 fontStyle: FontStyle.italic,
               ),
@@ -174,9 +174,9 @@ class VisionCard extends StatelessWidget {
     return Text(
       vision.answer,
       style: const TextStyle(
-        fontSize: 14,
+        fontSize: 13,
         color: Colors.white70,
-        height: 1.4,
+        height: 1.3,
       ),
       maxLines: 3,
       overflow: TextOverflow.ellipsis,
@@ -237,13 +237,13 @@ class VisionCard extends StatelessWidget {
           type: FeedbackType.positive,
           color: Colors.green,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 3),
         _feedbackButton(
           text: '🪨',
           type: FeedbackType.negative,
           color: Colors.red,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 3),
         _feedbackButton(
           text: '🐸',
           type: FeedbackType.funny,
@@ -263,7 +263,7 @@ class VisionCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => onFeedbackUpdate(type),
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           shape: BoxShape.circle,
@@ -275,7 +275,7 @@ class VisionCard extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             color: isSelected ? color : Colors.white54,
           ),
         ),
