@@ -1,16 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'models/profet_manager.dart';
 import 'screens/home_screen.dart';
 import 'screens/profet_selection_screen.dart';
-import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/vision_book_screen.dart';
 import 'screens/ai_status_screen.dart';
 import 'screens/splash_screen.dart';
 import 'services/locale_service.dart';
 import 'services/user_profile_service.dart';
 import 'utils/app_logger.dart';
+import 'config/app_config.dart';
 
 void main() async {
   // Ensure Flutter is initialized
@@ -179,7 +181,12 @@ class _MyHomePageState extends State<MyHomePage> {
   
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      // If trying to access AI Status screen (index 4) without debug mode, redirect to Settings
+      if (index == 4 && !(kDebugMode || AppConfig.isDebugMode)) {
+        _selectedIndex = 3; // Redirect to Settings screen
+      } else {
+        _selectedIndex = index;
+      }
     });
   }
 
@@ -214,16 +221,52 @@ class _MyHomePageState extends State<MyHomePage> {
           onProfetChange: _changeProfetType,
         );
       case 2:
-        return ProfileScreen(onLanguageChanged: _refreshApp);
-      case 3:
         return const VisionBookScreen();
+      case 3:
+        return SettingsScreen(onLanguageChanged: _refreshApp);
       case 4:
-        return const AIStatusScreen();
+        // Only show AI Status screen in debug mode
+        return (kDebugMode || AppConfig.isDebugMode) 
+            ? const AIStatusScreen()
+            : SettingsScreen(onLanguageChanged: _refreshApp); // Fallback to settings
       default:
         return HomeScreen(
           selectedProfet: _currentProfetType,
         );
     }
+  }
+
+  List<BottomNavigationBarItem> _getNavigationItems(BuildContext context) {
+    final baseItems = <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: AppLocalizations.of(context)!.navigationHome,
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.people),
+        label: AppLocalizations.of(context)!.navigationOracles,
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.menu_book),
+        label: AppLocalizations.of(context)!.navigationVisions,
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: AppLocalizations.of(context)!.settingsPageTitle,
+      ),
+    ];
+
+    // Only add AI Status tab in debug mode
+    if (kDebugMode || AppConfig.isDebugMode) {
+      baseItems.add(
+        BottomNavigationBarItem(
+          icon: Icon(Icons.info),
+          label: AppLocalizations.of(context)!.navigationAIStatus,
+        ),
+      );
+    }
+
+    return baseItems;
   }
 
   @override
@@ -232,28 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _getCurrentScreen(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: AppLocalizations.of(context)!.navigationHome,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: AppLocalizations.of(context)!.navigationOracles,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: AppLocalizations.of(context)!.navigationProfile,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: AppLocalizations.of(context)!.navigationVisions,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: AppLocalizations.of(context)!.navigationAIStatus,
-          ),
-        ],
+        items: _getNavigationItems(context),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),

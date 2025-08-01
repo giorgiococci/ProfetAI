@@ -441,4 +441,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get justNow => 'Just now';
+
+  @override
+  String get settingsPageTitle => 'Settings';
+
+  @override
+  String get userProfileSettings => 'User Profile';
+
+  @override
+  String get userProfileSettingsDescription =>
+      'Manage your personal information';
+
+  @override
+  String get localizationSettings => 'Localization';
+
+  @override
+  String get localizationSettingsDescription =>
+      'Change app language and region';
+
+  @override
+  String get deleteDataSettings => 'Delete Data';
+
+  @override
+  String get deleteDataSettingsDescription => 'Manage stored data and visions';
+
+  @override
+  String get userProfilePageTitle => 'User Profile';
+
+  @override
+  String get localizationPageTitle => 'Localization';
+
+  @override
+  String get deleteDataPageTitle => 'Delete Data';
 }

@@ -739,5 +739,55 @@
   "justNow": "Just now",
   "@justNow": {
     "description": "Text for very recent time"
+  },
+
+  "settingsPageTitle": "Settings",
+  "@settingsPageTitle": {
+    "description": "Title for the settings page"
+  },
+
+  "userProfileSettings": "User Profile",
+  "@userProfileSettings": {
+    "description": "Settings menu item for user profile settings"
+  },
+
+  "userProfileSettingsDescription": "Manage your personal information",
+  "@userProfileSettingsDescription": {
+    "description": "Description for user profile settings menu item"
+  },
+
+  "localizationSettings": "Localization",
+  "@localizationSettings": {
+    "description": "Settings menu item for localization settings"
+  },
+
+  "localizationSettingsDescription": "Change app language and region",
+  "@localizationSettingsDescription": {
+    "description": "Description for localization settings menu item"
+  },
+
+  "deleteDataSettings": "Delete Data",
+  "@deleteDataSettings": {
+    "description": "Settings menu item for delete data settings"
+  },
+
+  "deleteDataSettingsDescription": "Manage stored data and visions",
+  "@deleteDataSettingsDescription": {
+    "description": "Description for delete data settings menu item"
+  },
+
+  "userProfilePageTitle": "User Profile",
+  "@userProfilePageTitle": {
+    "description": "Title for the user profile settings page"
+  },
+
+  "localizationPageTitle": "Localization",
+  "@localizationPageTitle": {
+    "description": "Title for the localization settings page"
+  },
+
+  "deleteDataPageTitle": "Delete Data",
+  "@deleteDataPageTitle": {
+    "description": "Title for the delete data settings page"
   }
 }

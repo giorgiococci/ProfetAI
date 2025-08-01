@@ -130,5 +130,16 @@
   "daysShort": "{count}g",
   "hoursShort": "{count}h",
   "minutesShort": "{count}m",
-  "justNow": "Adesso"
+  "justNow": "Adesso",
+
+  "settingsPageTitle": "Impostazioni",
+  "userProfileSettings": "Profilo Utente",
+  "userProfileSettingsDescription": "Gestisci le tue informazioni personali",
+  "localizationSettings": "Localizzazione",
+  "localizationSettingsDescription": "Cambia lingua e regione dell'app",
+  "deleteDataSettings": "Elimina Dati",
+  "deleteDataSettingsDescription": "Gestisci dati memorizzati e visioni",
+  "userProfilePageTitle": "Profilo Utente",
+  "localizationPageTitle": "Localizzazione",
+  "deleteDataPageTitle": "Elimina Dati"
 }
