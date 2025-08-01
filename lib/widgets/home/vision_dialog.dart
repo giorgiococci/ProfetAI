@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../models/vision_feedback.dart';
 import '../../widgets/common/common_widgets.dart';
-import '../../widgets/common/action_button.dart';
 import '../../utils/theme_utils.dart';
 import 'feedback_section.dart';
 
 /// A comprehensive dialog widget for displaying oracle visions and responses.
 /// Includes AI indicator, question display, content, feedback section, and action buttons.
-class VisionDialog extends StatelessWidget {
+class VisionDialog extends StatefulWidget {
   final String title;
   final IconData titleIcon;
   final String content;
   final Profet profet;
   final bool isAIEnabled;
   final String? question;
+  final FeedbackType? initialFeedback;
   final Function(FeedbackType) onFeedbackSelected;
   final VoidCallback onSave;
   final VoidCallback onShare;
@@ -28,11 +28,15 @@ class VisionDialog extends StatelessWidget {
     required this.profet,
     required this.isAIEnabled,
     this.question,
+    this.initialFeedback,
     required this.onFeedbackSelected,
     required this.onSave,
     required this.onShare,
     required this.onClose,
   });
+
+  @override
+  State<VisionDialog> createState() => _VisionDialogState();
 
   /// Shows the vision dialog
   static Future<void> show({
@@ -43,6 +47,7 @@ class VisionDialog extends StatelessWidget {
     required Profet profet,
     required bool isAIEnabled,
     String? question,
+    FeedbackType? initialFeedback,
     required Function(FeedbackType) onFeedbackSelected,
     required VoidCallback onSave,
     required VoidCallback onShare,
@@ -61,6 +66,7 @@ class VisionDialog extends StatelessWidget {
           profet: profet,
           isAIEnabled: isAIEnabled,
           question: question,
+          initialFeedback: initialFeedback,
           onFeedbackSelected: onFeedbackSelected,
           onSave: onSave,
           onShare: onShare,
@@ -69,33 +75,65 @@ class VisionDialog extends StatelessWidget {
       },
     );
   }
+}
+
+class _VisionDialogState extends State<VisionDialog> {
+  FeedbackType? selectedFeedback;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with the provided initial feedback
+    selectedFeedback = widget.initialFeedback;
+  }
+
+  void _handleFeedbackSelected(FeedbackType feedbackType) {
+    setState(() {
+      selectedFeedback = feedbackType;
+    });
+    // Call the original callback but don't close the dialog
+    widget.onFeedbackSelected(feedbackType);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final dialogHeight = screenHeight * 0.8; // Increased from 0.7 to 0.8
+    
     return Dialog(
       backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: screenHeight * 0.08, // Start higher on screen (8% from top)
+        bottom: screenHeight * 0.12, // Keep some space at bottom
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.7,
+        height: dialogHeight,
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: profet.primaryColor.withValues(alpha: 0.8), width: 2),
+          border: Border.all(color: widget.profet.primaryColor.withValues(alpha: 0.8), width: 2),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             // Title
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: _buildTitle(),
             ),
-            // Content
+            // Scrollable Content
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _buildContentWithActions(context),
+                child: _buildScrollableContent(context),
               ),
+            ),
+            // Fixed Action Buttons at bottom
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildActionSection(context),
             ),
           ],
         ),
@@ -108,9 +146,9 @@ class VisionDialog extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            title,
+            widget.title,
             style: ThemeUtils.titleStyle.copyWith(
-              color: profet.primaryColor,
+              color: widget.profet.primaryColor,
               fontSize: 16, // Further reduced font size for better fit
             ),
             maxLines: 2, // Allow title to wrap to 2 lines if needed
@@ -121,22 +159,43 @@ class VisionDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContentWithActions(BuildContext context) {
+  Widget _buildScrollableContent(BuildContext context) {
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (question != null && question!.isNotEmpty) ...[
+          if (widget.question != null && widget.question!.isNotEmpty) ...[
             _buildQuestionContainer(),
             const SizedBox(height: 15),
           ],
           _buildContentContainer(),
           const SizedBox(height: 20),
-          _buildActions(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionSection(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Feedback section
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: FeedbackSection.defaultOptions(
+            profet: widget.profet,
+            onFeedbackSelected: _handleFeedbackSelected,
+            context: context,
+            selectedFeedback: selectedFeedback,
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildDivider(),
+        const SizedBox(height: 8),
+        _buildActionButtons(),
+      ],
     );
   }
 
@@ -146,17 +205,17 @@ class VisionDialog extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: profet.secondaryColor.withValues(alpha: 0.5)),
+        border: Border.all(color: widget.profet.secondaryColor.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [
-          Icon(Icons.help_outline, color: profet.secondaryColor, size: 20),
+          Icon(Icons.help_outline, color: widget.profet.secondaryColor, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '"$question"',
+              '"${widget.question}"',
               style: ThemeUtils.bodyStyle.copyWith(
-                color: profet.secondaryColor,
+                color: widget.profet.secondaryColor,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -168,15 +227,15 @@ class VisionDialog extends StatelessWidget {
 
   Widget _buildContentContainer() {
     return ProphetContentContainer(
-      primaryColor: profet.primaryColor,
-      secondaryColor: profet.secondaryColor,
+      primaryColor: widget.profet.primaryColor,
+      secondaryColor: widget.profet.secondaryColor,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxHeight: 300, // Increased from 200 to 300 for more content space
+          maxHeight: 350, // Increased to 350 for better use of space
         ),
         child: SingleChildScrollView(
           child: Text(
-            content,
+            widget.content,
             style: ThemeUtils.bodyStyle.copyWith(
               height: 1.5,
             ),
@@ -186,31 +245,10 @@ class VisionDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Feedback section with reduced spacing
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduced from 8.0
-          child: FeedbackSection.defaultOptions(
-            profet: profet,
-            onFeedbackSelected: onFeedbackSelected,
-            context: context,
-          ),
-        ),
-        const SizedBox(height: 8), // Reduced from 16
-        _buildDivider(),
-        const SizedBox(height: 8), // Reduced from 16
-        _buildActionButtons(),
-      ],
-    );
-  }
-
   Widget _buildDivider() {
     return Container(
       height: 1,
-      color: profet.primaryColor.withValues(alpha: 0.2),
+      color: widget.profet.primaryColor.withValues(alpha: 0.2),
       margin: const EdgeInsets.symmetric(horizontal: 16),
     );
   }
@@ -225,8 +263,8 @@ class VisionDialog extends StatelessWidget {
             child: ActionButton(
               icon: Icons.bookmark_add,
               label: 'Salva',
-              color: profet.primaryColor,
-              onPressed: onSave,
+              color: widget.profet.primaryColor,
+              onPressed: widget.onSave,
             ),
           ),
         ),
@@ -236,8 +274,8 @@ class VisionDialog extends StatelessWidget {
             child: ActionButton(
               icon: Icons.share,
               label: 'Condividi',
-              color: profet.secondaryColor,
-              onPressed: onShare,
+              color: widget.profet.secondaryColor,
+              onPressed: widget.onShare,
             ),
           ),
         ),
@@ -248,7 +286,7 @@ class VisionDialog extends StatelessWidget {
               icon: Icons.close,
               label: 'Chiudi',
               color: Colors.grey,
-              onPressed: onClose,
+              onPressed: widget.onClose,
             ),
           ),
         ),

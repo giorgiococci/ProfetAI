@@ -11,6 +11,7 @@ class FeedbackSection extends StatelessWidget {
   final Function(FeedbackType) onFeedbackSelected;
   final String title;
   final List<FeedbackButtonData> feedbackOptions;
+  final FeedbackType? selectedFeedback;
 
   const FeedbackSection({
     super.key,
@@ -18,6 +19,7 @@ class FeedbackSection extends StatelessWidget {
     required this.onFeedbackSelected,
     this.title = 'Come è stata questa visione?',
     required this.feedbackOptions,
+    this.selectedFeedback,
   });
 
   /// Factory constructor with default feedback options
@@ -27,6 +29,7 @@ class FeedbackSection extends StatelessWidget {
     required Function(FeedbackType) onFeedbackSelected,
     required BuildContext context,
     String? title,
+    FeedbackType? selectedFeedback,
   }) {
     final localizations = AppLocalizations.of(context)!;
     return FeedbackSection(
@@ -34,6 +37,7 @@ class FeedbackSection extends StatelessWidget {
       profet: profet,
       onFeedbackSelected: onFeedbackSelected,
       title: title ?? 'Come è stata questa visione?',
+      selectedFeedback: selectedFeedback,
       feedbackOptions: [
         FeedbackButtonData(
           type: FeedbackType.positive,
@@ -70,12 +74,14 @@ class FeedbackSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: feedbackOptions.map((option) {
+              final isSelected = selectedFeedback == option.type;
               return Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 1),
                   child: FeedbackButton(
                     profet: profet,
                     feedbackData: option,
+                    isSelected: isSelected,
                     onPressed: () => onFeedbackSelected(option.type),
                   ),
                 ),
@@ -93,6 +99,7 @@ class FeedbackButton extends StatefulWidget {
   final Profet profet;
   final FeedbackButtonData feedbackData;
   final VoidCallback onPressed;
+  final bool isSelected;
   final double iconSize;
   final double fontSize;
   final EdgeInsetsGeometry padding;
@@ -102,6 +109,7 @@ class FeedbackButton extends StatefulWidget {
     required this.profet,
     required this.feedbackData,
     required this.onPressed,
+    this.isSelected = false,
     this.iconSize = 18,
     this.fontSize = 8,
     this.padding = const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
@@ -134,15 +142,23 @@ class _FeedbackButtonState extends State<FeedbackButton> {
 
   @override
   Widget build(BuildContext context) {
+    // Use selected state if available, otherwise use pressed state
+    final isHighlighted = widget.isSelected || _isPressed;
+    
     return GestureDetector(
       onTap: _isPressed ? null : _handlePress,
       child: Container(
         padding: widget.padding,
         decoration: BoxDecoration(
-          color: widget.profet.primaryColor.withValues(alpha: _isPressed ? 0.2 : 0.1),
+          color: widget.profet.primaryColor.withValues(
+            alpha: widget.isSelected ? 0.3 : (isHighlighted ? 0.2 : 0.1)
+          ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: widget.profet.primaryColor.withValues(alpha: _isPressed ? 0.5 : 0.3),
+            color: widget.profet.primaryColor.withValues(
+              alpha: widget.isSelected ? 0.8 : (isHighlighted ? 0.5 : 0.3)
+            ),
+            width: widget.isSelected ? 2 : 1,
           ),
         ),
         child: Column(

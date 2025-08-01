@@ -318,4 +318,127 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get failedToDeleteVisions =>
       'Failed to delete visions. Please try again.';
+
+  @override
+  String get visionBookTitle => 'Vision Book';
+
+  @override
+  String get searchVisions => 'Search visions';
+
+  @override
+  String get refreshVisions => 'Refresh';
+
+  @override
+  String visionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count visions',
+      one: '1 vision',
+      zero: 'No visions',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String visionsFiltered(int count, int total) {
+    return '$count of $total visions';
+  }
+
+  @override
+  String get filtered => 'Filtered';
+
+  @override
+  String get deleteVision => 'Delete Vision';
+
+  @override
+  String deleteVisionConfirm(String title) {
+    return 'Are you sure you want to delete \"$title\"?';
+  }
+
+  @override
+  String get errorLoadingVisions => 'Error loading visions';
+
+  @override
+  String get visionDeletedSuccessfully => 'Vision deleted successfully';
+
+  @override
+  String get errorDeletingVision => 'Error deleting vision';
+
+  @override
+  String get feedbackUpdatedSuccessfully => 'Feedback updated successfully';
+
+  @override
+  String get errorUpdatingFeedback => 'Error updating feedback';
+
+  @override
+  String get noVisionsMatchFilters => 'No visions match your filters';
+
+  @override
+  String get noVisionsStoredYet => 'No visions stored yet';
+
+  @override
+  String get tryAdjustingFilters =>
+      'Try adjusting your search criteria or clear filters to see all visions.';
+
+  @override
+  String get startMysticalJourney =>
+      'Start your mystical journey by asking the oracles for guidance.';
+
+  @override
+  String get clearFilters => 'Clear Filters';
+
+  @override
+  String get allOracles => 'All Oracles';
+
+  @override
+  String oraclesSelected(int count) {
+    return '$count Selected';
+  }
+
+  @override
+  String get newestFirst => 'Newest First';
+
+  @override
+  String get oldestFirst => 'Oldest First';
+
+  @override
+  String get titleAZ => 'Title A-Z';
+
+  @override
+  String get titleZA => 'Title Z-A';
+
+  @override
+  String get byOracle => 'By Oracle';
+
+  @override
+  String sortFilter(String sortType) {
+    return 'Sort: $sortType';
+  }
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String timeAgo(String time) {
+    return '$time ago';
+  }
+
+  @override
+  String daysShort(int count) {
+    return '${count}d';
+  }
+
+  @override
+  String hoursShort(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String minutesShort(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String get justNow => 'Just now';
 }

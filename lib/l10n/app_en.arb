@@ -520,5 +520,224 @@
   "failedToDeleteVisions": "Failed to delete visions. Please try again.",
   "@failedToDeleteVisions": {
     "description": "Error message when deleting all visions fails"
+  },
+
+  "visionBookTitle": "Vision Book",
+  "@visionBookTitle": {
+    "description": "Title for the vision book screen"
+  },
+
+  "searchVisions": "Search visions",
+  "@searchVisions": {
+    "description": "Tooltip text for search visions button"
+  },
+
+  "refreshVisions": "Refresh",
+  "@refreshVisions": {
+    "description": "Tooltip text for refresh visions button"
+  },
+
+  "visionsCount": "{count, plural, =0{No visions} =1{1 vision} other{{count} visions}}",
+  "@visionsCount": {
+    "description": "Text showing number of visions",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "visionsFiltered": "{count} of {total} visions",
+  "@visionsFiltered": {
+    "description": "Text showing filtered visions count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "filtered": "Filtered",
+  "@filtered": {
+    "description": "Badge text indicating filtered results"
+  },
+
+  "deleteVision": "Delete Vision",
+  "@deleteVision": {
+    "description": "Title for delete vision dialog"
+  },
+
+  "deleteVisionConfirm": "Are you sure you want to delete \"{title}\"?",
+  "@deleteVisionConfirm": {
+    "description": "Confirmation message for deleting a vision",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+
+  "errorLoadingVisions": "Error loading visions",
+  "@errorLoadingVisions": {
+    "description": "Error message when visions fail to load"
+  },
+
+  "visionDeletedSuccessfully": "Vision deleted successfully",
+  "@visionDeletedSuccessfully": {
+    "description": "Success message when vision is deleted"
+  },
+
+  "errorDeletingVision": "Error deleting vision",
+  "@errorDeletingVision": {
+    "description": "Error message when vision deletion fails"
+  },
+
+  "feedbackUpdatedSuccessfully": "Feedback updated successfully",
+  "@feedbackUpdatedSuccessfully": {
+    "description": "Success message when feedback is updated"
+  },
+
+  "errorUpdatingFeedback": "Error updating feedback",
+  "@errorUpdatingFeedback": {
+    "description": "Error message when feedback update fails"
+  },
+
+  "noVisionsMatchFilters": "No visions match your filters",
+  "@noVisionsMatchFilters": {
+    "description": "Message when no visions match the current filters"
+  },
+
+  "noVisionsStoredYet": "No visions stored yet",
+  "@noVisionsStoredYet": {
+    "description": "Message when no visions have been stored"
+  },
+
+  "tryAdjustingFilters": "Try adjusting your search criteria or clear filters to see all visions.",
+  "@tryAdjustingFilters": {
+    "description": "Suggestion text when no visions match filters"
+  },
+
+  "startMysticalJourney": "Start your mystical journey by asking the oracles for guidance.",
+  "@startMysticalJourney": {
+    "description": "Encouraging text when no visions exist"
+  },
+
+  "clearFilters": "Clear Filters",
+  "@clearFilters": {
+    "description": "Button text to clear all filters"
+  },
+
+  "allOracles": "All Oracles",
+  "@allOracles": {
+    "description": "Text for showing all oracles filter option"
+  },
+
+  "oraclesSelected": "{count} Selected",
+  "@oraclesSelected": {
+    "description": "Text showing number of selected oracles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "newestFirst": "Newest First",
+  "@newestFirst": {
+    "description": "Sort option for newest first"
+  },
+
+  "oldestFirst": "Oldest First",
+  "@oldestFirst": {
+    "description": "Sort option for oldest first"
+  },
+
+  "titleAZ": "Title A-Z",
+  "@titleAZ": {
+    "description": "Sort option for title A to Z"
+  },
+
+  "titleZA": "Title Z-A",
+  "@titleZA": {
+    "description": "Sort option for title Z to A"
+  },
+
+  "byOracle": "By Oracle",
+  "@byOracle": {
+    "description": "Sort option by oracle type"
+  },
+
+  "sortFilter": "Sort: {sortType}",
+  "@sortFilter": {
+    "description": "Active sort filter label",
+    "placeholders": {
+      "sortType": {
+        "type": "String",
+        "description": "The type of sorting applied"
+      }
+    }
+  },
+
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear button text for filters"
+  },
+
+  "timeAgo": "{time} ago",
+  "@timeAgo": {
+    "description": "Time ago format",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+
+  "daysShort": "{count}d",
+  "@daysShort": {
+    "description": "Short format for days",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "hoursShort": "{count}h",
+  "@hoursShort": {
+    "description": "Short format for hours",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "minutesShort": "{count}m",
+  "@minutesShort": {
+    "description": "Short format for minutes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "justNow": "Just now",
+  "@justNow": {
+    "description": "Text for very recent time"
   }
 }

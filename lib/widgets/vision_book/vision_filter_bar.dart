@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:profet_ai/models/vision.dart';
+import 'package:profet_ai/l10n/app_localizations.dart';
+import 'package:profet_ai/prophet_localizations.dart';
 
 class VisionFilterBar extends StatelessWidget {
   final VisionFilter currentFilter;
@@ -26,34 +28,28 @@ class VisionFilterBar extends StatelessWidget {
           ),
         ),
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              _buildProphetFilter(),
-              const SizedBox(width: 8),
-              _buildSortButton(),
-              const Spacer(),
-              if (currentFilter.hasActiveFilters)
-                TextButton(
-                  onPressed: () => onFilterChanged(VisionFilter()),
-                  child: const Text(
-                    'Clear',
-                    style: TextStyle(color: Colors.purple),
-                  ),
-                ),
-            ],
-          ),
-          if (currentFilter.hasActiveFilters) ...[
-            const SizedBox(height: 8),
-            _buildActiveFilters(),
-          ],
+          _buildProphetFilter(context),
+          const SizedBox(width: 8),
+          _buildSortButton(context),
+          const Spacer(),
+          if (currentFilter.hasActiveFilters)
+            IconButton(
+              onPressed: () => onFilterChanged(VisionFilter()),
+              icon: const Icon(
+                Icons.clear_all,
+                color: Colors.purple,
+                size: 20,
+              ),
+              tooltip: AppLocalizations.of(context)!.clearFilters,
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildProphetFilter() {
+  Widget _buildProphetFilter(BuildContext context) {
     return PopupMenuButton<String>(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -78,8 +74,8 @@ class VisionFilterBar extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               currentFilter.prophetTypes.isEmpty 
-                  ? 'All Oracles'
-                  : '${currentFilter.prophetTypes.length} Selected',
+                  ? AppLocalizations.of(context)!.allOracles
+                  : AppLocalizations.of(context)!.oraclesSelected(currentFilter.prophetTypes.length),
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 12,
@@ -104,14 +100,14 @@ class VisionFilterBar extends StatelessWidget {
         onFilterChanged(currentFilter.copyWith(prophetTypes: newTypes));
       },
       itemBuilder: (context) => [
-        _buildProphetMenuItem('mystic_prophet', 'Mystic Oracle'),
-        _buildProphetMenuItem('chaotic_prophet', 'Chaotic Oracle'),
-        _buildProphetMenuItem('cynical_prophet', 'Cynical Oracle'),
+        _buildProphetMenuItemAsync(context, 'mystic_prophet', 'mystic'),
+        _buildProphetMenuItemAsync(context, 'chaotic_prophet', 'chaotic'),
+        _buildProphetMenuItemAsync(context, 'cynical_prophet', 'cynical'),
       ],
     );
   }
 
-  PopupMenuItem<String> _buildProphetMenuItem(String value, String label) {
+  PopupMenuItem<String> _buildProphetMenuItemAsync(BuildContext context, String value, String prophetKey) {
     final isSelected = currentFilter.prophetTypes.contains(value);
     return PopupMenuItem<String>(
       value: value,
@@ -123,18 +119,37 @@ class VisionFilterBar extends StatelessWidget {
             size: 18,
           ),
           const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.purple : Colors.white,
-            ),
+          FutureBuilder<String>(
+            future: ProphetLocalizations.getName(context, prophetKey),
+            builder: (context, snapshot) {
+              final label = snapshot.data ?? _getProphetFallbackName(value);
+              return Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? Colors.purple : Colors.white,
+                ),
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSortButton() {
+  String _getProphetFallbackName(String prophetType) {
+    switch (prophetType) {
+      case 'mystic_prophet':
+        return 'Mystic Oracle';
+      case 'chaotic_prophet':
+        return 'Chaotic Oracle';
+      case 'cynical_prophet':
+        return 'Cynical Oracle';
+      default:
+        return 'Oracle';
+    }
+  }
+
+  Widget _buildSortButton(BuildContext context) {
     return PopupMenuButton<VisionSortBy>(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -158,7 +173,7 @@ class VisionFilterBar extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              _getSortLabel(currentFilter.sortBy),
+              _getSortLabel(context, currentFilter.sortBy),
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 12,
@@ -177,16 +192,16 @@ class VisionFilterBar extends StatelessWidget {
         onFilterChanged(currentFilter.copyWith(sortBy: sortBy));
       },
       itemBuilder: (context) => [
-        _buildSortMenuItem(VisionSortBy.dateDesc, 'Newest First'),
-        _buildSortMenuItem(VisionSortBy.dateAsc, 'Oldest First'),
-        _buildSortMenuItem(VisionSortBy.titleAsc, 'Title A-Z'),
-        _buildSortMenuItem(VisionSortBy.titleDesc, 'Title Z-A'),
-        _buildSortMenuItem(VisionSortBy.prophetType, 'By Oracle'),
+        _buildSortMenuItem(context, VisionSortBy.dateDesc, AppLocalizations.of(context)!.newestFirst),
+        _buildSortMenuItem(context, VisionSortBy.dateAsc, AppLocalizations.of(context)!.oldestFirst),
+        _buildSortMenuItem(context, VisionSortBy.titleAsc, AppLocalizations.of(context)!.titleAZ),
+        _buildSortMenuItem(context, VisionSortBy.titleDesc, AppLocalizations.of(context)!.titleZA),
+        _buildSortMenuItem(context, VisionSortBy.prophetType, AppLocalizations.of(context)!.byOracle),
       ],
     );
   }
 
-  PopupMenuItem<VisionSortBy> _buildSortMenuItem(VisionSortBy sortBy, String label) {
+  PopupMenuItem<VisionSortBy> _buildSortMenuItem(BuildContext context, VisionSortBy sortBy, String label) {
     final isSelected = currentFilter.sortBy == sortBy;
     return PopupMenuItem<VisionSortBy>(
       value: sortBy,
@@ -209,89 +224,19 @@ class VisionFilterBar extends StatelessWidget {
     );
   }
 
-  Widget _buildActiveFilters() {
-    return Wrap(
-      spacing: 8,
-      children: [
-        if (currentFilter.prophetTypes.isNotEmpty)
-          for (String prophetType in currentFilter.prophetTypes)
-            _buildFilterChip(
-              _getProphetDisplayName(prophetType),
-              () {
-                final newTypes = Set<String>.from(currentFilter.prophetTypes);
-                newTypes.remove(prophetType);
-                onFilterChanged(currentFilter.copyWith(prophetTypes: newTypes));
-              },
-            ),
-        if (currentFilter.sortBy != VisionSortBy.dateDesc)
-          _buildFilterChip(
-            'Sort: ${_getSortLabel(currentFilter.sortBy)}',
-            () => onFilterChanged(currentFilter.copyWith(sortBy: VisionSortBy.dateDesc)),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildFilterChip(String label, VoidCallback onRemove) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.purple.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.purple.withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-            ),
-          ),
-          const SizedBox(width: 4),
-          GestureDetector(
-            onTap: onRemove,
-            child: const Icon(
-              Icons.close,
-              color: Colors.white70,
-              size: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getSortLabel(VisionSortBy sortBy) {
+  String _getSortLabel(BuildContext context, VisionSortBy sortBy) {
+    final localizations = AppLocalizations.of(context)!;
     switch (sortBy) {
       case VisionSortBy.dateDesc:
-        return 'Newest';
+        return localizations.newestFirst;
       case VisionSortBy.dateAsc:
-        return 'Oldest';
+        return localizations.oldestFirst;
       case VisionSortBy.titleAsc:
-        return 'A-Z';
+        return localizations.titleAZ;
       case VisionSortBy.titleDesc:
-        return 'Z-A';
+        return localizations.titleZA;
       case VisionSortBy.prophetType:
-        return 'Oracle';
-    }
-  }
-
-  String _getProphetDisplayName(String prophetType) {
-    switch (prophetType) {
-      case 'mystic_prophet':
-        return 'Mystic';
-      case 'chaotic_prophet':
-        return 'Chaotic';
-      case 'cynical_prophet':
-        return 'Cynical';
-      default:
-        return prophetType;
+        return localizations.byOracle;
     }
   }
 }

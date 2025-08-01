@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../models/profet.dart';
-import '../models/vision_feedback.dart';
 import '../services/vision_integration_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/home/home_widgets.dart';
@@ -57,28 +56,33 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(widget.selectedProfet);
 
-    return Container(
-      decoration: BoxDecoration(
-        image: profet.backgroundImagePath != null
-            ? DecorationImage(
-                image: AssetImage(profet.backgroundImagePath!),
-                fit: BoxFit.cover,
-                opacity: 0.7,
-              )
-            : null,
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: ThemeUtils.paddingLG,
-          child: HomeContentWidget(
-            selectedProphet: widget.selectedProfet,
-            questionController: _questionController,
-            prophetName: _prophetName,
-            isLoading: isLoading,
-            hasError: hasError,
-            error: error,
-            onAskOracle: _handleAskOracle,
-            onListenToOracle: _handleListenToOracle,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          image: profet.backgroundImagePath != null
+              ? DecorationImage(
+                  image: AssetImage(profet.backgroundImagePath!),
+                  fit: BoxFit.cover,
+                  opacity: 0.7,
+                )
+              : null,
+        ),
+        child: SafeArea(
+          bottom: false, // Allow background to extend to bottom
+          child: Padding(
+            padding: ThemeUtils.paddingLG,
+            child: HomeContentWidget(
+              selectedProphet: widget.selectedProfet,
+              questionController: _questionController,
+              prophetName: _prophetName,
+              isLoading: isLoading,
+              hasError: hasError,
+              error: error,
+              onAskOracle: _handleAskOracle,
+              onListenToOracle: _handleListenToOracle,
+            ),
           ),
         ),
       ),
@@ -212,24 +216,12 @@ class _HomeScreenState extends State<HomeScreen>
             isAIEnabled: visionResult.isAIGenerated,
             question: question,
             onFeedbackSelected: (feedbackType) {
-              // Capture all needed context before closing dialog
-              final navigator = Navigator.of(context);
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
-              final localizations = AppLocalizations.of(context)!;
-              
-              // Close dialog first
-              navigator.pop();
-              
-              // Then handle feedback processing
+              // Handle feedback processing without closing dialog or showing alerts
               if (visionResult.visionId != null) {
-                _showFeedbackDialog(
-                  profet: profet,
-                  feedbackType: feedbackType,
-                  question: question,
-                  hasQuestion: hasQuestion,
+                // Silently update the feedback in the background
+                _visionIntegrationService.updateVisionFeedback(
                   visionId: visionResult.visionId!,
-                  scaffoldMessenger: scaffoldMessenger,
-                  localizations: localizations,
+                  feedbackType: feedbackType,
                 );
               }
             },
@@ -313,68 +305,6 @@ class _HomeScreenState extends State<HomeScreen>
           duration: const Duration(seconds: 3),
         );
       }
-    }
-  }
-
-  void _showFeedbackDialog({
-    required Profet profet,
-    required FeedbackType feedbackType,
-    String? question,
-    required bool hasQuestion,
-    required int visionId,
-    required ScaffoldMessengerState scaffoldMessenger,
-    required AppLocalizations localizations,
-  }) async {
-    try {
-      // Update the stored vision with feedback
-      final success = await _visionIntegrationService.updateVisionFeedback(
-        visionId: visionId,
-        feedbackType: feedbackType,
-      );
-
-      if (success) {
-        // Get localized feedback message
-        String feedbackMessage;
-        
-        switch (feedbackType) {
-          case FeedbackType.positive:
-            feedbackMessage = localizations.positiveResponse;
-            break;
-          case FeedbackType.negative:
-            feedbackMessage = localizations.negativeResponse;
-            break;
-          case FeedbackType.funny:
-            feedbackMessage = localizations.funnyResponse;
-            break;
-        }
-
-        // Show confirmation
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text('Feedback saved: $feedbackMessage'),
-            backgroundColor: profet.primaryColor,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      } else {
-        // Show error if feedback update failed
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: const Text('Failed to save feedback'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      // Handle any errors during feedback update
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text('Error saving feedback: $e'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
     }
   }
 

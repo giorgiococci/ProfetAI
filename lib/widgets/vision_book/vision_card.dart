@@ -3,6 +3,8 @@ import 'package:profet_ai/models/vision.dart';
 import 'package:profet_ai/models/vision_feedback.dart';
 import 'package:profet_ai/models/profet_manager.dart';
 import 'package:profet_ai/utils/theme_utils.dart';
+import 'package:profet_ai/prophet_localizations.dart';
+import 'package:profet_ai/l10n/app_localizations.dart';
 
 class VisionCard extends StatelessWidget {
   final Vision vision;
@@ -24,12 +26,12 @@ class VisionCard extends StatelessWidget {
     
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             gradient: LinearGradient(
@@ -45,15 +47,15 @@ class VisionCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(context, prophetType),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               _buildTitle(),
               if (vision.question != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 _buildQuestion(),
               ],
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               _buildPreview(),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               _buildFooter(context, prophetType),
             ],
           ),
@@ -66,22 +68,26 @@ class VisionCard extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
             color: ThemeUtils.getProphetColor(prophetType).withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(
-            _getDisplayName(vision.prophetType),
-            style: TextStyle(
-              color: ThemeUtils.getProphetColor(prophetType),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+          child: FutureBuilder<String>(
+            future: _getProphetLocalizedName(context, vision.prophetType),
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.data ?? _getDisplayName(vision.prophetType),
+                style: TextStyle(
+                  color: ThemeUtils.getProphetColor(prophetType),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
         ),
         const Spacer(),
-        _buildFeedbackIndicator(),
         PopupMenuButton<String>(
           icon: Icon(
             Icons.more_vert,
@@ -96,13 +102,16 @@ class VisionCard extends StatelessWidget {
             }
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'delete',
               child: Row(
                 children: [
-                  Icon(Icons.delete, color: Colors.red, size: 18),
-                  SizedBox(width: 8),
-                  Text('Delete', style: TextStyle(color: Colors.red)),
+                  const Icon(Icons.delete, color: Colors.red, size: 18),
+                  const SizedBox(width: 8),
+                  Text(
+                    AppLocalizations.of(context)!.delete, 
+                    style: const TextStyle(color: Colors.red)
+                  ),
                 ],
               ),
             ),
@@ -127,7 +136,7 @@ class VisionCard extends StatelessWidget {
 
   Widget _buildQuestion() {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
@@ -141,14 +150,14 @@ class VisionCard extends StatelessWidget {
           Icon(
             Icons.help_outline,
             color: Colors.white70,
-            size: 16,
+            size: 14,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           Expanded(
             child: Text(
               vision.question!,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: Colors.white70,
                 fontStyle: FontStyle.italic,
               ),
@@ -165,9 +174,9 @@ class VisionCard extends StatelessWidget {
     return Text(
       vision.answer,
       style: const TextStyle(
-        fontSize: 14,
+        fontSize: 13,
         color: Colors.white70,
-        height: 1.4,
+        height: 1.3,
       ),
       maxLines: 3,
       overflow: TextOverflow.ellipsis,
@@ -177,26 +186,27 @@ class VisionCard extends StatelessWidget {
   Widget _buildFooter(BuildContext context, ProfetType prophetType) {
     return Row(
       children: [
-        _buildTimestamp(),
+        _buildTimestamp(context),
         const Spacer(),
         _buildFeedbackButtons(),
       ],
     );
   }
 
-  Widget _buildTimestamp() {
+  Widget _buildTimestamp(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final difference = now.difference(vision.timestamp);
     
     String timeString;
     if (difference.inDays > 0) {
-      timeString = '${difference.inDays}d ago';
+      timeString = localizations.timeAgo('${difference.inDays}d');
     } else if (difference.inHours > 0) {
-      timeString = '${difference.inHours}h ago';
+      timeString = localizations.timeAgo('${difference.inHours}h');
     } else if (difference.inMinutes > 0) {
-      timeString = '${difference.inMinutes}m ago';
+      timeString = localizations.timeAgo('${difference.inMinutes}m');
     } else {
-      timeString = 'Just now';
+      timeString = localizations.justNow;
     }
 
     return Row(
@@ -218,59 +228,24 @@ class VisionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildFeedbackIndicator() {
-    if (vision.feedbackType == null) return const SizedBox.shrink();
-
-    IconData icon;
-    Color color;
-    
-    switch (vision.feedbackType!) {
-      case FeedbackType.positive:
-        icon = Icons.thumb_up;
-        color = Colors.green;
-        break;
-      case FeedbackType.negative:
-        icon = Icons.thumb_down;
-        color = Colors.red;
-        break;
-      case FeedbackType.funny:
-        icon = Icons.sentiment_very_satisfied;
-        color = Colors.orange;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 16,
-      ),
-    );
-  }
-
   Widget _buildFeedbackButtons() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _feedbackButton(
-          icon: Icons.thumb_up,
+          text: '🌟',
           type: FeedbackType.positive,
           color: Colors.green,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 3),
         _feedbackButton(
-          icon: Icons.thumb_down,
+          text: '🪨',
           type: FeedbackType.negative,
           color: Colors.red,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 3),
         _feedbackButton(
-          icon: Icons.sentiment_very_satisfied,
+          text: '🐸',
           type: FeedbackType.funny,
           color: Colors.orange,
         ),
@@ -279,7 +254,7 @@ class VisionCard extends StatelessWidget {
   }
 
   Widget _feedbackButton({
-    required IconData icon,
+    required String text,
     required FeedbackType type,
     required Color color,
   }) {
@@ -288,7 +263,7 @@ class VisionCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => onFeedbackUpdate(type),
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           shape: BoxShape.circle,
@@ -297,10 +272,12 @@ class VisionCard extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Icon(
-          icon,
-          color: isSelected ? color : Colors.white54,
-          size: 16,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            color: isSelected ? color : Colors.white54,
+          ),
         ),
       ),
     );
@@ -329,6 +306,28 @@ class VisionCard extends StatelessWidget {
         return 'Cynical Oracle';
       default:
         return 'Oracle';
+    }
+  }
+
+  Future<String> _getProphetLocalizedName(BuildContext context, String prophetType) async {
+    final prophetKey = _getProphetLocalizationKey(prophetType);
+    try {
+      return await ProphetLocalizations.getName(context, prophetKey);
+    } catch (e) {
+      return _getDisplayName(prophetType); // Fallback to hardcoded names
+    }
+  }
+
+  String _getProphetLocalizationKey(String prophetType) {
+    switch (prophetType.toLowerCase()) {
+      case 'mystic_prophet':
+        return 'mystic';
+      case 'chaotic_prophet':
+        return 'chaotic';
+      case 'cynical_prophet':
+        return 'cynical';
+      default:
+        return 'mystic';
     }
   }
 }

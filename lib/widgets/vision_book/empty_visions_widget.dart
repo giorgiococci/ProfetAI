@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 class EmptyVisionsWidget extends StatelessWidget {
   final bool hasFilters;
@@ -12,6 +13,8 @@ class EmptyVisionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -25,7 +28,7 @@ class EmptyVisionsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              hasFilters ? 'No visions match your filters' : 'No visions stored yet',
+              hasFilters ? localizations.noVisionsMatchFilters : localizations.noVisionsStoredYet,
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -36,8 +39,8 @@ class EmptyVisionsWidget extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               hasFilters 
-                  ? 'Try adjusting your search criteria or clear filters to see all visions.'
-                  : 'Start your mystical journey by asking the oracles for guidance.',
+                  ? localizations.tryAdjustingFilters
+                  : localizations.startMysticalJourney,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white54,
@@ -57,7 +60,7 @@ class EmptyVisionsWidget extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
-                child: const Text('Clear Filters'),
+                child: Text(localizations.clearFilters),
               ),
             ],
           ],

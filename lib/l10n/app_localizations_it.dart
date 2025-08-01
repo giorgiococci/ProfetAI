@@ -320,4 +320,127 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get failedToDeleteVisions =>
       'Impossibile eliminare le visioni. Riprova.';
+
+  @override
+  String get visionBookTitle => 'Libro delle Visioni';
+
+  @override
+  String get searchVisions => 'Cerca visioni';
+
+  @override
+  String get refreshVisions => 'Aggiorna';
+
+  @override
+  String visionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count visioni',
+      one: '1 visione',
+      zero: 'Nessuna visione',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String visionsFiltered(int count, int total) {
+    return '$count di $total visioni';
+  }
+
+  @override
+  String get filtered => 'Filtrate';
+
+  @override
+  String get deleteVision => 'Elimina Visione';
+
+  @override
+  String deleteVisionConfirm(String title) {
+    return 'Sei sicuro di voler eliminare \"$title\"?';
+  }
+
+  @override
+  String get errorLoadingVisions => 'Errore nel caricamento delle visioni';
+
+  @override
+  String get visionDeletedSuccessfully => 'Visione eliminata con successo';
+
+  @override
+  String get errorDeletingVision => 'Errore nell\'eliminazione della visione';
+
+  @override
+  String get feedbackUpdatedSuccessfully => 'Feedback aggiornato con successo';
+
+  @override
+  String get errorUpdatingFeedback => 'Errore nell\'aggiornamento del feedback';
+
+  @override
+  String get noVisionsMatchFilters => 'Nessuna visione corrisponde ai filtri';
+
+  @override
+  String get noVisionsStoredYet => 'Nessuna visione memorizzata';
+
+  @override
+  String get tryAdjustingFilters =>
+      'Prova a modificare i criteri di ricerca o cancella i filtri per vedere tutte le visioni.';
+
+  @override
+  String get startMysticalJourney =>
+      'Inizia il tuo viaggio mistico chiedendo agli oracoli una guida.';
+
+  @override
+  String get clearFilters => 'Rimuovi Filtri';
+
+  @override
+  String get allOracles => 'Tutti gli Oracoli';
+
+  @override
+  String oraclesSelected(int count) {
+    return '$count Selezionati';
+  }
+
+  @override
+  String get newestFirst => 'Più Recenti';
+
+  @override
+  String get oldestFirst => 'Più Vecchi';
+
+  @override
+  String get titleAZ => 'Titolo A-Z';
+
+  @override
+  String get titleZA => 'Titolo Z-A';
+
+  @override
+  String get byOracle => 'Per Oracolo';
+
+  @override
+  String sortFilter(String sortType) {
+    return 'Ordina: $sortType';
+  }
+
+  @override
+  String get clear => 'Cancella';
+
+  @override
+  String timeAgo(String time) {
+    return '$time fa';
+  }
+
+  @override
+  String daysShort(int count) {
+    return '${count}g';
+  }
+
+  @override
+  String hoursShort(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String minutesShort(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String get justNow => 'Adesso';
 }

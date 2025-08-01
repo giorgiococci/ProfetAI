@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 
 class VisionBookAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController searchController;
@@ -18,10 +19,12 @@ class VisionBookAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return AppBar(
-      title: const Text(
-        'Vision Book',
-        style: TextStyle(
+      title: Text(
+        localizations.visionBookTitle,
+        style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,
         ),
@@ -33,12 +36,12 @@ class VisionBookAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           onPressed: onSearchTap,
           icon: const Icon(Icons.search),
-          tooltip: 'Search visions',
+          tooltip: localizations.searchVisions,
         ),
         IconButton(
           onPressed: onRefreshTap,
           icon: const Icon(Icons.refresh),
-          tooltip: 'Refresh',
+          tooltip: localizations.refreshVisions,
         ),
         const SizedBox(width: 8),
       ],
@@ -50,7 +53,7 @@ class VisionBookAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Text(
                 visionCount == totalCount
-                    ? '$totalCount visions'
+                    ? '$totalCount ${totalCount == 1 ? 'vision' : 'visions'}'
                     : '$visionCount of $totalCount visions',
                 style: const TextStyle(
                   color: Colors.white70,
@@ -65,9 +68,9 @@ class VisionBookAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: Colors.purple.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    'Filtered',
-                    style: TextStyle(
+                  child: Text(
+                    localizations.filtered,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
