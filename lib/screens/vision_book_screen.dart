@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:profet_ai/models/vision.dart';
 import 'package:profet_ai/models/vision_feedback.dart';
+import 'package:profet_ai/models/profet_manager.dart';
 import 'package:profet_ai/services/vision_storage_service.dart';
 import 'package:profet_ai/widgets/vision_book/vision_book_app_bar.dart';
 import 'package:profet_ai/widgets/vision_book/vision_filter_bar.dart';
 import 'package:profet_ai/widgets/vision_book/vision_card.dart';
 import 'package:profet_ai/widgets/vision_book/empty_visions_widget.dart';
 import 'package:profet_ai/widgets/vision_book/vision_search_delegate.dart';
+import 'package:profet_ai/widgets/home/vision_dialog.dart';
+import 'package:profet_ai/utils/notification_utils.dart';
+import 'package:profet_ai/utils/theme_utils.dart';
 import 'package:profet_ai/l10n/app_localizations.dart';
 
 class VisionBookScreen extends StatefulWidget {
@@ -231,12 +235,98 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
         visions: _allVisions,
         onVisionTap: (vision) {
           Navigator.of(context).pop();
-          // TODO: Open vision detail view
+          _showVisionDetail(vision);
         },
         onVisionDelete: _deleteVision,
         onFeedbackUpdate: _updateVisionFeedback,
       ),
     );
+  }
+
+  /// Shows vision detail dialog using the same dialog as home screen
+  Future<void> _showVisionDetail(Vision vision) async {
+    try {
+      // Get the prophet object from the stored prophet type
+      final prophetType = _getProphetTypeFromString(vision.prophetType);
+      final profet = ProfetManager.getProfet(prophetType);
+      
+      final localizations = AppLocalizations.of(context)!;
+      
+      // Create appropriate title based on whether it's a question or random vision
+      final title = vision.question != null 
+          ? localizations.oracleResponds(_getProphetDisplayName(vision.prophetType))
+          : localizations.visionOf(_getProphetDisplayName(vision.prophetType));
+      
+      await VisionDialog.show(
+        context: context,
+        title: title,
+        titleIcon: vision.question != null ? Icons.psychology_alt : Icons.auto_awesome,
+        content: vision.answer,
+        profet: profet,
+        isAIEnabled: vision.isAIGenerated,
+        question: vision.question,
+        onFeedbackSelected: (feedbackType) {
+          // Update feedback in the database
+          _updateVisionFeedback(vision, feedbackType);
+        },
+        onSave: () {
+          // Show save confirmation (vision is already saved)
+          NotificationUtils.showSaveConfirmation(
+            context: context,
+            prophetColor: ThemeUtils.getProphetColor(prophetType),
+            message: 'Vision "${vision.title}" is already in your Vision Book!',
+          );
+        },
+        onShare: () {
+          // Show share confirmation
+          NotificationUtils.showShareConfirmation(
+            context: context,
+            prophetColor: ThemeUtils.getProphetColor(prophetType),
+          );
+        },
+        onClose: () {
+          Navigator.of(context).pop();
+        },
+      );
+    } catch (e) {
+      // Handle any errors showing the dialog
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error showing vision: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Convert prophet type string to ProfetType enum
+  ProfetType _getProphetTypeFromString(String prophetType) {
+    switch (prophetType.toLowerCase()) {
+      case 'mystic_prophet':
+        return ProfetType.mistico;
+      case 'chaotic_prophet':
+        return ProfetType.caotico;
+      case 'cynical_prophet':
+        return ProfetType.cinico;
+      default:
+        return ProfetType.mistico;
+    }
+  }
+
+  /// Get display name for prophet type
+  String _getProphetDisplayName(String prophetType) {
+    switch (prophetType.toLowerCase()) {
+      case 'mystic_prophet':
+        return 'Mystic Oracle';
+      case 'chaotic_prophet':
+        return 'Chaotic Oracle';
+      case 'cynical_prophet':
+        return 'Cynical Oracle';
+      default:
+        return 'Oracle';
+    }
   }
 
   @override
@@ -296,10 +386,7 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
             padding: const EdgeInsets.only(bottom: 12),
             child: VisionCard(
               vision: vision,
-              onTap: () {
-                // TODO: Open vision detail view
-                print('Tapped vision: ${vision.title}');
-              },
+              onTap: () => _showVisionDetail(vision),
               onDelete: () => _deleteVision(vision),
               onFeedbackUpdate: (feedbackType) => _updateVisionFeedback(vision, feedbackType),
             ),
