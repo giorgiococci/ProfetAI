@@ -623,6 +623,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'App language updated to {language}'**
   String languageUpdated(String language);
+
+  /// Section title for critical/warning actions in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Actions'**
+  String get criticalActions;
+
+  /// Button text to delete all stored visions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Visions'**
+  String get deleteAllVisions;
+
+  /// Warning message when user tries to delete all visions
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ This action will permanently delete all your stored visions and cannot be undone. Are you sure you want to continue?'**
+  String get deleteAllVisionsWarning;
+
+  /// Title for delete all visions confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Visions?'**
+  String get deleteAllVisionsConfirmTitle;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Delete button text
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Success message when all visions are deleted
+  ///
+  /// In en, this message translates to:
+  /// **'All visions have been deleted successfully'**
+  String get allVisionsDeleted;
+
+  /// Error message when deleting all visions fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete visions. Please try again.'**
+  String get failedToDeleteVisions;
 }
 
 class _AppLocalizationsDelegate

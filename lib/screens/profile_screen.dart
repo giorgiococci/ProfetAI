@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/user_profile.dart';
 import '../services/user_profile_service.dart';
+import '../services/vision_storage_service.dart';
 import '../utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> with FormStateMixin, Load
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final UserProfileService _profileService = UserProfileService();
+  final VisionStorageService _visionStorageService = VisionStorageService();
 
   UserProfile _currentProfile = const UserProfile();
   Country? _selectedCountry;
@@ -158,6 +160,92 @@ class _ProfileScreenState extends State<ProfileScreen> with FormStateMixin, Load
     }
   }
 
+  /// Delete all stored visions with confirmation
+  Future<void> _deleteAllVisions() async {
+    final localizations = AppLocalizations.of(context)!;
+    
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(localizations.deleteAllVisionsConfirmTitle),
+        content: Text(localizations.deleteAllVisionsWarning),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(localizations.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(localizations.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        // Show loading indicator
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Row(
+                children: [
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  SizedBox(width: 16),
+                  Text('Deleting all visions...'),
+                ],
+              ),
+              duration: Duration(seconds: 10),
+            ),
+          );
+        }
+
+        // Delete all visions
+        final success = await _visionStorageService.deleteAllVisions();
+        
+        if (mounted) {
+          // Hide loading snackbar
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          
+          if (success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(localizations.allVisionsDeleted),
+                backgroundColor: Colors.green,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(localizations.failedToDeleteVisions),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${localizations.failedToDeleteVisions} Error: $e'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -209,6 +297,16 @@ class _ProfileScreenState extends State<ProfileScreen> with FormStateMixin, Load
               title: localizations.interestsAndTopics,
               children: [
                 _buildInterestsField(localizations),
+              ],
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // Critical Actions Section
+            _buildSectionCard(
+              title: localizations.criticalActions,
+              children: [
+                _buildDeleteAllVisionsField(localizations),
               ],
             ),
             
@@ -493,5 +591,53 @@ class _ProfileScreenState extends State<ProfileScreen> with FormStateMixin, Load
       default:
         return interest.key;
     }
+  }
+
+  Widget _buildDeleteAllVisionsField(AppLocalizations localizations) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.warning, color: Colors.redAccent),
+            const SizedBox(width: 8),
+            Text(
+              localizations.deleteAllVisions,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: _deleteAllVisions,
+            icon: const Icon(Icons.delete_forever),
+            label: Text(localizations.deleteAllVisions),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '⚠️ This action cannot be undone',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[400],
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
+    );
   }
 }
