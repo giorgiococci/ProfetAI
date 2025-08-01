@@ -863,6 +863,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Just now'**
   String get justNow;
+
+  /// Title for the settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsPageTitle;
+
+  /// Settings menu item for user profile settings
+  ///
+  /// In en, this message translates to:
+  /// **'User Profile'**
+  String get userProfileSettings;
+
+  /// Description for user profile settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your personal information'**
+  String get userProfileSettingsDescription;
+
+  /// Settings menu item for localization settings
+  ///
+  /// In en, this message translates to:
+  /// **'Localization'**
+  String get localizationSettings;
+
+  /// Description for localization settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Change app language and region'**
+  String get localizationSettingsDescription;
+
+  /// Settings menu item for delete data settings
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Data'**
+  String get deleteDataSettings;
+
+  /// Description for delete data settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Manage stored data and visions'**
+  String get deleteDataSettingsDescription;
+
+  /// Title for the user profile settings page
+  ///
+  /// In en, this message translates to:
+  /// **'User Profile'**
+  String get userProfilePageTitle;
+
+  /// Title for the localization settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Localization'**
+  String get localizationPageTitle;
+
+  /// Title for the delete data settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Data'**
+  String get deleteDataPageTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -4,7 +4,7 @@ import 'l10n/app_localizations.dart';
 import 'models/profet_manager.dart';
 import 'screens/home_screen.dart';
 import 'screens/profet_selection_screen.dart';
-import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/vision_book_screen.dart';
 import 'screens/ai_status_screen.dart';
 import 'screens/splash_screen.dart';
@@ -214,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onProfetChange: _changeProfetType,
         );
       case 2:
-        return ProfileScreen(onLanguageChanged: _refreshApp);
+        return SettingsScreen(onLanguageChanged: _refreshApp);
       case 3:
         return const VisionBookScreen();
       case 4:
@@ -242,8 +242,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: AppLocalizations.of(context)!.navigationOracles,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: AppLocalizations.of(context)!.navigationProfile,
+            icon: Icon(Icons.settings),
+            label: AppLocalizations.of(context)!.settingsPageTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
