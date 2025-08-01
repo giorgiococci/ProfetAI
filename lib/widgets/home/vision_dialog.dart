@@ -14,6 +14,7 @@ class VisionDialog extends StatefulWidget {
   final Profet profet;
   final bool isAIEnabled;
   final String? question;
+  final FeedbackType? initialFeedback;
   final Function(FeedbackType) onFeedbackSelected;
   final VoidCallback onSave;
   final VoidCallback onShare;
@@ -27,6 +28,7 @@ class VisionDialog extends StatefulWidget {
     required this.profet,
     required this.isAIEnabled,
     this.question,
+    this.initialFeedback,
     required this.onFeedbackSelected,
     required this.onSave,
     required this.onShare,
@@ -45,6 +47,7 @@ class VisionDialog extends StatefulWidget {
     required Profet profet,
     required bool isAIEnabled,
     String? question,
+    FeedbackType? initialFeedback,
     required Function(FeedbackType) onFeedbackSelected,
     required VoidCallback onSave,
     required VoidCallback onShare,
@@ -63,6 +66,7 @@ class VisionDialog extends StatefulWidget {
           profet: profet,
           isAIEnabled: isAIEnabled,
           question: question,
+          initialFeedback: initialFeedback,
           onFeedbackSelected: onFeedbackSelected,
           onSave: onSave,
           onShare: onShare,
@@ -75,6 +79,13 @@ class VisionDialog extends StatefulWidget {
 
 class _VisionDialogState extends State<VisionDialog> {
   FeedbackType? selectedFeedback;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with the provided initial feedback
+    selectedFeedback = widget.initialFeedback;
+  }
 
   void _handleFeedbackSelected(FeedbackType feedbackType) {
     setState(() {

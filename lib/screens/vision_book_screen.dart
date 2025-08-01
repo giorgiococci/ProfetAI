@@ -265,6 +265,7 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
         profet: profet,
         isAIEnabled: vision.isAIGenerated,
         question: vision.question,
+        initialFeedback: vision.feedbackType,
         onFeedbackSelected: (feedbackType) {
           // Update feedback in the database
           _updateVisionFeedback(vision, feedbackType);
