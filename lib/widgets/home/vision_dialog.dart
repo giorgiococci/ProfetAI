@@ -86,30 +86,43 @@ class _VisionDialogState extends State<VisionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final dialogHeight = screenHeight * 0.8; // Increased from 0.7 to 0.8
+    
     return Dialog(
       backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: screenHeight * 0.08, // Start higher on screen (8% from top)
+        bottom: screenHeight * 0.12, // Keep some space at bottom
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.7,
+        height: dialogHeight,
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: widget.profet.primaryColor.withValues(alpha: 0.8), width: 2),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             // Title
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: _buildTitle(),
             ),
-            // Content
+            // Scrollable Content
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _buildContentWithActions(context),
+                child: _buildScrollableContent(context),
               ),
+            ),
+            // Fixed Action Buttons at bottom
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildActionSection(context),
             ),
           ],
         ),
@@ -135,7 +148,7 @@ class _VisionDialogState extends State<VisionDialog> {
     );
   }
 
-  Widget _buildContentWithActions(BuildContext context) {
+  Widget _buildScrollableContent(BuildContext context) {
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
       child: Column(
@@ -148,9 +161,30 @@ class _VisionDialogState extends State<VisionDialog> {
           ],
           _buildContentContainer(),
           const SizedBox(height: 20),
-          _buildActions(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionSection(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Feedback section
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: FeedbackSection.defaultOptions(
+            profet: widget.profet,
+            onFeedbackSelected: _handleFeedbackSelected,
+            context: context,
+            selectedFeedback: selectedFeedback,
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildDivider(),
+        const SizedBox(height: 8),
+        _buildActionButtons(),
+      ],
     );
   }
 
@@ -186,7 +220,7 @@ class _VisionDialogState extends State<VisionDialog> {
       secondaryColor: widget.profet.secondaryColor,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxHeight: 300, // Increased from 200 to 300 for more content space
+          maxHeight: 350, // Increased to 350 for better use of space
         ),
         child: SingleChildScrollView(
           child: Text(
@@ -197,28 +231,6 @@ class _VisionDialogState extends State<VisionDialog> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildActions(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Feedback section with reduced spacing
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduced from 8.0
-          child: FeedbackSection.defaultOptions(
-            profet: widget.profet,
-            onFeedbackSelected: _handleFeedbackSelected,
-            context: context,
-            selectedFeedback: selectedFeedback,
-          ),
-        ),
-        const SizedBox(height: 8), // Reduced from 16
-        _buildDivider(),
-        const SizedBox(height: 8), // Reduced from 16
-        _buildActionButtons(),
-      ],
     );
   }
 
