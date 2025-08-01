@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../services/ai_service_manager.dart';
+import '../services/database_service.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
@@ -61,6 +62,24 @@ class _SplashScreenState extends State<SplashScreen>
       // Initialize AI service (this handles config and setup)
       final aiInitialized = await AIServiceManager.initialize();
       AppLogger.logInfo('SplashScreen', 'AI initialization result: $aiInitialized');
+      
+      // Initialize database service with timeout protection
+      try {
+        AppLogger.logInfo('SplashScreen', 'Starting database initialization...');
+        final databaseService = DatabaseService();
+        await databaseService.database.timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            AppLogger.logWarning('SplashScreen', 'Database initialization timed out after 10 seconds');
+            throw Exception('Database initialization timeout');
+          },
+        );
+        AppLogger.logInfo('SplashScreen', '✅ Database initialized successfully');
+      } catch (e) {
+        AppLogger.logError('SplashScreen', '❌ Failed to initialize database', e);
+        AppLogger.logWarning('SplashScreen', '⚠️  App will continue with limited vision storage functionality');
+        // Continue anyway - app should still work without storage
+      }
       
       setState(() {
         _setupComplete = true;

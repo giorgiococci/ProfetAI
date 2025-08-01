@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../models/vision_feedback.dart';
 import '../../widgets/common/common_widgets.dart';
+import '../../widgets/common/action_button.dart';
 import '../../utils/theme_utils.dart';
 import 'feedback_section.dart';
 
@@ -49,6 +50,9 @@ class VisionDialog extends StatelessWidget {
   }) {
     return showDialog<void>(
       context: context,
+      barrierDismissible: true,
+      useRootNavigator: false,
+      barrierColor: Colors.black.withValues(alpha: 0.3), // Much more transparent barrier
       builder: (BuildContext context) {
         return VisionDialog(
           title: title,
@@ -68,73 +72,71 @@ class VisionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.black.withOpacity(0.85),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: profet.primaryColor.withValues(alpha: 0.8), width: 2),
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: profet.primaryColor.withValues(alpha: 0.8), width: 2),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Title
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildTitle(),
+            ),
+            // Content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _buildContentWithActions(context),
+              ),
+            ),
+          ],
+        ),
       ),
-      title: _buildTitle(),
-      content: _buildContent(),
-      actions: [_buildActions(context)],
     );
   }
 
   Widget _buildTitle() {
     return Row(
       children: [
-        Icon(titleIcon, color: profet.primaryColor, size: 28),
-        const SizedBox(width: 10),
         Expanded(
           child: Text(
             title,
             style: ThemeUtils.titleStyle.copyWith(
               color: profet.primaryColor,
+              fontSize: 16, // Further reduced font size for better fit
             ),
+            maxLines: 2, // Allow title to wrap to 2 lines if needed
+            overflow: TextOverflow.ellipsis, // Add ellipsis if still too long
           ),
         ),
-        if (isAIEnabled) _buildAIIndicator(),
       ],
     );
   }
 
-  Widget _buildAIIndicator() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.withValues(alpha: 0.5)),
-      ),
-      child: const Row(
+  Widget _buildContentWithActions(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.psychology, color: Colors.blue, size: 12),
-          SizedBox(width: 4),
-          Text(
-            'AI',
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          if (question != null && question!.isNotEmpty) ...[
+            _buildQuestionContainer(),
+            const SizedBox(height: 15),
+          ],
+          _buildContentContainer(),
+          const SizedBox(height: 20),
+          _buildActions(context),
         ],
       ),
-    );
-  }
-
-  Widget _buildContent() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (question != null && question!.isNotEmpty) ...[
-          _buildQuestionContainer(),
-          const SizedBox(height: 15),
-        ],
-        _buildContentContainer(),
-      ],
     );
   }
 
@@ -168,10 +170,17 @@ class VisionDialog extends StatelessWidget {
     return ProphetContentContainer(
       primaryColor: profet.primaryColor,
       secondaryColor: profet.secondaryColor,
-      child: Text(
-        content,
-        style: ThemeUtils.bodyStyle.copyWith(
-          height: 1.5,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 300, // Increased from 200 to 300 for more content space
+        ),
+        child: SingleChildScrollView(
+          child: Text(
+            content,
+            style: ThemeUtils.bodyStyle.copyWith(
+              height: 1.5,
+            ),
+          ),
         ),
       ),
     );
@@ -179,15 +188,20 @@ class VisionDialog extends StatelessWidget {
 
   Widget _buildActions(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        FeedbackSection.defaultOptions(
-          profet: profet,
-          onFeedbackSelected: onFeedbackSelected,
-          context: context,
+        // Feedback section with reduced spacing
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduced from 8.0
+          child: FeedbackSection.defaultOptions(
+            profet: profet,
+            onFeedbackSelected: onFeedbackSelected,
+            context: context,
+          ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 8), // Reduced from 16
         _buildDivider(),
-        const SizedBox(height: 8),
+        const SizedBox(height: 8), // Reduced from 16
         _buildActionButtons(),
       ],
     );
@@ -202,18 +216,41 @@ class VisionDialog extends StatelessWidget {
   }
 
   Widget _buildActionButtons() {
-    return ActionButtonsRow(
-      buttons: [
-        ActionButtonData.save(
-          color: profet.primaryColor,
-          onPressed: onSave,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ActionButton(
+              icon: Icons.bookmark_add,
+              label: 'Salva',
+              color: profet.primaryColor,
+              onPressed: onSave,
+            ),
+          ),
         ),
-        ActionButtonData.share(
-          color: profet.secondaryColor,
-          onPressed: onShare,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ActionButton(
+              icon: Icons.share,
+              label: 'Condividi',
+              color: profet.secondaryColor,
+              onPressed: onShare,
+            ),
+          ),
         ),
-        ActionButtonData.close(
-          onPressed: onClose,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ActionButton(
+              icon: Icons.close,
+              label: 'Chiudi',
+              color: Colors.grey,
+              onPressed: onClose,
+            ),
+          ),
         ),
       ],
     );

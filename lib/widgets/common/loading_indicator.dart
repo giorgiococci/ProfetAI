@@ -61,30 +61,63 @@ class LoadingDialog extends StatelessWidget {
     this.isDismissible = false,
   });
 
-  /// Shows a loading dialog and returns a Future that can be used to dismiss it
+  // Static reference to track active dialog
+  static OverlayEntry? _currentOverlay;
+  static bool _isDialogShowing = false;
+
+  /// Shows a loading dialog using Overlay instead of showDialog
   static Future<void> show({
     required BuildContext context,
     required Color primaryColor,
     required String message,
     bool isDismissible = false,
-  }) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: isDismissible,
-      builder: (BuildContext context) {
-        return LoadingDialog(
-          primaryColor: primaryColor,
-          message: message,
-          isDismissible: isDismissible,
-        );
-      },
+  }) async {
+    // Only dismiss if there's actually a dialog showing
+    if (_isDialogShowing) {
+      dismiss(context);
+      // Wait a bit for the previous dialog to be fully removed
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    
+    _isDialogShowing = true;
+    
+    _currentOverlay = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.black54,
+        child: Center(
+          child: LoadingDialog(
+            primaryColor: primaryColor,
+            message: message,
+            isDismissible: isDismissible,
+          ),
+        ),
+      ),
     );
+    
+    Overlay.of(context).insert(_currentOverlay!);
   }
 
   /// Dismisses the currently shown loading dialog
   static void dismiss(BuildContext context) {
-    Navigator.of(context).pop();
+    try {
+      if (_isDialogShowing && _currentOverlay != null) {
+        _currentOverlay!.remove();
+        _currentOverlay = null;
+        _isDialogShowing = false;
+        print('LoadingDialog.dismiss: Dialog dismissed successfully using Overlay');
+      } else {
+        print('LoadingDialog.dismiss: No dialog to dismiss');
+      }
+    } catch (e) {
+      print('LoadingDialog.dismiss: Error dismissing dialog: $e');
+      // Force reset state even if removal failed
+      _currentOverlay = null;
+      _isDialogShowing = false;
+    }
   }
+
+  /// Check if dialog is currently showing
+  static bool get isShowing => _isDialogShowing;
 
   @override
   Widget build(BuildContext context) {

@@ -10,12 +10,17 @@ import 'screens/ai_status_screen.dart';
 import 'screens/splash_screen.dart';
 import 'services/locale_service.dart';
 import 'services/user_profile_service.dart';
+import 'utils/app_logger.dart';
 
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Don't initialize services here - let splash screen handle it
+  // Skip database initialization at startup to avoid blocking the UI
+  // Database will be initialized on-demand when needed with timeout protection
+  AppLogger.logInfo('Main', 'Skipping database initialization at startup for better web compatibility');
+  
+  // Don't initialize other services here - let splash screen handle it
   runApp(const MyApp());
 }
 

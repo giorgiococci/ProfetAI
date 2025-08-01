@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../models/profet.dart';
 import '../models/vision_feedback.dart';
-import '../services/feedback_service.dart';
+import '../services/vision_integration_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/home/home_widgets.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
 import '../utils/utils.dart';
+import '../utils/app_logger.dart';
 
 class HomeScreen extends StatefulWidget {
   final ProfetType selectedProfet;
@@ -23,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> 
     with LoadingStateMixin, FormStateMixin {
   final TextEditingController _questionController = TextEditingController();
+  final VisionIntegrationService _visionIntegrationService = VisionIntegrationService();
   late VisionState _visionState;
   late ProphetSelectionState _prophetState;
   String _prophetName = '';
@@ -106,75 +108,137 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _showVisionDialog({bool hasQuestion = false, String? question}) async {
+    AppLogger.logDebug('HomeScreen', '_showVisionDialog called with hasQuestion=$hasQuestion, question=$question');
     final profet = ProfetManager.getProfet(widget.selectedProfet);
 
-    _visionState.setLoading(true);
-    String content = '';
+    // Only update vision state if widget is mounted and state is not disposed
+    if (mounted) {
+      try {
+        _visionState.setLoading(true);
+      } catch (stateError) {
+        AppLogger.logWarning('HomeScreen', 'Vision state already disposed, cannot start vision generation');
+        return;
+      }
+    } else {
+      AppLogger.logWarning('HomeScreen', 'Widget not mounted, cannot start vision generation');
+      return;
+    }
+    
     bool isAIEnabled = Profet.isAIEnabled;
+    AppLogger.logDebug('HomeScreen', 'isAIEnabled=$isAIEnabled');
 
     try {
+      VisionResult visionResult;
+      
+      // Show loading dialog for AI-powered visions
+      if (isAIEnabled) {
+        AppLogger.logDebug('HomeScreen', 'Showing loading dialog');
+        await ProphetLoadingDialog.show(context: context, profet: profet);
+      }
+
+      AppLogger.logDebug('HomeScreen', 'About to generate vision...');
+      // Generate and store vision using integrated service
       if (hasQuestion && question != null && question.isNotEmpty) {
-        if (isAIEnabled) {
-          await ProphetLoadingDialog.show(context: context, profet: profet);
-          
-          if (mounted) {
-            content = await profet.getAIPersonalizedResponse(question, context);
-          }
-          if (mounted) ProphetLoadingDialog.dismiss(context);
-        } else {
-          if (mounted) {
-            content = await profet.getLocalizedPersonalizedResponse(context, question);
-          }
-        }
+        AppLogger.logDebug('HomeScreen', 'Generating question vision');
+        visionResult = await _visionIntegrationService.generateAndStoreQuestionVision(
+          context: context,
+          profet: profet,
+          question: question,
+          isAIEnabled: isAIEnabled,
+        );
       } else {
-        if (isAIEnabled) {
-          await ProphetLoadingDialog.show(context: context, profet: profet);
+        AppLogger.logDebug('HomeScreen', 'Generating random vision');
+        visionResult = await _visionIntegrationService.generateAndStoreRandomVision(
+          context: context,
+          profet: profet,
+          isAIEnabled: isAIEnabled,
+        );
+      }
+
+      AppLogger.logDebug('HomeScreen', 'Vision generated successfully: ${visionResult.content.substring(0, 50)}...');
+
+      // Dismiss loading dialog IMMEDIATELY after successful generation
+      if (isAIEnabled) {
+        AppLogger.logDebug('HomeScreen', 'Dismissing loading dialog after AI generation');
+        try {
+          ProphetLoadingDialog.dismiss(context);
+          AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed successfully');
           
-          if (mounted) {
-            content = await profet.getAIRandomVision(context);
-          }
-          if (mounted) ProphetLoadingDialog.dismiss(context);
-        } else {
-          if (mounted) {
-            final visions = await profet.getLocalizedRandomVisions(context);
-            final fallbackText = mounted ? AppLocalizations.of(context)!.oracleSilent : 'Silent...';
-            content = visions.isNotEmpty ? visions.first : fallbackText;
+          // Wait for the loading dialog to be fully removed before showing vision dialog
+          await Future.delayed(const Duration(milliseconds: 200));
+          
+        } catch (e) {
+          AppLogger.logError('HomeScreen', 'Failed to dismiss loading dialog: $e');
+          // Force dismiss by trying multiple approaches
+          try {
+            Navigator.of(context).pop();
+            AppLogger.logDebug('HomeScreen', 'Force dismissed with Navigator.pop()');
+          } catch (e2) {
+            AppLogger.logError('HomeScreen', 'Force dismiss also failed: $e2');
           }
         }
       }
 
-      _visionState.setVision(content);
-      _visionState.setLoading(false);
-
+      // Only update vision state if widget is still mounted and state is not disposed
       if (mounted) {
+        try {
+          _visionState.setVision(visionResult.content);
+          _visionState.setLoading(false);
+        } catch (stateError) {
+          AppLogger.logWarning('HomeScreen', 'Vision state already disposed, skipping state update');
+        }
+      }
+
+      // Add a small delay to ensure UI updates properly
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      // FORCE SHOW VISION DIALOG - This is the critical part!
+      if (mounted) {
+        AppLogger.logInfo('HomeScreen', 'FORCE SHOWING VISION DIALOG - Vision: ${visionResult.content.substring(0, 30)}...');
+        
         final localizations = AppLocalizations.of(context)!;
         final title = hasQuestion 
             ? localizations.oracleResponds(_prophetName)
             : localizations.visionOf(_prophetName);
         
-        await VisionDialog.show(
-          context: context,
-          title: title,
-          titleIcon: Icons.auto_awesome,
-          content: content,
-          profet: profet,
-          isAIEnabled: isAIEnabled,
-          question: question,
-          onFeedbackSelected: (feedbackType) {
-            if (mounted) {
-              _showFeedbackDialog(
-                profet: profet,
-                feedbackType: feedbackType,
-                question: question,
-                hasQuestion: hasQuestion,
-              );
-            }
-          },
+        try {
+          AppLogger.logInfo('HomeScreen', 'Calling VisionDialog.show with title: $title');
+          await VisionDialog.show(
+            context: context,
+            title: title,
+            titleIcon: Icons.auto_awesome,
+            content: visionResult.content,
+            profet: profet,
+            isAIEnabled: visionResult.isAIGenerated,
+            question: question,
+            onFeedbackSelected: (feedbackType) {
+              // Capture all needed context before closing dialog
+              final navigator = Navigator.of(context);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final localizations = AppLocalizations.of(context)!;
+              
+              // Close dialog first
+              navigator.pop();
+              
+              // Then handle feedback processing
+              if (visionResult.visionId != null) {
+                _showFeedbackDialog(
+                  profet: profet,
+                  feedbackType: feedbackType,
+                  question: question,
+                  hasQuestion: hasQuestion,
+                  visionId: visionResult.visionId!,
+                  scaffoldMessenger: scaffoldMessenger,
+                  localizations: localizations,
+                );
+              }
+            },
           onSave: () {
             if (mounted) {
               NotificationUtils.showSaveConfirmation(
                 context: context,
                 prophetColor: ThemeUtils.getProphetColor(widget.selectedProfet),
+                message: 'Vision "${visionResult.title}" saved to Vision Book!',
               );
             }
           },
@@ -187,19 +251,62 @@ class _HomeScreenState extends State<HomeScreen>
             }
           },
           onClose: () {
-            if (mounted) {
-              Navigator.of(context).pop(); // Actually close the dialog
-              if (hasQuestion) {
-                _questionController.clear();
+            Navigator.of(context).pop();
+            if (hasQuestion) {
+              _questionController.clear();
+              try {
                 _visionState.clearAll();
+              } catch (stateError) {
+                AppLogger.logWarning('HomeScreen', 'Vision state already disposed, skipping clear operation');
               }
             }
           },
         );
+        AppLogger.logDebug('HomeScreen', 'Vision dialog shown successfully');
+        } catch (dialogError) {
+          AppLogger.logError('HomeScreen', 'Failed to show vision dialog', dialogError);
+          if (mounted) {
+            NotificationUtils.showError(
+              context: context,
+              message: 'Failed to show vision: ${dialogError.toString()}',
+              duration: const Duration(seconds: 3),
+            );
+          }
+        }
+      } else {
+        AppLogger.logWarning('HomeScreen', 'Widget unmounted after vision generation, vision stored but dialog not shown');
       }
     } catch (e) {
-      _visionState.setLoading(false);
+      AppLogger.logError('HomeScreen', 'Error in _showVisionDialog', e);
+      AppLogger.logError('HomeScreen', 'Stack trace: ${StackTrace.current}');
+      
+      // Always try to dismiss loading dialog on error
+      if (isAIEnabled) {
+        try {
+          ProphetLoadingDialog.dismiss(context);
+          AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed after error');
+          
+          // Also try force dismiss with Navigator
+          try {
+            Navigator.of(context).pop();
+            AppLogger.logDebug('HomeScreen', 'Force dismissed with Navigator after error');
+          } catch (navError) {
+            AppLogger.logDebug('HomeScreen', 'Navigator force dismiss failed: $navError');
+          }
+          
+        } catch (dismissError) {
+          AppLogger.logWarning('HomeScreen', 'Failed to dismiss loading dialog after error: $dismissError');
+        }
+      }
+      
+      // Only update vision state if widget is still mounted and state is not disposed
       if (mounted) {
+        try {
+          _visionState.setLoading(false);
+        } catch (stateError) {
+          AppLogger.logWarning('HomeScreen', 'Vision state already disposed, skipping state update');
+        }
+        
         NotificationUtils.showError(
           context: context,
           message: 'Error: ${e.toString()}',
@@ -214,51 +321,60 @@ class _HomeScreenState extends State<HomeScreen>
     required FeedbackType feedbackType,
     String? question,
     required bool hasQuestion,
+    required int visionId,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required AppLocalizations localizations,
   }) async {
-    // For now, show a simple confirmation and save the feedback
-    final localizations = AppLocalizations.of(context)!;
-    String feedbackMessage;
-    
-    switch (feedbackType) {
-      case FeedbackType.positive:
-        feedbackMessage = localizations.positiveResponse;
-        break;
-      case FeedbackType.negative:
-        feedbackMessage = localizations.negativeResponse;
-        break;
-      case FeedbackType.funny:
-        feedbackMessage = "Feedback funny ricevuto!"; // Fallback
-        break;
-    }
+    try {
+      // Update the stored vision with feedback
+      final success = await _visionIntegrationService.updateVisionFeedback(
+        visionId: visionId,
+        feedbackType: feedbackType,
+      );
 
-    // Save the feedback
-    final feedback = VisionFeedback(
-      type: feedbackType,
-      icon: feedbackType == FeedbackType.positive ? '🌟' : 
-            feedbackType == FeedbackType.negative ? '👎' : '😄',
-      action: 'Feedback received',
-      thematicText: feedbackMessage,
-      timestamp: DateTime.now(),
-      visionContent: _visionState.currentVision,
-      question: question,
-    );
+      if (success) {
+        // Get localized feedback message
+        String feedbackMessage;
+        
+        switch (feedbackType) {
+          case FeedbackType.positive:
+            feedbackMessage = localizations.positiveResponse;
+            break;
+          case FeedbackType.negative:
+            feedbackMessage = localizations.negativeResponse;
+            break;
+          case FeedbackType.funny:
+            feedbackMessage = localizations.funnyResponse;
+            break;
+        }
 
-    // Save feedback using the service
-    final feedbackService = FeedbackService();
-    await feedbackService.saveFeedback(feedback);
-
-    // Show confirmation
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
+        // Show confirmation
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text('Feedback saved: $feedbackMessage'),
+            backgroundColor: profet.primaryColor,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        // Show error if feedback update failed
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: const Text('Failed to save feedback'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle any errors during feedback update
+      scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text('Feedback saved: $feedbackMessage'),
-          backgroundColor: profet.primaryColor,
-          duration: const Duration(seconds: 2),
+          content: Text('Error saving feedback: $e'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
         ),
       );
-      
-      // Don't close the dialog here - let the user use the close button
-      // The VisionDialog will remain open for the user to close manually
     }
   }
 

@@ -86,5 +86,13 @@
   "interestTarot": "Tarocchi",
   "interestAstrology": "Astrologia",
   "interestNumerology": "Numerologia",
-  "languageUpdated": "Lingua dell'app aggiornata a {language}"
+  "languageUpdated": "Lingua dell'app aggiornata a {language}",
+  "criticalActions": "Azioni Critiche",
+  "deleteAllVisions": "Elimina Tutte le Visioni",
+  "deleteAllVisionsWarning": "⚠️ Questa azione eliminerà permanentemente tutte le tue visioni memorizzate e non può essere annullata. Sei sicuro di voler continuare?",
+  "deleteAllVisionsConfirmTitle": "Eliminare Tutte le Visioni?",
+  "cancel": "Annulla",
+  "delete": "Elimina",
+  "allVisionsDeleted": "Tutte le visioni sono state eliminate con successo",
+  "failedToDeleteVisions": "Impossibile eliminare le visioni. Riprova."
 }

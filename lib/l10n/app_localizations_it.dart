@@ -293,4 +293,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String languageUpdated(String language) {
     return 'Lingua dell\'app aggiornata a $language';
   }
+
+  @override
+  String get criticalActions => 'Azioni Critiche';
+
+  @override
+  String get deleteAllVisions => 'Elimina Tutte le Visioni';
+
+  @override
+  String get deleteAllVisionsWarning =>
+      '⚠️ Questa azione eliminerà permanentemente tutte le tue visioni memorizzate e non può essere annullata. Sei sicuro di voler continuare?';
+
+  @override
+  String get deleteAllVisionsConfirmTitle => 'Eliminare Tutte le Visioni?';
+
+  @override
+  String get cancel => 'Annulla';
+
+  @override
+  String get delete => 'Elimina';
+
+  @override
+  String get allVisionsDeleted =>
+      'Tutte le visioni sono state eliminate con successo';
+
+  @override
+  String get failedToDeleteVisions =>
+      'Impossibile eliminare le visioni. Riprova.';
 }

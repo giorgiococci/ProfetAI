@@ -57,7 +57,7 @@ class FeedbackSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       child: Column(
         children: [
           Text(
@@ -66,13 +66,13 @@ class FeedbackSection extends StatelessWidget {
               color: Colors.grey[300],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: feedbackOptions.map((option) {
               return Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 1),
                   child: FeedbackButton(
                     profet: profet,
                     feedbackData: option,
@@ -89,7 +89,7 @@ class FeedbackSection extends StatelessWidget {
 }
 
 /// Individual feedback button widget
-class FeedbackButton extends StatelessWidget {
+class FeedbackButton extends StatefulWidget {
   final Profet profet;
   final FeedbackButtonData feedbackData;
   final VoidCallback onPressed;
@@ -102,39 +102,69 @@ class FeedbackButton extends StatelessWidget {
     required this.profet,
     required this.feedbackData,
     required this.onPressed,
-    this.iconSize = 20,
-    this.fontSize = 9,
-    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    this.iconSize = 18,
+    this.fontSize = 8,
+    this.padding = const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
   });
+
+  @override
+  State<FeedbackButton> createState() => _FeedbackButtonState();
+}
+
+class _FeedbackButtonState extends State<FeedbackButton> {
+  bool _isPressed = false;
+
+  void _handlePress() async {
+    if (_isPressed) return; // Prevent multiple taps
+    
+    setState(() {
+      _isPressed = true;
+    });
+    
+    widget.onPressed();
+    
+    // Reset after a short delay to prevent rapid multiple taps
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (mounted) {
+      setState(() {
+        _isPressed = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: _isPressed ? null : _handlePress,
       child: Container(
-        padding: padding,
+        padding: widget.padding,
         decoration: BoxDecoration(
-          color: profet.primaryColor.withValues(alpha: 0.1),
+          color: widget.profet.primaryColor.withValues(alpha: _isPressed ? 0.2 : 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: profet.primaryColor.withValues(alpha: 0.3),
+            color: widget.profet.primaryColor.withValues(alpha: _isPressed ? 0.5 : 0.3),
           ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              feedbackData.icon,
-              style: TextStyle(fontSize: iconSize),
+              widget.feedbackData.icon,
+              style: TextStyle(fontSize: widget.iconSize),
             ),
-            const SizedBox(height: 2),
-            Text(
-              feedbackData.label,
-              style: ThemeUtils.captionStyle.copyWith(
-                color: profet.primaryColor,
-                fontWeight: FontWeight.w600,
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                widget.feedbackData.label,
+                style: ThemeUtils.captionStyle.copyWith(
+                  color: widget.profet.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: widget.fontSize,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2, // Allow text to wrap to 2 lines if needed
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),

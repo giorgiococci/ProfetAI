@@ -480,5 +480,45 @@
         "description": "The name of the selected language"
       }
     }
+  },
+
+  "criticalActions": "Critical Actions",
+  "@criticalActions": {
+    "description": "Section title for critical/warning actions in profile"
+  },
+
+  "deleteAllVisions": "Delete All Visions",
+  "@deleteAllVisions": {
+    "description": "Button text to delete all stored visions"
+  },
+
+  "deleteAllVisionsWarning": "⚠️ This action will permanently delete all your stored visions and cannot be undone. Are you sure you want to continue?",
+  "@deleteAllVisionsWarning": {
+    "description": "Warning message when user tries to delete all visions"
+  },
+
+  "deleteAllVisionsConfirmTitle": "Delete All Visions?",
+  "@deleteAllVisionsConfirmTitle": {
+    "description": "Title for delete all visions confirmation dialog"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+
+  "allVisionsDeleted": "All visions have been deleted successfully",
+  "@allVisionsDeleted": {
+    "description": "Success message when all visions are deleted"
+  },
+
+  "failedToDeleteVisions": "Failed to delete visions. Please try again.",
+  "@failedToDeleteVisions": {
+    "description": "Error message when deleting all visions fails"
   }
 }
