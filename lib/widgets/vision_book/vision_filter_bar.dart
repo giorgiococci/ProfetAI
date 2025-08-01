@@ -28,28 +28,22 @@ class VisionFilterBar extends StatelessWidget {
           ),
         ),
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              _buildProphetFilter(context),
-              const SizedBox(width: 8),
-              _buildSortButton(context),
-              const Spacer(),
-              if (currentFilter.hasActiveFilters)
-                TextButton(
-                  onPressed: () => onFilterChanged(VisionFilter()),
-                  child: Text(
-                    AppLocalizations.of(context)!.clearFilters,
-                    style: const TextStyle(color: Colors.purple),
-                  ),
-                ),
-            ],
-          ),
-          if (currentFilter.hasActiveFilters) ...[
-            const SizedBox(height: 8),
-            _buildActiveFilters(context),
-          ],
+          _buildProphetFilter(context),
+          const SizedBox(width: 8),
+          _buildSortButton(context),
+          const Spacer(),
+          if (currentFilter.hasActiveFilters)
+            IconButton(
+              onPressed: () => onFilterChanged(VisionFilter()),
+              icon: const Icon(
+                Icons.clear_all,
+                color: Colors.purple,
+                size: 20,
+              ),
+              tooltip: AppLocalizations.of(context)!.clearFilters,
+            ),
         ],
       ),
     );
@@ -230,84 +224,6 @@ class VisionFilterBar extends StatelessWidget {
     );
   }
 
-  Widget _buildActiveFilters(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      children: [
-        if (currentFilter.prophetTypes.isNotEmpty)
-          for (String prophetType in currentFilter.prophetTypes)
-            _buildFilterChipAsync(context, prophetType, () {
-              final newTypes = Set<String>.from(currentFilter.prophetTypes);
-              newTypes.remove(prophetType);
-              onFilterChanged(currentFilter.copyWith(prophetTypes: newTypes));
-            }),
-        if (currentFilter.sortBy != VisionSortBy.dateDesc)
-          _buildFilterChip(
-            'Sort: ${_getSortLabel(context, currentFilter.sortBy)}',
-            () => onFilterChanged(currentFilter.copyWith(sortBy: VisionSortBy.dateDesc)),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildFilterChipAsync(BuildContext context, String prophetType, VoidCallback onRemove) {
-    return FutureBuilder<String>(
-      future: ProphetLocalizations.getName(context, _getProphetKey(prophetType)),
-      builder: (context, snapshot) {
-        final label = snapshot.data ?? _getProphetDisplayName(prophetType);
-        return _buildFilterChip(label, onRemove);
-      },
-    );
-  }
-
-  String _getProphetKey(String prophetType) {
-    switch (prophetType) {
-      case 'mystic_prophet':
-        return 'mystic';
-      case 'chaotic_prophet':
-        return 'chaotic';
-      case 'cynical_prophet':
-        return 'cynical';
-      default:
-        return 'mystic';
-    }
-  }
-
-  Widget _buildFilterChip(String label, VoidCallback onRemove) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.purple.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.purple.withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-            ),
-          ),
-          const SizedBox(width: 4),
-          GestureDetector(
-            onTap: onRemove,
-            child: const Icon(
-              Icons.close,
-              color: Colors.white70,
-              size: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   String _getSortLabel(BuildContext context, VisionSortBy sortBy) {
     final localizations = AppLocalizations.of(context)!;
     switch (sortBy) {
@@ -321,19 +237,6 @@ class VisionFilterBar extends StatelessWidget {
         return localizations.titleZA;
       case VisionSortBy.prophetType:
         return localizations.byOracle;
-    }
-  }
-
-  String _getProphetDisplayName(String prophetType) {
-    switch (prophetType) {
-      case 'mystic_prophet':
-        return 'Mystic';
-      case 'chaotic_prophet':
-        return 'Chaotic';
-      case 'cynical_prophet':
-        return 'Cynical';
-      default:
-        return prophetType;
     }
   }
 }
