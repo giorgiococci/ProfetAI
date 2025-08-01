@@ -31,31 +31,41 @@ class ActionButton extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final showText = screenWidth > minScreenWidthForText;
 
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-      ),
-      child: showText
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, color: color, size: iconSize),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: fontWeight,
-                      fontSize: fontSize,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: padding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          constraints: const BoxConstraints(
+            minHeight: 48, // Ensure minimum touch target size for mobile
+            minWidth: 48,
+          ),
+          child: showText
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(icon, color: color, size: iconSize),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          color: color,
+                          fontWeight: fontWeight,
+                          fontSize: fontSize,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            )
-          : Icon(icon, color: color, size: iconSize + 4), // Slightly larger when text is hidden
+                  ],
+                )
+              : Icon(icon, color: color, size: iconSize + 4), // Slightly larger when text is hidden
+        ),
+      ),
     );
   }
 }

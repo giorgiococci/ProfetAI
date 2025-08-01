@@ -159,13 +159,13 @@ class _HomeScreenState extends State<HomeScreen>
 
       // Dismiss loading dialog IMMEDIATELY after successful generation
       if (isAIEnabled) {
-        AppLogger.logDebug('HomeScreen', 'Dismissing loading dialog immediately');
+        AppLogger.logDebug('HomeScreen', 'Dismissing loading dialog after AI generation');
         try {
           ProphetLoadingDialog.dismiss(context);
           AppLogger.logDebug('HomeScreen', 'Loading dialog dismissed successfully');
           
-          // Double-check that dialog was dismissed
-          await Future.delayed(const Duration(milliseconds: 100));
+          // Wait for the loading dialog to be fully removed before showing vision dialog
+          await Future.delayed(const Duration(milliseconds: 200));
           
         } catch (e) {
           AppLogger.logError('HomeScreen', 'Failed to dismiss loading dialog: $e');
@@ -202,24 +202,6 @@ class _HomeScreenState extends State<HomeScreen>
             : localizations.visionOf(_prophetName);
         
         try {
-          // One final force dismiss before showing vision dialog
-          if (isAIEnabled) {
-            try {
-              ProphetLoadingDialog.dismiss(context);
-            } catch (e) {
-              // Ignore dismiss errors at this point
-            }
-            
-            try {
-              Navigator.of(context).pop();
-            } catch (e) {
-              // Ignore Navigator errors at this point  
-            }
-          }
-          
-          // Wait a bit more to ensure loading dialog is gone
-          await Future.delayed(const Duration(milliseconds: 100));
-          
           AppLogger.logInfo('HomeScreen', 'Calling VisionDialog.show with title: $title');
           await VisionDialog.show(
             context: context,
@@ -230,13 +212,24 @@ class _HomeScreenState extends State<HomeScreen>
             isAIEnabled: visionResult.isAIGenerated,
             question: question,
             onFeedbackSelected: (feedbackType) {
-              if (mounted && visionResult.visionId != null) {
+              // Capture all needed context before closing dialog
+              final navigator = Navigator.of(context);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final localizations = AppLocalizations.of(context)!;
+              
+              // Close dialog first
+              navigator.pop();
+              
+              // Then handle feedback processing
+              if (visionResult.visionId != null) {
                 _showFeedbackDialog(
                   profet: profet,
                   feedbackType: feedbackType,
                   question: question,
                   hasQuestion: hasQuestion,
                   visionId: visionResult.visionId!,
+                  scaffoldMessenger: scaffoldMessenger,
+                  localizations: localizations,
                 );
               }
             },
@@ -258,15 +251,13 @@ class _HomeScreenState extends State<HomeScreen>
             }
           },
           onClose: () {
-            if (mounted) {
-              Navigator.of(context).pop(); // Actually close the dialog
-              if (hasQuestion) {
-                _questionController.clear();
-                try {
-                  _visionState.clearAll();
-                } catch (stateError) {
-                  AppLogger.logWarning('HomeScreen', 'Vision state already disposed, skipping clear operation');
-                }
+            Navigator.of(context).pop();
+            if (hasQuestion) {
+              _questionController.clear();
+              try {
+                _visionState.clearAll();
+              } catch (stateError) {
+                AppLogger.logWarning('HomeScreen', 'Vision state already disposed, skipping clear operation');
               }
             }
           },
@@ -331,6 +322,8 @@ class _HomeScreenState extends State<HomeScreen>
     String? question,
     required bool hasQuestion,
     required int visionId,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required AppLocalizations localizations,
   }) async {
     try {
       // Update the stored vision with feedback
@@ -341,7 +334,6 @@ class _HomeScreenState extends State<HomeScreen>
 
       if (success) {
         // Get localized feedback message
-        final localizations = AppLocalizations.of(context)!;
         String feedbackMessage;
         
         switch (feedbackType) {
@@ -357,38 +349,32 @@ class _HomeScreenState extends State<HomeScreen>
         }
 
         // Show confirmation
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Feedback saved: $feedbackMessage'),
-              backgroundColor: profet.primaryColor,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text('Feedback saved: $feedbackMessage'),
+            backgroundColor: profet.primaryColor,
+            duration: const Duration(seconds: 2),
+          ),
+        );
       } else {
         // Show error if feedback update failed
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Failed to save feedback'),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      // Handle any errors during feedback update
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text('Error saving feedback: $e'),
+            content: const Text('Failed to save feedback'),
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
+    } catch (e) {
+      // Handle any errors during feedback update
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text('Error saving feedback: $e'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   }
 

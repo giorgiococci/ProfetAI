@@ -72,8 +72,12 @@ class LoadingDialog extends StatelessWidget {
     required String message,
     bool isDismissible = false,
   }) async {
-    // Dismiss any existing dialog first
-    dismiss(context);
+    // Only dismiss if there's actually a dialog showing
+    if (_isDialogShowing) {
+      dismiss(context);
+      // Wait a bit for the previous dialog to be fully removed
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
     
     _isDialogShowing = true;
     

@@ -36,6 +36,8 @@ class HomeContentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final profet = ProfetManager.getProfet(selectedProphet);
     final localizations = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400; // Detect smartphones
 
     return SingleChildScrollView(
       child: Column(
@@ -46,7 +48,7 @@ class HomeContentWidget extends StatelessWidget {
             prophetTypeString: ProphetUtils.prophetTypeToString(selectedProphet),
           ),
 
-          ThemeUtils.spacerLG,
+          isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
 
           // Oracle Avatar with loading state
           if (isLoading)
@@ -54,7 +56,7 @@ class HomeContentWidget extends StatelessWidget {
           else
             OracleAvatar(profet: profet),
 
-          ThemeUtils.spacerLG,
+          isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
 
           // Question Input Field with theme styling - reduced height
           Container(
@@ -74,7 +76,7 @@ class HomeContentWidget extends StatelessWidget {
             ),
           ),
 
-          ThemeUtils.spacerXL,
+          isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
 
           // Action buttons with theme styling
           OracleActionButtons(
@@ -88,7 +90,7 @@ class HomeContentWidget extends StatelessWidget {
             ErrorDisplayWidget(errorMessage: error!),
 
           // Bottom spacing instead of Spacer for scrollable content
-          ThemeUtils.spacerXL,
+          isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
         ],
       ),
     );

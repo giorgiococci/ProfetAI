@@ -25,6 +25,9 @@ class ProphetHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400; // Detect smartphones
+    
     return Padding(
       padding: padding ?? ThemeUtils.horizontalPaddingLG,
       child: Column(
@@ -37,10 +40,10 @@ class ProphetHeader extends StatelessWidget {
                 snapshot.data ?? 'Temple of Wisdom',
                 style: titleStyle ??
                     TextStyle(
-                      fontSize: 28,
+                      fontSize: isSmallScreen ? 20 : 28, // Reduced from 28 to 20 on mobile
                       fontWeight: FontWeight.bold,
                       color: profet.primaryColor,
-                      letterSpacing: 2.0,
+                      letterSpacing: isSmallScreen ? 1.0 : 2.0, // Reduced letter spacing on mobile
                     ),
                 textAlign: TextAlign.center,
               );
@@ -55,7 +58,7 @@ class ProphetHeader extends StatelessWidget {
                   snapshot.data ?? 'An ancient oracle with wisdom',
                   style: descriptionStyle ??
                       TextStyle(
-                        fontSize: 18,
+                        fontSize: isSmallScreen ? 14 : 18, // Reduced from 18 to 14 on mobile
                         fontWeight: FontWeight.w500,
                         color: profet.secondaryColor,
                         fontStyle: FontStyle.italic,

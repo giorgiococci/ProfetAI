@@ -67,18 +67,17 @@ class FeedbackSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // Use Wrap instead of Row for better responsiveness
-          Wrap(
-            alignment: WrapAlignment.spaceEvenly,
-            spacing: 8.0, // Space between buttons horizontally
-            runSpacing: 8.0, // Space between buttons vertically if they wrap
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: feedbackOptions.map((option) {
-              return SizedBox(
-                width: 80, // Fixed width for consistent button sizes
-                child: FeedbackButton(
-                  profet: profet,
-                  feedbackData: option,
-                  onPressed: () => onFeedbackSelected(option.type),
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1),
+                  child: FeedbackButton(
+                    profet: profet,
+                    feedbackData: option,
+                    onPressed: () => onFeedbackSelected(option.type),
+                  ),
                 ),
               );
             }).toList(),
@@ -90,7 +89,7 @@ class FeedbackSection extends StatelessWidget {
 }
 
 /// Individual feedback button widget
-class FeedbackButton extends StatelessWidget {
+class FeedbackButton extends StatefulWidget {
   final Profet profet;
   final FeedbackButtonData feedbackData;
   final VoidCallback onPressed;
@@ -105,37 +104,62 @@ class FeedbackButton extends StatelessWidget {
     required this.onPressed,
     this.iconSize = 18,
     this.fontSize = 8,
-    this.padding = const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+    this.padding = const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
   });
+
+  @override
+  State<FeedbackButton> createState() => _FeedbackButtonState();
+}
+
+class _FeedbackButtonState extends State<FeedbackButton> {
+  bool _isPressed = false;
+
+  void _handlePress() async {
+    if (_isPressed) return; // Prevent multiple taps
+    
+    setState(() {
+      _isPressed = true;
+    });
+    
+    widget.onPressed();
+    
+    // Reset after a short delay to prevent rapid multiple taps
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (mounted) {
+      setState(() {
+        _isPressed = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: _isPressed ? null : _handlePress,
       child: Container(
-        padding: padding,
+        padding: widget.padding,
         decoration: BoxDecoration(
-          color: profet.primaryColor.withValues(alpha: 0.1),
+          color: widget.profet.primaryColor.withValues(alpha: _isPressed ? 0.2 : 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: profet.primaryColor.withValues(alpha: 0.3),
+            color: widget.profet.primaryColor.withValues(alpha: _isPressed ? 0.5 : 0.3),
           ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              feedbackData.icon,
-              style: TextStyle(fontSize: iconSize),
+              widget.feedbackData.icon,
+              style: TextStyle(fontSize: widget.iconSize),
             ),
             const SizedBox(height: 4),
             Flexible(
               child: Text(
-                feedbackData.label,
+                widget.feedbackData.label,
                 style: ThemeUtils.captionStyle.copyWith(
-                  color: profet.primaryColor,
+                  color: widget.profet.primaryColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: fontSize,
+                  fontSize: widget.fontSize,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2, // Allow text to wrap to 2 lines if needed

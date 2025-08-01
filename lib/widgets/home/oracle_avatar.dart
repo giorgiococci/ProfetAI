@@ -53,13 +53,18 @@ class OracleAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = size / 2;
-    final imageSize = size - (borderWidth * 2);
-    final iconSize = size * 0.4; // Proportional icon size
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 400; // Detect smartphones
+    
+    // Adjust size for small screens
+    final actualSize = isSmallScreen ? size * 0.75 : size; // 25% smaller on mobile
+    final borderRadius = actualSize / 2;
+    final imageSize = actualSize - (borderWidth * 2);
+    final iconSize = actualSize * 0.4; // Proportional icon size
 
     return Container(
-      width: size,
-      height: size,
+      width: actualSize,
+      height: actualSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
