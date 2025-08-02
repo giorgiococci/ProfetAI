@@ -301,7 +301,7 @@ class _FloatingQuestionInputState extends State<FloatingQuestionInput>
                   ),
                   maxLines: 3,
                   minLines: 1,
-                  autofocus: true,
+                  autofocus: false,
                 )
               : GestureDetector(
                   onTap: _toggleExpanded,

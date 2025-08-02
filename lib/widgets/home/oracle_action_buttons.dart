@@ -9,12 +9,14 @@ class OracleActionButtons extends StatelessWidget {
   final ProfetType selectedProphet;
   final VoidCallback onAskOracle;
   final VoidCallback onListenToOracle;
+  final bool isQuestionEmpty;
 
   const OracleActionButtons({
     super.key,
     required this.selectedProphet,
     required this.onAskOracle,
     required this.onListenToOracle,
+    required this.isQuestionEmpty,
   });
 
   @override
@@ -27,12 +29,26 @@ class OracleActionButtons extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            style: ThemeUtils.getProphetButtonStyle(selectedProphet),
-            onPressed: onAskOracle,
-            icon: const Icon(Icons.help_outline),
+            style: isQuestionEmpty 
+                ? ThemeUtils.getProphetButtonStyle(selectedProphet).copyWith(
+                    backgroundColor: WidgetStateProperty.all(
+                      Colors.grey.withOpacity(0.5),
+                    ),
+                    foregroundColor: WidgetStateProperty.all(
+                      Colors.grey.shade400,
+                    ),
+                  )
+                : ThemeUtils.getProphetButtonStyle(selectedProphet),
+            onPressed: isQuestionEmpty ? null : onAskOracle,
+            icon: Icon(
+              Icons.auto_awesome,
+              color: isQuestionEmpty ? Colors.grey.shade400 : null,
+            ),
             label: Text(
               localizations.askTheOracle,
-              style: ThemeUtils.buttonTextStyle,
+              style: ThemeUtils.buttonTextStyle.copyWith(
+                color: isQuestionEmpty ? Colors.grey.shade400 : null,
+              ),
             ),
           ),
         ),
@@ -50,7 +66,7 @@ class OracleActionButtons extends StatelessWidget {
             ),
             onPressed: onListenToOracle,
             icon: const Icon(
-              Icons.hearing,
+              Icons.bubble_chart,
               color: Colors.white,
             ),
             label: Text(

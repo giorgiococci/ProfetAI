@@ -155,7 +155,7 @@ abstract class AppLocalizations {
   /// Button text to listen to oracle's vision without a question
   ///
   /// In en, this message translates to:
-  /// **'LISTEN TO THE ORACLE'**
+  /// **'LET THE ORACLE SPEAK'**
   String get listenToOracle;
 
   /// Placeholder text for question input field
