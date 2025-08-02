@@ -6,6 +6,7 @@ import '../config/app_config.dart';
 import '../utils/app_logger.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
 import '../utils/utils.dart';
+import '../l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -184,8 +185,8 @@ class _SplashScreenState extends State<SplashScreen>
                   
                   // Rotating prophet images
                   SizedBox(
-                    width: 200,
-                    height: 200,
+                    width: 240, // Increased from 200
+                    height: 240, // Increased from 200
                     child: AnimatedBuilder(
                       animation: _rotationController,
                       builder: (context, child) {
@@ -201,7 +202,7 @@ class _SplashScreenState extends State<SplashScreen>
                   
                   // Loading text
                   Text(
-                    'Loading prophets from the universe',
+                    AppLocalizations.of(context)!.loadingProphetsFromUniverse,
                     style: ThemeUtils.titleStyle.copyWith(
                       letterSpacing: 1.2,
                     ),
@@ -291,7 +292,7 @@ class _SplashScreenState extends State<SplashScreen>
     return prophets.map((prophet) {
       try {
         final angle = prophet['angle'] as double;
-        final radius = 75.0;
+        final radius = 90.0; // Increased from 75.0
         
         return Transform.translate(
           offset: Offset(
@@ -299,8 +300,8 @@ class _SplashScreenState extends State<SplashScreen>
             radius * math.sin(angle),
           ),
           child: Container(
-            width: 60,
-            height: 60,
+            width: 80, // Increased from 60
+            height: 80, // Increased from 60
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: (prophet['color'] as Color).withOpacity(0.2),
@@ -325,8 +326,8 @@ class _SplashScreenState extends State<SplashScreen>
         AppLogger.logError('SplashScreen', 'Error building prophet icon', e);
         // Return a fallback container in case of any error
         return Container(
-          width: 60,
-          height: 60,
+          width: 80, // Increased from 60
+          height: 80, // Increased from 60
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.grey,
@@ -341,11 +342,11 @@ class _SplashScreenState extends State<SplashScreen>
     try {
       return Image.asset(
         prophet['image'] as String,
-        width: 54,
-        height: 54,
+        width: 74, // Increased from 54
+        height: 74, // Increased from 54
         fit: BoxFit.cover,
-        cacheWidth: 54,
-        cacheHeight: 54,
+        cacheWidth: 148, // Increased from 54 (2x for high DPI)
+        cacheHeight: 148, // Increased from 54 (2x for high DPI)
         errorBuilder: (context, error, stackTrace) {
           AppLogger.logWarning('SplashScreen', 'Failed to load image: ${prophet['image']}, error: $error');
           // Fallback to icon if image fails to load
@@ -354,7 +355,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Icon(
               _getFallbackIcon(prophet['image'] as String),
               color: Colors.white,
-              size: 24,
+              size: 32, // Increased from 24
             ),
           );
         },
@@ -377,7 +378,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: Icon(
           _getFallbackIcon(prophet['image'] as String),
           color: Colors.white,
-          size: 24,
+          size: 32, // Increased from 24
         ),
       );
     }

@@ -45,7 +45,7 @@
     "description": "Button text to ask the oracle a question"
   },
 
-  "listenToOracle": "LISTEN TO THE ORACLE",
+  "listenToOracle": "LET THE ORACLE SPEAK",
   "@listenToOracle": {
     "description": "Button text to listen to oracle's vision without a question"
   },

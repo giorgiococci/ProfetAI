@@ -10,7 +10,7 @@ import 'error_display_widget.dart';
 
 /// The main content widget for the home screen.
 /// Combines all home screen elements in a clean, organized structure.
-class HomeContentWidget extends StatelessWidget {
+class HomeContentWidget extends StatefulWidget {
   final ProfetType selectedProphet;
   final TextEditingController questionController;
   final String prophetName;
@@ -33,63 +33,99 @@ class HomeContentWidget extends StatelessWidget {
   });
 
   @override
+  State<HomeContentWidget> createState() => _HomeContentWidgetState();
+}
+
+class _HomeContentWidgetState extends State<HomeContentWidget> {
+  bool _isQuestionEmpty = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _isQuestionEmpty = widget.questionController.text.trim().isEmpty;
+    widget.questionController.addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.questionController.removeListener(_onTextChanged);
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    final isEmpty = widget.questionController.text.trim().isEmpty;
+    if (_isQuestionEmpty != isEmpty) {
+      setState(() {
+        _isQuestionEmpty = isEmpty;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final profet = ProfetManager.getProfet(selectedProphet);
+    final profet = ProfetManager.getProfet(widget.selectedProphet);
     final localizations = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth < 400; // Detect smartphones
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Prophet Header with transparent background
-          ProphetHeader(
-            profet: profet,
-            prophetTypeString: ProphetUtils.prophetTypeToString(selectedProphet),
-          ),
-
-          isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
-
-          // Oracle Avatar with loading state
-          if (isLoading)
-            LoadingStateWidget(selectedProphet: selectedProphet)
-          else
-            OracleAvatar(profet: profet),
-
-          isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
-
-          // Question Input Field with single container styling
-          TextFormField(
-            controller: questionController,
-            decoration: ThemeUtils.getProphetInputDecoration(
-              selectedProphet,
-              labelText: localizations.enterQuestionPlaceholder(
-                prophetName.isNotEmpty ? prophetName : 'Oracle'
-              ),
-            ).copyWith(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              fillColor: ThemeUtils.getProphetColor(selectedProphet).withValues(alpha: 0.1),
+    return GestureDetector(
+      onTap: () {
+        // Remove focus from any text field when tapping outside
+        FocusScope.of(context).unfocus();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Prophet Header with transparent background
+            ProphetHeader(
+              profet: profet,
+              prophetTypeString: ProphetUtils.prophetTypeToString(widget.selectedProphet),
             ),
-            maxLines: 3,
-            validator: ValidationUtils.validateQuestion,
-          ),
 
-          isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
+            isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
 
-          // Action buttons with theme styling
-          OracleActionButtons(
-            selectedProphet: selectedProphet,
-            onAskOracle: onAskOracle,
-            onListenToOracle: onListenToOracle,
-          ),
+            // Oracle Avatar with loading state
+            if (widget.isLoading)
+              LoadingStateWidget(selectedProphet: widget.selectedProphet)
+            else
+              OracleAvatar(profet: profet),
 
-          // Error display
-          if (hasError && error != null)
-            ErrorDisplayWidget(errorMessage: error!),
+            isSmallScreen ? ThemeUtils.spacerMD : ThemeUtils.spacerLG, // Reduced spacing on mobile
 
-          // Bottom spacing instead of Spacer for scrollable content
-          isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
-        ],
+            // Question Input Field with single container styling
+            TextFormField(
+              controller: widget.questionController,
+              decoration: ThemeUtils.getProphetInputDecoration(
+                widget.selectedProphet,
+                labelText: localizations.enterQuestionPlaceholder(
+                  widget.prophetName.isNotEmpty ? widget.prophetName : 'Oracle'
+                ),
+              ).copyWith(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                fillColor: ThemeUtils.getProphetColor(widget.selectedProphet).withValues(alpha: 0.1),
+              ),
+              maxLines: 3,
+              validator: ValidationUtils.validateQuestion,
+            ),
+
+            isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
+
+            // Action buttons with theme styling
+            OracleActionButtons(
+              selectedProphet: widget.selectedProphet,
+              onAskOracle: widget.onAskOracle,
+              onListenToOracle: widget.onListenToOracle,
+              isQuestionEmpty: _isQuestionEmpty,
+            ),
+
+            // Error display
+            if (widget.hasError && widget.error != null)
+              ErrorDisplayWidget(errorMessage: widget.error!),
+
+            // Bottom spacing instead of Spacer for scrollable content
+            isSmallScreen ? ThemeUtils.spacerLG : ThemeUtils.spacerXL, // Reduced spacing on mobile
+          ],
+        ),
       ),
     );
   }

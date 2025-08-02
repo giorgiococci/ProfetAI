@@ -37,7 +37,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get askTheOracle => 'ASK THE ORACLE';
 
   @override
-  String get listenToOracle => 'LISTEN TO THE ORACLE';
+  String get listenToOracle => 'LET THE ORACLE SPEAK';
 
   @override
   String enterQuestionPlaceholder(String oracleName) {

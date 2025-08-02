@@ -91,6 +91,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   // Handler methods using state utilities
   void _handleAskOracle() {
+    // Remove focus from textbox before processing
+    FocusScope.of(context).unfocus();
+    
     final question = _questionController.text.trim();
     final validation = ValidationUtils.validateQuestion(question);
     
@@ -108,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _handleListenToOracle() {
+    // Remove focus from textbox before opening dialog
+    FocusScope.of(context).unfocus();
     _showVisionDialog(hasQuestion: false);
   }
 
@@ -244,6 +249,12 @@ class _HomeScreenState extends State<HomeScreen>
           },
           onClose: () {
             Navigator.of(context).pop();
+            // Use post-frame callback to ensure unfocus happens after navigation completes
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                FocusScope.of(context).unfocus();
+              }
+            });
             if (hasQuestion) {
               _questionController.clear();
               try {
