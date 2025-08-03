@@ -280,12 +280,17 @@ class _SplashScreenState extends State<SplashScreen>
       {
         'image': 'assets/images/prophets/chaotic_prophet.png',
         'color': const Color(0xFFFF6B35), // Orange - Chaotic
-        'angle': 2 * math.pi / 3,
+        'angle': 2 * math.pi / 4,
       },
       {
         'image': 'assets/images/prophets/cynical_prophet.png',
         'color': const Color(0xFF78909C), // Gray-blue - Cynic
-        'angle': 4 * math.pi / 3,
+        'angle': 4 * math.pi / 4,
+      },
+      {
+        'image': 'assets/images/prophets/roaster_prophet.png',
+        'color': const Color(0xFFFF3D00), // Burning red-orange - Roaster
+        'angle': 6 * math.pi / 4,
       },
     ];
 
@@ -388,6 +393,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (imagePath.contains('mystic')) return Icons.visibility;
     if (imagePath.contains('chaotic')) return Icons.shuffle;
     if (imagePath.contains('cinic')) return Icons.sentiment_dissatisfied;
+    if (imagePath.contains('roaster')) return Icons.local_fire_department;
     return Icons.help;
   }
 }

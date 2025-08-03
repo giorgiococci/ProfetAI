@@ -15,6 +15,8 @@ class ProphetUtils {
         return 'chaotic';
       case ProfetType.cinico:
         return 'cynical';
+      case ProfetType.roaster:
+        return 'roaster';
     }
   }
 
@@ -27,6 +29,8 @@ class ProphetUtils {
         return ProfetType.caotico;
       case 'cynical':
         return ProfetType.cinico;
+      case 'roaster':
+        return ProfetType.roaster;
       default:
         return null;
     }
@@ -69,6 +73,8 @@ class ProphetUtils {
         return '⚡';
       case ProfetType.cinico:
         return '🎭';
+      case ProfetType.roaster:
+        return '🔥';
     }
   }
 
@@ -81,6 +87,8 @@ class ProphetUtils {
         return Icons.whatshot;
       case ProfetType.cinico:
         return Icons.psychology_alt;
+      case ProfetType.roaster:
+        return Icons.local_fire_department;
     }
   }
 }

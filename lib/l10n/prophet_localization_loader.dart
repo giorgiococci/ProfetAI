@@ -265,6 +265,9 @@ class ProphetLocalizationLoader {
       case 'oracolo_cinico':
       case 'cynical':
         return 'cynical_prophet';
+      case 'oracolo_roaster':
+      case 'roaster':
+        return 'roaster_prophet';
       default:
         return prophetType.toLowerCase();
     }
@@ -299,7 +302,7 @@ class ProphetLocalizationLoader {
   /// This is useful for debugging APK issues
   static Future<bool> verifyAssetsLoaded() async {
     bool allAssetsLoaded = true;
-    final prophetTypes = ['chaotic_prophet', 'mystic_prophet', 'cynical_prophet']; // Use direct folder names
+    final prophetTypes = ['chaotic_prophet', 'mystic_prophet', 'cynical_prophet', 'roaster_prophet']; // Use direct folder names
     final locales = ['en', 'it'];
     
     debugPrint('Starting prophet localization asset verification...');
