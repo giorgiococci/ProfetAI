@@ -146,6 +146,9 @@ class Vision {
       case 'cynical_prophet':
       case 'cinico':
         return 'Cynical Oracle';
+      case 'roaster_prophet':
+      case 'roaster':
+        return 'The Prophet Who Roasts';
       default:
         return 'Oracle';
     }
@@ -163,6 +166,9 @@ class Vision {
       case 'cynical_prophet':
       case 'cinico':
         return 'assets/images/prophets/cynical_prophet.png';
+      case 'roaster_prophet':
+      case 'roaster':
+        return 'assets/images/prophets/roaster_prophet.png';
       default:
         return 'assets/images/prophets/mystic_prophet.png';
     }

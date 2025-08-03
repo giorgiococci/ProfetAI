@@ -92,6 +92,8 @@ class _ProfetSelectionScreenState extends State<ProfetSelectionScreen>
         return 'chaotic';
       case ProfetType.cinico:
         return 'cynical';
+      case ProfetType.roaster:
+        return 'roaster';
     }
   }
 

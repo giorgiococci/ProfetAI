@@ -103,6 +103,7 @@ class VisionFilterBar extends StatelessWidget {
         _buildProphetMenuItemAsync(context, 'mystic_prophet', 'mystic'),
         _buildProphetMenuItemAsync(context, 'chaotic_prophet', 'chaotic'),
         _buildProphetMenuItemAsync(context, 'cynical_prophet', 'cynical'),
+        _buildProphetMenuItemAsync(context, 'roaster_prophet', 'roaster'),
       ],
     );
   }
@@ -144,6 +145,8 @@ class VisionFilterBar extends StatelessWidget {
         return 'Chaotic Oracle';
       case 'cynical_prophet':
         return 'Cynical Oracle';
+      case 'roaster_prophet':
+        return 'The Prophet Who Roasts';
       default:
         return 'Oracle';
     }

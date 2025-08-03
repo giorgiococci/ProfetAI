@@ -174,6 +174,8 @@ class _MyHomePageState extends State<MyHomePage> {
         return ProfetType.caotico;
       case 'cynical':
         return ProfetType.cinico;
+      case 'roaster':
+        return ProfetType.roaster;
       default:
         return null;
     }

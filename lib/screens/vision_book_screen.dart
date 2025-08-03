@@ -311,6 +311,8 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
         return ProfetType.caotico;
       case 'cynical_prophet':
         return ProfetType.cinico;
+      case 'roaster_prophet':
+        return ProfetType.roaster;
       default:
         return ProfetType.mistico;
     }
@@ -325,6 +327,8 @@ class _VisionBookScreenState extends State<VisionBookScreen> {
         return 'Chaotic Oracle';
       case 'cynical_prophet':
         return 'Cynical Oracle';
+      case 'roaster_prophet':
+        return 'The Prophet Who Roasts';
       default:
         return 'Oracle';
     }

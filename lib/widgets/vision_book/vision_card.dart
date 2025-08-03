@@ -291,6 +291,8 @@ class VisionCard extends StatelessWidget {
         return ProfetType.caotico;
       case 'cynical_prophet':
         return ProfetType.cinico;
+      case 'roaster_prophet':
+        return ProfetType.roaster;
       default:
         return ProfetType.mistico;
     }
@@ -304,6 +306,8 @@ class VisionCard extends StatelessWidget {
         return 'Chaotic Oracle';
       case 'cynical_prophet':
         return 'Cynical Oracle';
+      case 'roaster_prophet':
+        return 'The Prophet Who Roasts';
       default:
         return 'Oracle';
     }
@@ -326,6 +330,8 @@ class VisionCard extends StatelessWidget {
         return 'chaotic';
       case 'cynical_prophet':
         return 'cynical';
+      case 'roaster_prophet':
+        return 'roaster';
       default:
         return 'mystic';
     }
