@@ -10,6 +10,7 @@
 - **Cynical Oracle** - Sharp, realistic, and brutally honest insights
 
 ### 🎯 Core Functionality
+- **Onboarding Experience** - Welcome flow introducing app features and optional personalization
 - **Personalized Predictions** - Ask questions and receive tailored responses
 - **Random Visions** - Get spontaneous insights from your chosen oracle
 - **Vision Book** - Save and revisit your favorite predictions
@@ -74,11 +75,19 @@ lib/
 │   ├── oracolo_mistico.dart # Mystic Oracle implementation
 │   ├── oracolo_caotico.dart # Chaotic Oracle implementation
 │   └── oracolo_cinico.dart  # Cynical Oracle implementation
-└── screens/                 # UI screens
-    ├── home_screen.dart         # Main interaction screen
-    ├── profet_selection_screen.dart # Oracle selection
-    ├── profile_screen.dart      # User profile
-    └── vision_book_screen.dart  # Saved predictions
+├── screens/                 # UI screens
+│   ├── home_screen.dart         # Main interaction screen
+│   ├── profet_selection_screen.dart # Oracle selection
+│   ├── profile_screen.dart      # User profile
+│   ├── vision_book_screen.dart  # Saved predictions
+│   └── onboarding/              # Onboarding flow
+│       ├── onboarding_flow.dart           # Main onboarding controller
+│       ├── onboarding_welcome_screen.dart # Welcome & app intro
+│       ├── onboarding_features_screen.dart # Features showcase
+│       └── onboarding_personalization_screen.dart # Optional user setup
+└── services/                # Business logic and data services
+    ├── onboarding_service.dart  # Onboarding state management
+    └── user_profile_service.dart # User preferences and data
 ```
 
 ## 🎨 Design Philosophy

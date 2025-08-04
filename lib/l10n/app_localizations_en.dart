@@ -473,4 +473,71 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteDataPageTitle => 'Delete Data';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get welcomeToProfetAI => 'Welcome to Profet AI';
+
+  @override
+  String get discoverMysticalInsights =>
+      'Discover mystical insights through unique oracles';
+
+  @override
+  String get beginJourney => 'Begin Journey';
+
+  @override
+  String get unlockMysticalPowers => 'Unlock Mystical Powers';
+
+  @override
+  String get personalizedPredictions => 'Personalized Predictions';
+
+  @override
+  String get personalizedPredictionsDesc =>
+      'Ask questions and receive tailored insights from your chosen oracle';
+
+  @override
+  String get randomVisions => 'Random Visions';
+
+  @override
+  String get randomVisionsDesc =>
+      'Get spontaneous wisdom when you need guidance most';
+
+  @override
+  String get visionBook => 'Vision Book';
+
+  @override
+  String get visionBookDesc =>
+      'Save and revisit your favorite predictions and insights';
+
+  @override
+  String get uniqueThemes => 'Unique Themes';
+
+  @override
+  String get uniqueThemesDesc =>
+      'Each oracle has its own mystical visual identity';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String get personalizeYourExperience => 'Personalize Your Experience';
+
+  @override
+  String get personalizeOptional =>
+      'Optional - You can always change this later';
+
+  @override
+  String get whatShouldOraclesCallYou => 'What should the oracles call you?';
+
+  @override
+  String get enterYourNameOptional => 'Enter your name (optional)';
+
+  @override
+  String get doYouHavePreferredOracle =>
+      'Do you have a preferred oracle? (Top 5)';
+
+  @override
+  String get enterTheMysticalRealm => 'Enter the Mystical Realm';
 }

@@ -476,4 +476,70 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get deleteDataPageTitle => 'Elimina Dati';
+
+  @override
+  String get skip => 'Salta';
+
+  @override
+  String get welcomeToProfetAI => 'Benvenuto in Profet AI';
+
+  @override
+  String get discoverMysticalInsights =>
+      'Scopri intuizioni mistiche attraverso oracoli unici';
+
+  @override
+  String get beginJourney => 'Inizia il Viaggio';
+
+  @override
+  String get unlockMysticalPowers => 'Sblocca Poteri Mistici';
+
+  @override
+  String get personalizedPredictions => 'Predizioni Personalizzate';
+
+  @override
+  String get personalizedPredictionsDesc =>
+      'Fai domande e ricevi intuizioni su misura dal tuo oracolo scelto';
+
+  @override
+  String get randomVisions => 'Visioni Casuali';
+
+  @override
+  String get randomVisionsDesc =>
+      'Ottieni saggezza spontanea quando hai più bisogno di guida';
+
+  @override
+  String get visionBook => 'Libro delle Visioni';
+
+  @override
+  String get visionBookDesc =>
+      'Salva e rivedi le tue predizioni e intuizioni preferite';
+
+  @override
+  String get uniqueThemes => 'Temi Unici';
+
+  @override
+  String get uniqueThemesDesc =>
+      'Ogni oracolo ha la propria identità visiva mistica';
+
+  @override
+  String get continueButton => 'Continua';
+
+  @override
+  String get personalizeYourExperience => 'Personalizza la Tua Esperienza';
+
+  @override
+  String get personalizeOptional => 'Opzionale - Puoi sempre cambiarlo dopo';
+
+  @override
+  String get whatShouldOraclesCallYou =>
+      'Come dovrebbero chiamarti gli oracoli?';
+
+  @override
+  String get enterYourNameOptional => 'Inserisci il tuo nome (opzionale)';
+
+  @override
+  String get doYouHavePreferredOracle => 'Hai un oracolo preferito? (Top 5)';
+
+  @override
+  String get enterTheMysticalRealm => 'Entra nel Regno Mistico';
 }

@@ -923,6 +923,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Data'**
   String get deleteDataPageTitle;
+
+  /// Skip button text for onboarding screens
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// Main welcome title for onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Profet AI'**
+  String get welcomeToProfetAI;
+
+  /// Welcome screen subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Discover mystical insights through unique oracles'**
+  String get discoverMysticalInsights;
+
+  /// Button text to start the onboarding journey
+  ///
+  /// In en, this message translates to:
+  /// **'Begin Journey'**
+  String get beginJourney;
+
+  /// Features screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Mystical Powers'**
+  String get unlockMysticalPowers;
+
+  /// Feature title for personalized predictions
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Predictions'**
+  String get personalizedPredictions;
+
+  /// Feature description for personalized predictions
+  ///
+  /// In en, this message translates to:
+  /// **'Ask questions and receive tailored insights from your chosen oracle'**
+  String get personalizedPredictionsDesc;
+
+  /// Feature title for random visions
+  ///
+  /// In en, this message translates to:
+  /// **'Random Visions'**
+  String get randomVisions;
+
+  /// Feature description for random visions
+  ///
+  /// In en, this message translates to:
+  /// **'Get spontaneous wisdom when you need guidance most'**
+  String get randomVisionsDesc;
+
+  /// Feature title for vision book
+  ///
+  /// In en, this message translates to:
+  /// **'Vision Book'**
+  String get visionBook;
+
+  /// Feature description for vision book
+  ///
+  /// In en, this message translates to:
+  /// **'Save and revisit your favorite predictions and insights'**
+  String get visionBookDesc;
+
+  /// Feature title for unique themes
+  ///
+  /// In en, this message translates to:
+  /// **'Unique Themes'**
+  String get uniqueThemes;
+
+  /// Feature description for unique themes
+  ///
+  /// In en, this message translates to:
+  /// **'Each oracle has its own mystical visual identity'**
+  String get uniqueThemesDesc;
+
+  /// Continue button text
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// Personalization screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Personalize Your Experience'**
+  String get personalizeYourExperience;
+
+  /// Subtitle indicating personalization is optional
+  ///
+  /// In en, this message translates to:
+  /// **'Optional - You can always change this later'**
+  String get personalizeOptional;
+
+  /// Label for name input field
+  ///
+  /// In en, this message translates to:
+  /// **'What should the oracles call you?'**
+  String get whatShouldOraclesCallYou;
+
+  /// Placeholder text for name input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name (optional)'**
+  String get enterYourNameOptional;
+
+  /// Label for oracle preference selection
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have a preferred oracle? (Top 5)'**
+  String get doYouHavePreferredOracle;
+
+  /// Final onboarding button text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the Mystical Realm'**
+  String get enterTheMysticalRealm;
 }
 
 class _AppLocalizationsDelegate
