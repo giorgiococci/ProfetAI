@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/profet_manager.dart';
 import '../models/profet.dart';
 import '../services/vision_integration_service.dart';
+import '../services/question_ad_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/home/home_widgets.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen>
     with LoadingStateMixin, FormStateMixin {
   final TextEditingController _questionController = TextEditingController();
   final VisionIntegrationService _visionIntegrationService = VisionIntegrationService();
+  final QuestionAdService _questionAdService = QuestionAdService();
   late VisionState _visionState;
   late ProphetSelectionState _prophetState;
   String _prophetName = '';
@@ -35,10 +37,24 @@ class _HomeScreenState extends State<HomeScreen>
     _prophetState = ProphetSelectionState();
     _prophetState.selectProphet(widget.selectedProfet);
     
+    // Initialize ad service
+    _initializeAdService();
+    
     // Load prophet name after first frame to ensure context is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadProphetName();
     });
+  }
+
+  /// Initialize the ad service for question tracking
+  Future<void> _initializeAdService() async {
+    try {
+      await _questionAdService.initialize();
+      AppLogger.logInfo('HomeScreen', 'Ad service initialized successfully');
+    } catch (e) {
+      AppLogger.logError('HomeScreen', 'Failed to initialize ad service', e);
+      // Continue without ads if initialization fails
+    }
   }
 
   Future<void> _loadProphetName() async {
@@ -90,7 +106,9 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   // Handler methods using state utilities
-  void _handleAskOracle() {
+  void _handleAskOracle() async {
+    AppLogger.logInfo('HomeScreen', '🚀 _handleAskOracle called');
+    
     // Remove focus from textbox before processing
     FocusScope.of(context).unfocus();
     
@@ -106,13 +124,46 @@ class _HomeScreenState extends State<HomeScreen>
       return;
     }
 
+    // Handle question with unified ad/cooldown logic
+    try {
+      AppLogger.logInfo('HomeScreen', '🎯 About to call handleUserQuestion');
+      final canProceed = await _questionAdService.handleUserQuestion(context);
+      AppLogger.logInfo('HomeScreen', '✅ handleUserQuestion result: $canProceed');
+      if (!canProceed) {
+        AppLogger.logInfo('HomeScreen', '❌ Question blocked - user chose to wait');
+        return;
+      }
+      AppLogger.logInfo('HomeScreen', '✅ Question approved - proceeding with vision');
+    } catch (e) {
+      AppLogger.logError('HomeScreen', 'Error in question handling', e);
+      // Continue with question processing even if ad/cooldown logic fails
+    }
+
     _visionState.setQuestion(question);
     _showVisionDialog(hasQuestion: true, question: question);
   }
 
-  void _handleListenToOracle() {
+  void _handleListenToOracle() async {
+    AppLogger.logInfo('HomeScreen', '🎧 _handleListenToOracle called');
+    
     // Remove focus from textbox before opening dialog
     FocusScope.of(context).unfocus();
+    
+    // Use the same unified logic for "listen to oracle"
+    try {
+      AppLogger.logInfo('HomeScreen', '🎯 About to call handleUserQuestion for listen');
+      final canProceed = await _questionAdService.handleUserQuestion(context);
+      AppLogger.logInfo('HomeScreen', '✅ handleUserQuestion result: $canProceed');
+      if (!canProceed) {
+        AppLogger.logInfo('HomeScreen', '❌ Listen to oracle blocked - user chose to wait');
+        return;
+      }
+      AppLogger.logInfo('HomeScreen', '✅ Listen approved - proceeding with vision');
+    } catch (e) {
+      AppLogger.logError('HomeScreen', 'Error checking for listen to oracle', e);
+      // Continue even if check fails
+    }
+    
     _showVisionDialog(hasQuestion: false);
   }
 

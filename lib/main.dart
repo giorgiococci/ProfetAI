@@ -11,12 +11,24 @@ import 'screens/ai_status_screen.dart';
 import 'screens/splash_screen.dart';
 import 'services/locale_service.dart';
 import 'services/user_profile_service.dart';
+import 'services/admob_service.dart';
 import 'utils/app_logger.dart';
 import 'config/app_config.dart';
 
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Mobile Ads SDK early
+  try {
+    AppLogger.logInfo('Main', 'Initializing Mobile Ads SDK');
+    final adMobService = AdMobService();
+    await adMobService.initialize();
+    AppLogger.logInfo('Main', 'Mobile Ads SDK initialized successfully');
+  } catch (e) {
+    AppLogger.logError('Main', 'Failed to initialize Mobile Ads SDK', e);
+    // Continue app initialization even if ads fail
+  }
   
   // Skip database initialization at startup to avoid blocking the UI
   // Database will be initialized on-demand when needed with timeout protection

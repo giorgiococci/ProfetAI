@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/theme_utils.dart';
 import 'settings/user_profile_settings_screen.dart';
 import 'settings/localization_settings_screen.dart';
 import 'settings/delete_data_settings_screen.dart';
+import 'ad_debug_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   final VoidCallback? onLanguageChanged;
@@ -53,6 +55,29 @@ class SettingsScreen extends StatelessWidget {
             iconColor: Colors.redAccent,
             onTap: () => _navigateToDeleteData(context),
           ),
+          
+          // Debug section - only show in debug mode
+          if (kDebugMode) ...[
+            const SizedBox(height: 20),
+            Text(
+              'Debug Tools',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.orange,
+              ),
+            ),
+            const SizedBox(height: 8),
+            
+            _buildSettingsCard(
+              context: context,
+              title: 'AdMob Debug & Test',
+              subtitle: 'Test ad functionality and callbacks',
+              icon: Icons.bug_report,
+              iconColor: Colors.orange,
+              onTap: () => _navigateToAdDebug(context),
+            ),
+          ],
         ],
       ),
     );
@@ -164,6 +189,14 @@ class SettingsScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const DeleteDataSettingsScreen(),
+      ),
+    );
+  }
+
+  void _navigateToAdDebug(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const AdDebugScreen(),
       ),
     );
   }
