@@ -57,6 +57,12 @@ dependencies:
   
   # For JSON serialization
   json_annotation: ^4.9.0
+  
+  # Google Mobile Ads (AdMob)
+  google_mobile_ads: ^5.1.0
+  
+  # For storing user preferences and counters
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
