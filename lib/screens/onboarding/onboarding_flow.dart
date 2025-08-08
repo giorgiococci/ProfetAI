@@ -48,8 +48,34 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   Future<void> _completeOnboarding() async {
-    await _onboardingService.completeOnboarding();
-    widget.onComplete();
+    try {
+      print('OnboardingFlow: Starting onboarding completion process...');
+      await _onboardingService.completeOnboarding();
+      
+      // Small delay to ensure storage operations are fully completed
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      print('OnboardingFlow: Onboarding completion successful, calling onComplete callback');
+      widget.onComplete();
+    } catch (e) {
+      print('OnboardingFlow: Error completing onboarding: $e');
+      // Show error to user and allow retry
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to save onboarding progress. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _savePersonalization({
@@ -58,6 +84,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     List<String>? lifeFocusAreas,
     String? lifeStage,
   }) async {
+    print('OnboardingFlow: Saving personalization data...');
     try {
       await _userProfileService.loadProfile();
       final currentProfile = _userProfileService.currentProfile ?? const UserProfile();
@@ -70,8 +97,10 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       );
       
       await _userProfileService.saveProfile(updatedProfile);
+      print('OnboardingFlow: ✅ Personalization data saved successfully');
     } catch (e) {
-      // Silently handle profile saving errors during onboarding
+      print('OnboardingFlow: ❌ Error saving personalization data: $e');
+      rethrow; // Re-throw so the UI can handle the error
     }
   }
 
@@ -114,7 +143,10 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 onSkip: _skipOnboarding,
               ),
               OnboardingPersonalizationScreen(
-                onNext: _nextPage,
+                onNext: () async {
+                  print('OnboardingFlow: Personalization screen called onNext, completing onboarding...');
+                  await _completeOnboarding();
+                },
                 onSkip: _skipOnboarding,
                 onSave: _savePersonalization,
               ),

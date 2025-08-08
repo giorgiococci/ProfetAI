@@ -104,6 +104,39 @@ The onboarding system is implemented as a PageView-based flow consisting of 3 sc
 - `lib/screens/onboarding/onboarding_welcome_screen.dart` - Converted to async localization
 - `lib/screens/onboarding/onboarding_personalization_screen.dart` - Converted to async localization
 
+### Phase 5: Storage Reliability and Race Condition Fix
+**Issue**: Onboarding completion was inconsistent, and user preferences were lost after app restart
+**Root Causes**: 
+1. FlutterSecureStorage reliability issues on Windows (especially in debug/release builds)
+2. Race condition between profile saving and onboarding completion
+3. Silent error handling prevented detection of storage failures
+
+**Files Modified**:
+- `lib/services/onboarding_service.dart` - Implemented dual-storage approach with SharedPreferences backup
+- `lib/services/user_profile_service.dart` - Enhanced with dual-storage reliability
+- `lib/screens/onboarding/onboarding_flow.dart` - Fixed race conditions and error handling
+- `lib/screens/onboarding/onboarding_personalization_screen.dart` - Made completion process awaitable
+
+**Technical Solutions**:
+1. **Dual Storage Architecture**: Both services now use FlutterSecureStorage as primary + SharedPreferences as backup
+2. **Comprehensive Logging**: Added detailed logging for all storage operations with success/failure tracking
+3. **Verification System**: Each write operation is immediately verified to ensure persistence
+4. **Race Condition Fix**: Onboarding completion now properly awaits all storage operations
+5. **Error Handling**: Replaced silent error handling with proper exception throwing and user feedback
+6. **Storage Status Debug**: Added `getStorageStatus()` methods for debugging storage states
+
+### Phase 6: Prophet Selection Integration Fix
+**Issue**: Selected prophet in onboarding wasn't being set as favorite in home screen
+**Root Cause**: Mismatch between prophet type identifiers - onboarding used enum names (`mistico`, `caotico`) while main app expected English strings (`mystic`, `chaotic`)
+
+**Files Modified**:
+- `lib/screens/onboarding/onboarding_personalization_screen.dart` - Added prophet type mapping function
+
+**Technical Solution**:
+- Added `_profetTypeToEnglishString()` method to convert ProfetType enums to proper English strings
+- Updated oracle selection ID generation to use English prophet type strings
+- Ensures selected prophet persists correctly and displays as favorite in home screen
+
 ## Technical Architecture
 
 ### Prophet Localization System
@@ -222,10 +255,12 @@ Unable to load asset: "lib/l10n/prophets/mistico/mistico_en.json"
 
 **Core Modified Files**:
 - `lib/models/user_profile.dart` - Simplified model
-- `lib/services/onboarding_service.dart` - Added debug capabilities
+- `lib/services/onboarding_service.dart` - Enhanced with dual-storage reliability and comprehensive logging
+- `lib/services/user_profile_service.dart` - Enhanced with dual-storage reliability and comprehensive logging
 - `lib/l10n/prophet_localization_loader.dart` - Enhanced with new methods
 - `lib/screens/onboarding/onboarding_welcome_screen.dart` - Async localization
-- `lib/screens/onboarding/onboarding_personalization_screen.dart` - Async localization
+- `lib/screens/onboarding/onboarding_personalization_screen.dart` - Async localization and awaitable completion
+- `lib/screens/onboarding/onboarding_flow.dart` - Fixed race conditions and error handling
 - `lib/l10n/app_it.arb` - Italian corrections
 
 **Supporting Files**:

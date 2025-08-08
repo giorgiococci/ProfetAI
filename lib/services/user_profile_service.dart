@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_profile.dart';
 import '../l10n/app_localizations.dart';
 import 'locale_service.dart';
 
 class UserProfileService {
   static const String _profileKey = 'user_profile';
+  static const String _profileBackupKey = 'user_profile_backup';
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
 
   // Singleton pattern
@@ -19,28 +22,104 @@ class UserProfileService {
   UserProfile? get currentProfile => _currentProfile;
 
   Future<void> loadProfile() async {
+    print('UserProfileService: Loading user profile...');
     try {
+      // Try FlutterSecureStorage first
       final profileJson = await _storage.read(key: _profileKey);
+      print('UserProfileService: Secure storage profile: ${profileJson != null ? profileJson.substring(0, math.min(100, profileJson.length)) : "null"}...');
+      
       if (profileJson != null) {
-        final Map<String, dynamic> profileMap = jsonDecode(profileJson);
-        _currentProfile = UserProfile.fromJson(profileMap);
+        try {
+          final Map<String, dynamic> profileMap = jsonDecode(profileJson);
+          _currentProfile = UserProfile.fromJson(profileMap);
+          print('UserProfileService: ✅ Profile loaded from secure storage successfully');
+          return;
+        } catch (e) {
+          print('UserProfileService: ❌ Error parsing secure storage profile: $e');
+        }
       }
+      
+      // If secure storage failed, try SharedPreferences backup
+      print('UserProfileService: Trying backup storage...');
+      final prefs = await SharedPreferences.getInstance();
+      final backupProfileJson = prefs.getString(_profileBackupKey);
+      print('UserProfileService: Backup storage profile: ${backupProfileJson != null ? backupProfileJson.substring(0, math.min(100, backupProfileJson.length)) : "null"}...');
+      
+      if (backupProfileJson != null) {
+        try {
+          final Map<String, dynamic> profileMap = jsonDecode(backupProfileJson);
+          _currentProfile = UserProfile.fromJson(profileMap);
+          print('UserProfileService: ✅ Profile loaded from backup storage successfully');
+          return;
+        } catch (e) {
+          print('UserProfileService: ❌ Error parsing backup storage profile: $e');
+        }
+      }
+      
+      // If both failed, create empty profile
+      print('UserProfileService: No valid profile found, creating empty profile');
+      _currentProfile = const UserProfile();
     } catch (e) {
+      print('UserProfileService: ❌ General error loading profile: $e');
       // If there's an error loading the profile, start with an empty profile
       _currentProfile = const UserProfile();
     }
   }
 
   Future<void> saveProfile(UserProfile profile) async {
+    print('UserProfileService: Saving user profile...');
+    
+    final profileJson = jsonEncode(profile.toJson());
+    bool secureStorageSuccess = false;
+    bool sharedPrefsSuccess = false;
+    
+    // Try to save in FlutterSecureStorage
     try {
-      final profileJson = jsonEncode(profile.toJson());
       await _storage.write(key: _profileKey, value: profileJson);
-      _currentProfile = profile;
       
-      // Auto-update app locale if user has selected a preferred language
+      // Verify the write
+      final verification = await _storage.read(key: _profileKey);
+      if (verification == profileJson) {
+        print('UserProfileService: ✅ Secure storage write successful');
+        secureStorageSuccess = true;
+      } else {
+        print('UserProfileService: ❌ Secure storage verification failed');
+      }
+    } catch (e) {
+      print('UserProfileService: ❌ Secure storage write failed: $e');
+    }
+    
+    // Try to save in SharedPreferences as backup
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_profileBackupKey, profileJson);
+      
+      // Verify the backup write
+      final backupVerification = prefs.getString(_profileBackupKey);
+      if (backupVerification == profileJson) {
+        print('UserProfileService: ✅ Backup storage write successful');
+        sharedPrefsSuccess = true;
+      } else {
+        print('UserProfileService: ❌ Backup storage verification failed');
+      }
+    } catch (e) {
+      print('UserProfileService: ❌ Backup storage write failed: $e');
+    }
+    
+    // Ensure at least one storage method worked
+    if (!secureStorageSuccess && !sharedPrefsSuccess) {
+      print('UserProfileService: 🚨 CRITICAL ERROR - Both storage methods failed!');
+      throw Exception('Failed to persist user profile in both storage methods');
+    }
+    
+    _currentProfile = profile;
+    print('UserProfileService: ✅ Profile saved successfully (Secure: $secureStorageSuccess, Backup: $sharedPrefsSuccess)');
+    
+    // Auto-update app locale if user has selected a preferred language
+    try {
       await _syncProfileLanguageWithAppLocale(profile);
     } catch (e) {
-      throw Exception('Failed to save profile: $e');
+      print('UserProfileService: ⚠️ Error syncing language preference: $e');
     }
   }
 
@@ -66,8 +145,25 @@ class UserProfileService {
   }
 
   Future<void> clearProfile() async {
-    await _storage.delete(key: _profileKey);
+    print('UserProfileService: Clearing user profile...');
+    
+    try {
+      await _storage.delete(key: _profileKey);
+      print('UserProfileService: ✅ Secure storage cleared');
+    } catch (e) {
+      print('UserProfileService: ❌ Error clearing secure storage: $e');
+    }
+    
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_profileBackupKey);
+      print('UserProfileService: ✅ Backup storage cleared');
+    } catch (e) {
+      print('UserProfileService: ❌ Error clearing backup storage: $e');
+    }
+    
     _currentProfile = const UserProfile();
+    print('UserProfileService: ✅ Profile cleared successfully');
   }
 
   /// Set favorite prophet for the current user
@@ -88,6 +184,50 @@ class UserProfileService {
   /// Check if a prophet is the favorite
   bool isFavoriteProphet(String prophetType) {
     return _currentProfile?.favoriteProphet == prophetType;
+  }
+
+  /// Debug method to check profile storage status
+  Future<Map<String, dynamic>> getProfileStorageStatus() async {
+    final status = <String, dynamic>{};
+    
+    try {
+      final secureProfileJson = await _storage.read(key: _profileKey);
+      status['secureStorage'] = {
+        'hasData': secureProfileJson != null,
+        'dataLength': secureProfileJson?.length ?? 0,
+        'preview': secureProfileJson != null ? secureProfileJson.substring(0, math.min(100, secureProfileJson.length)) : null,
+      };
+    } catch (e) {
+      status['secureStorage'] = {
+        'error': e.toString(),
+        'hasData': false,
+      };
+    }
+    
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final backupProfileJson = prefs.getString(_profileBackupKey);
+      status['backupStorage'] = {
+        'hasData': backupProfileJson != null,
+        'dataLength': backupProfileJson?.length ?? 0,
+        'preview': backupProfileJson != null ? backupProfileJson.substring(0, math.min(100, backupProfileJson.length)) : null,
+      };
+    } catch (e) {
+      status['backupStorage'] = {
+        'error': e.toString(),
+        'hasData': false,
+      };
+    }
+    
+    status['currentProfile'] = {
+      'isLoaded': _currentProfile != null,
+      'name': _currentProfile?.name,
+      'favoriteProphet': _currentProfile?.favoriteProphet,
+      'lifeFocusAreas': _currentProfile?.lifeFocusAreas,
+      'lifeStage': _currentProfile?.lifeStage,
+    };
+    
+    return status;
   }
 
   // Static data for countries (commonly used ones)
