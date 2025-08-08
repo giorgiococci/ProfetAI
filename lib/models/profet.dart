@@ -165,6 +165,144 @@ abstract class Profet {
     }
   }
 
+  /// Enhanced AI response generation with personalized biographical context
+  /// 
+  /// This method accepts additional personalized context that can be used
+  /// to tailor the prophet's response based on user's biographical insights
+  Future<String> getAIPersonalizedResponseWithContext(
+    String question, 
+    BuildContext context, 
+    {String? personalizedContext}
+  ) async {
+    AppLogger.logInfo(_component, '=== getAIPersonalizedResponseWithContext called ===');
+    AppLogger.logInfo(_component, 'Question: $question');
+    AppLogger.logInfo(_component, 'Prophet: $name');
+    AppLogger.logInfo(_component, 'Has personalized context: ${personalizedContext != null}');
+    
+    // Check AI availability
+    final isAIAvailable = AIServiceManager.isAIAvailable;
+    AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
+    
+    if (!isAIAvailable) {
+      AppLogger.logWarning(_component, 'AI not available, using fallback response');
+      AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
+      throw Exception('AI not available - UI should handle with localized fallback');
+    }
+
+    try {
+      AppLogger.logInfo(_component, 'Attempting to generate AI response with personalization...');
+      
+      // Get the base system prompt
+      final baseSystemPrompt = await getLocalizedAISystemPrompt(context);
+      
+      // Enhanced system prompt with personalized context
+      String enhancedSystemPrompt = baseSystemPrompt;
+      if (personalizedContext != null && personalizedContext.isNotEmpty) {
+        enhancedSystemPrompt += '\n\n$personalizedContext';
+        AppLogger.logInfo(_component, 'Enhanced system prompt with personalized context');
+      }
+      
+      AppLogger.logInfo(_component, 'Using enhanced system prompt: $enhancedSystemPrompt');
+      AppLogger.logInfo(_component, 'Using parameters: maxTokens=200, temperature=0.8');
+      
+      final response = await AIServiceManager.generateResponse(
+        prompt: question,
+        systemMessage: enhancedSystemPrompt,
+        maxTokens: 200,
+        temperature: 0.8,
+      );
+      
+      AppLogger.logInfo(_component, 'AI response received: ${response != null ? "YES" : "NULL"}');
+      if (response != null) {
+        AppLogger.logInfo(_component, 'AI response length: ${response.length}');
+        AppLogger.logInfo(_component, 'AI response content: $response');
+      }
+      
+      if (response != null && response.isNotEmpty) {
+        AppLogger.logInfo(_component, '✅ AI response with personalization generated successfully');
+        return response;
+      } else {
+        AppLogger.logWarning(_component, '⚠️ AI returned empty response, throwing for UI fallback');
+        throw Exception('AI returned empty response - UI should handle with localized fallback');
+      }
+    } catch (e) {
+      AppLogger.logError(_component, '❌ AI response with personalization failed, throwing for UI fallback', e);
+      throw e; // Re-throw so UI can handle with localized methods
+    }
+  }
+
+  /// Enhanced random vision generation with personalized biographical context
+  /// 
+  /// This method generates a random vision that can be tailored based on
+  /// the user's interests and preferences from their biographical profile
+  Future<String> getAIRandomVisionWithContext(
+    BuildContext context, 
+    {String? personalizedContext}
+  ) async {
+    AppLogger.logInfo(_component, '=== getAIRandomVisionWithContext called ===');
+    AppLogger.logInfo(_component, 'Prophet: $name');
+    AppLogger.logInfo(_component, 'Has personalized context: ${personalizedContext != null}');
+    
+    // Check AI availability
+    final isAIAvailable = AIServiceManager.isAIAvailable;
+    AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
+    
+    if (!isAIAvailable) {
+      AppLogger.logWarning(_component, 'AI not available for random vision, throwing for UI fallback');
+      AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
+      throw Exception('AI not available - UI should handle with localized fallback');
+    }
+
+    try {
+      AppLogger.logInfo(_component, 'Attempting to generate AI random vision with personalization...');
+      
+      // Get the base system prompt
+      final baseSystemPrompt = await getLocalizedAISystemPrompt(context);
+      
+      // Enhanced system prompt with personalized context
+      String enhancedSystemPrompt = baseSystemPrompt;
+      if (personalizedContext != null && personalizedContext.isNotEmpty) {
+        enhancedSystemPrompt += '\n\n$personalizedContext';
+        enhancedSystemPrompt += '\n\nPlease generate a vision that aligns with the user\'s interests and background.';
+        AppLogger.logInfo(_component, 'Enhanced system prompt with personalized context for random vision');
+      }
+      
+      // Create a prompt for random vision that considers user context
+      String visionPrompt = 'Please provide me with spiritual guidance and wisdom.';
+      if (personalizedContext != null && personalizedContext.isNotEmpty) {
+        visionPrompt = 'Based on my background and interests, please share spiritual wisdom that would be meaningful to me.';
+      }
+      
+      AppLogger.logInfo(_component, 'Using enhanced system prompt: $enhancedSystemPrompt');
+      AppLogger.logInfo(_component, 'Using vision prompt: $visionPrompt');
+      AppLogger.logInfo(_component, 'Using parameters: maxTokens=250, temperature=0.9');
+      
+      final response = await AIServiceManager.generateResponse(
+        prompt: visionPrompt,
+        systemMessage: enhancedSystemPrompt,
+        maxTokens: 250,
+        temperature: 0.9, // Higher temperature for more creative random visions
+      );
+      
+      AppLogger.logInfo(_component, 'AI random vision response received: ${response != null ? "YES" : "NULL"}');
+      if (response != null) {
+        AppLogger.logInfo(_component, 'AI random vision response length: ${response.length}');
+        AppLogger.logInfo(_component, 'AI random vision response content: $response');
+      }
+      
+      if (response != null && response.isNotEmpty) {
+        AppLogger.logInfo(_component, '✅ AI random vision with personalization generated successfully');
+        return response;
+      } else {
+        AppLogger.logWarning(_component, '⚠️ AI returned empty random vision, throwing for UI fallback');
+        throw Exception('AI returned empty random vision - UI should handle with localized fallback');
+      }
+    } catch (e) {
+      AppLogger.logError(_component, '❌ AI random vision with personalization failed, throwing for UI fallback', e);
+      throw e; // Re-throw so UI can handle with localized methods
+    }
+  }
+
   Future<String> getAIRandomVision(BuildContext context) async {
     AppLogger.logInfo(_component, '=== getAIRandomVision called ===');
     AppLogger.logInfo(_component, 'Prophet: $name');

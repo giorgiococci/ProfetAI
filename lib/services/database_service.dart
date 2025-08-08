@@ -233,6 +233,9 @@ class DatabaseService {
         CREATE INDEX idx_visions_feedback_type ON visions(feedback_type)
       ''');
 
+      // Create bio-related tables
+      await _createBioTables(db);
+
       // Create full-text search virtual table only if FTS5 is available
       await _createFtsTableIfSupported(db);
 
@@ -301,6 +304,69 @@ class DatabaseService {
     } catch (e) {
       AppLogger.logWarning(_component, 'FTS5 triggers not supported on this platform, FTS sync disabled: $e');
       // FTS5 table will still work, just won't auto-sync with changes
+    }
+  }
+
+  /// Create biographical data tables
+  Future<void> _createBioTables(Database db) async {
+    AppLogger.logInfo(_component, 'Creating biographical data tables...');
+    
+    try {
+      // Create user_bio table (main bio record per user)
+      await db.execute('''
+        CREATE TABLE user_bio (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id TEXT NOT NULL UNIQUE,
+          created_at INTEGER NOT NULL,
+          updated_at INTEGER NOT NULL,
+          is_enabled INTEGER DEFAULT 1
+        )
+      ''');
+
+      // Create biographical_insights table (individual insights)
+      await db.execute('''
+        CREATE TABLE biographical_insights (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_bio_id INTEGER NOT NULL,
+          content TEXT NOT NULL,
+          source_question_id TEXT NOT NULL,
+          source_answer TEXT NOT NULL,
+          extracted_from TEXT NOT NULL,
+          privacy_level TEXT NOT NULL,
+          extracted_at INTEGER NOT NULL,
+          last_used_at INTEGER,
+          usage_count INTEGER DEFAULT 0,
+          is_active INTEGER DEFAULT 1,
+          FOREIGN KEY (user_bio_id) REFERENCES user_bio (id) ON DELETE CASCADE
+        )
+      ''');
+
+      // Create indexes for efficient bio querying
+      await db.execute('''
+        CREATE INDEX idx_user_bio_user_id ON user_bio(user_id)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_user_bio_id ON biographical_insights(user_bio_id)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_privacy_level ON biographical_insights(privacy_level)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_active ON biographical_insights(is_active)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_extracted_at ON biographical_insights(extracted_at DESC)
+      ''');
+
+      AppLogger.logInfo(_component, 'Biographical data tables created successfully');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to create biographical data tables', e);
+      rethrow;
     }
   }
 
