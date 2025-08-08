@@ -104,18 +104,23 @@ class _SplashScreenState extends State<SplashScreen>
       
       // Check onboarding status and navigate accordingly
       final onboardingService = OnboardingService();
+      print('SplashScreen: Checking onboarding completion status...');
       final isOnboardingComplete = await onboardingService.isOnboardingComplete();
+      print('SplashScreen: Onboarding complete status: $isOnboardingComplete');
       
       if (mounted) {
         if (isOnboardingComplete) {
           // Navigate to home screen
+          print('SplashScreen: Navigating to home screen...');
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
           // Navigate to onboarding
+          print('SplashScreen: Navigating to onboarding flow...');
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => OnboardingFlow(
                 onComplete: () {
+                  print('SplashScreen: Onboarding completed, navigating to home...');
                   Navigator.of(context).pushReplacementNamed('/home');
                 },
               ),

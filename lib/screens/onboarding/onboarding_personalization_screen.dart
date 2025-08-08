@@ -4,9 +4,9 @@ import '../../l10n/app_localizations.dart';
 import '../../l10n/prophet_localization_loader.dart';
 
 class OnboardingPersonalizationScreen extends StatefulWidget {
-  final VoidCallback onNext;
+  final Future<void> Function() onNext;
   final VoidCallback onSkip;
-  final Function({
+  final Future<void> Function({
     String? name, 
     String? favoriteProphet,
     List<String>? lifeFocusAreas,
@@ -38,14 +38,47 @@ class _OnboardingPersonalizationScreenState extends State<OnboardingPersonalizat
     super.dispose();
   }
 
-  void _handleContinue() {
-    widget.onSave(
-      name: _nameController.text,
-      favoriteProphet: _selectedOracle,
-      lifeFocusAreas: _selectedLifeFocusAreas,
-      lifeStage: _selectedLifeStage,
-    );
-    widget.onNext();
+  /// Convert ProfetType enum to English prophet type string
+  String _profetTypeToEnglishString(ProfetType type) {
+    switch (type) {
+      case ProfetType.mistico:
+        return 'mystic';
+      case ProfetType.caotico:
+        return 'chaotic';
+      case ProfetType.cinico:
+        return 'cynical';
+      case ProfetType.roaster:
+        return 'roaster';
+    }
+  }
+
+  Future<void> _handleContinue() async {
+    try {
+      print('PersonalizationScreen: Starting personalization save and completion...');
+      
+      // Save the personalization data (now async)
+      await widget.onSave(
+        name: _nameController.text,
+        favoriteProphet: _selectedOracle,
+        lifeFocusAreas: _selectedLifeFocusAreas,
+        lifeStage: _selectedLifeStage,
+      );
+      print('PersonalizationScreen: Personalization data saved successfully');
+      
+      // Then complete the onboarding flow (async)
+      await widget.onNext();
+    } catch (e) {
+      print('PersonalizationScreen: Error during completion: $e');
+      // Show error to user
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving your preferences. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -296,7 +329,7 @@ class _OnboardingPersonalizationScreenState extends State<OnboardingPersonalizat
         
         widgets.add(
           _buildOracleSelection(
-            id: oracleType.name,
+            id: _profetTypeToEnglishString(oracleType),
             name: localizedName,
             description: localizedDescription,
             imagePath: oracle.profetImagePath,
@@ -308,7 +341,7 @@ class _OnboardingPersonalizationScreenState extends State<OnboardingPersonalizat
         // Fallback to original names if localization fails
         widgets.add(
           _buildOracleSelection(
-            id: oracleType.name,
+            id: _profetTypeToEnglishString(oracleType),
             name: oracle.name,
             description: oracle.description,
             imagePath: oracle.profetImagePath,
@@ -393,7 +426,7 @@ class _OnboardingPersonalizationScreenState extends State<OnboardingPersonalizat
       return Column(
         children: [
           _buildOracleSelection(
-            id: oracleType.name,
+            id: _profetTypeToEnglishString(oracleType),
             name: oracle.name,
             description: oracle.description,
             imagePath: oracle.profetImagePath,
