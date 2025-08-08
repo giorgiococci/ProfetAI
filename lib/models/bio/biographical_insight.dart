@@ -7,10 +7,12 @@ import '../../utils/privacy/privacy_levels.dart';
 class BiographicalInsight {
   final int? id;
   final String content;
+  final String category;
   final String sourceQuestionId; // Reference to the vision that generated this insight
   final String sourceAnswer; // The prophet's answer that contained this information
   final String extractedFrom; // Which prophet interaction this came from
   final PrivacyLevel privacyLevel;
+  final double confidenceScore; // AI confidence in this insight (0.0-1.0)
   final DateTime extractedAt;
   final DateTime? lastUsedAt; // When this insight was last used to enhance a response
   final int usageCount; // How many times this insight has been used
@@ -19,10 +21,12 @@ class BiographicalInsight {
   const BiographicalInsight({
     this.id,
     required this.content,
+    required this.category,
     required this.sourceQuestionId,
     required this.sourceAnswer,
     required this.extractedFrom,
     required this.privacyLevel,
+    required this.confidenceScore,
     required this.extractedAt,
     this.lastUsedAt,
     this.usageCount = 0,
@@ -33,10 +37,12 @@ class BiographicalInsight {
   BiographicalInsight copyWith({
     int? id,
     String? content,
+    String? category,
     String? sourceQuestionId,
     String? sourceAnswer,
     String? extractedFrom,
     PrivacyLevel? privacyLevel,
+    double? confidenceScore,
     DateTime? extractedAt,
     DateTime? lastUsedAt,
     int? usageCount,
@@ -45,10 +51,12 @@ class BiographicalInsight {
     return BiographicalInsight(
       id: id ?? this.id,
       content: content ?? this.content,
+      category: category ?? this.category,
       sourceQuestionId: sourceQuestionId ?? this.sourceQuestionId,
       sourceAnswer: sourceAnswer ?? this.sourceAnswer,
       extractedFrom: extractedFrom ?? this.extractedFrom,
       privacyLevel: privacyLevel ?? this.privacyLevel,
+      confidenceScore: confidenceScore ?? this.confidenceScore,
       extractedAt: extractedAt ?? this.extractedAt,
       lastUsedAt: lastUsedAt ?? this.lastUsedAt,
       usageCount: usageCount ?? this.usageCount,
@@ -61,10 +69,12 @@ class BiographicalInsight {
     return {
       'id': id,
       'content': content,
+      'category': category,
       'source_question_id': sourceQuestionId,
       'source_answer': sourceAnswer,
       'extracted_from': extractedFrom,
       'privacy_level': privacyLevel.name,
+      'confidence_score': confidenceScore,
       'extracted_at': extractedAt.millisecondsSinceEpoch,
       'last_used_at': lastUsedAt?.millisecondsSinceEpoch,
       'usage_count': usageCount,
@@ -77,6 +87,7 @@ class BiographicalInsight {
     return BiographicalInsight(
       id: map['id']?.toInt(),
       content: map['content'] ?? '',
+      category: map['category'] ?? 'general',
       sourceQuestionId: map['source_question_id'] ?? '',
       sourceAnswer: map['source_answer'] ?? '',
       extractedFrom: map['extracted_from'] ?? '',
@@ -84,6 +95,7 @@ class BiographicalInsight {
         (e) => e.name == map['privacy_level'],
         orElse: () => PrivacyLevel.confidential, // Default to most restrictive for safety
       ),
+      confidenceScore: (map['confidence_score'] ?? 0.0) as double,
       extractedAt: DateTime.fromMillisecondsSinceEpoch(map['extracted_at'] ?? 0),
       lastUsedAt: map['last_used_at'] != null 
           ? DateTime.fromMillisecondsSinceEpoch(map['last_used_at']) 
@@ -98,10 +110,12 @@ class BiographicalInsight {
     return {
       'id': id,
       'content': content,
+      'category': category,
       'sourceQuestionId': sourceQuestionId,
       'sourceAnswer': sourceAnswer,
       'extractedFrom': extractedFrom,
       'privacyLevel': privacyLevel.name,
+      'confidenceScore': confidenceScore,
       'extractedAt': extractedAt.toIso8601String(),
       'lastUsedAt': lastUsedAt?.toIso8601String(),
       'usageCount': usageCount,
@@ -114,6 +128,7 @@ class BiographicalInsight {
     return BiographicalInsight(
       id: json['id']?.toInt(),
       content: json['content'] ?? '',
+      category: json['category'] ?? 'general',
       sourceQuestionId: json['sourceQuestionId'] ?? '',
       sourceAnswer: json['sourceAnswer'] ?? '',
       extractedFrom: json['extractedFrom'] ?? '',
@@ -121,6 +136,7 @@ class BiographicalInsight {
         (e) => e.name == json['privacyLevel'],
         orElse: () => PrivacyLevel.confidential,
       ),
+      confidenceScore: (json['confidenceScore'] ?? 0.0) as double,
       extractedAt: DateTime.parse(json['extractedAt']),
       lastUsedAt: json['lastUsedAt'] != null 
           ? DateTime.parse(json['lastUsedAt']) 

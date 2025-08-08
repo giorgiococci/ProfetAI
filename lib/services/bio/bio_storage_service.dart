@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import '../../models/bio/user_bio.dart';
 import '../../models/bio/biographical_insight.dart';
+import '../../models/bio/generated_bio.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/privacy/privacy_levels.dart';
 import '../database_service.dart';
@@ -92,6 +93,7 @@ class BioStorageService {
   /// Add a new biographical insight
   Future<BiographicalInsight> addInsight({
     required String content,
+    required String category,
     required String sourceQuestionId,
     required String sourceAnswer,
     required String extractedFrom,
@@ -112,10 +114,12 @@ class BioStorageService {
       // Create insight
       final insight = BiographicalInsight(
         content: content,
+        category: category,
         sourceQuestionId: sourceQuestionId,
         sourceAnswer: sourceAnswer,
         extractedFrom: extractedFrom,
         privacyLevel: privacyLevel,
+        confidenceScore: 0.8, // Default confidence score
         extractedAt: DateTime.now(),
       );
       
@@ -318,6 +322,62 @@ class BioStorageService {
     }
   }
 
+  /// Delete all biographical data for a user (insights, generated bio, and user bio record)
+  Future<bool> deleteAllBioData({String? userId}) async {
+    try {
+      userId = userId ?? _defaultUserId;
+      AppLogger.logInfo(_component, 'Deleting all biographical data for user: $userId');
+      
+      final db = await _databaseService.database;
+      
+      // Start transaction for atomic deletion
+      return await db.transaction<bool>((txn) async {
+        // Get bio ID first
+        final bioResult = await txn.query(
+          'user_bio',
+          columns: ['id'],
+          where: 'user_id = ?',
+          whereArgs: [userId],
+        );
+        
+        if (bioResult.isEmpty) {
+          AppLogger.logInfo(_component, 'No bio data found for user, nothing to delete');
+          return true;
+        }
+        
+        final bioId = bioResult.first['id'] as int;
+        
+        // Delete insights
+        final insightsDeleted = await txn.delete(
+          'biographical_insights',
+          where: 'user_bio_id = ?',
+          whereArgs: [bioId],
+        );
+        
+        // Delete generated bio
+        final generatedBioDeleted = await txn.delete(
+          'generated_bio',
+          where: 'user_id = ?',
+          whereArgs: [userId],
+        );
+        
+        // Delete user bio record
+        final userBioDeleted = await txn.delete(
+          'user_bio',
+          where: 'user_id = ?',
+          whereArgs: [userId],
+        );
+        
+        AppLogger.logInfo(_component, 'Deleted $insightsDeleted insights, $generatedBioDeleted generated bio records, and $userBioDeleted user bio records');
+        return true;
+      });
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to delete all biographical data', e);
+      return false;
+    }
+  }
+
   /// Enable or disable bio collection for a user
   Future<bool> setBioEnabled({String? userId, required bool enabled}) async {
     try {
@@ -380,5 +440,106 @@ class BioStorageService {
       AppLogger.logError(_component, 'Bio service health check failed', e);
       return false;
     }
+  }
+
+  /// Get insights for a user
+  Future<List<BiographicalInsight>> getInsights({String? userId}) async {
+    try {
+      userId = userId ?? _defaultUserId;
+      final userBio = await getUserBio(userId: userId);
+      return userBio?.insights ?? [];
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to get insights for user: $userId', e);
+      return [];
+    }
+  }
+
+  /// Save generated bio
+  Future<void> saveGeneratedBio({
+    required String userId,
+    required GeneratedBio generatedBio,
+  }) async {
+    try {
+      AppLogger.logInfo(_component, 'Saving generated bio for user: $userId');
+      AppLogger.logInfo(_component, 'Bio has ${generatedBio.sections.length} sections');
+      
+      final Database db = await _databaseService.database;
+      
+      final bioWithId = generatedBio.copyWith(
+        id: generatedBio.id.isEmpty ? _generateUuid() : generatedBio.id,
+        userId: userId,
+      );
+      
+      AppLogger.logInfo(_component, 'Generated bio ID: ${bioWithId.id}');
+      
+      final bioMap = bioWithId.toMap();
+      AppLogger.logInfo(_component, 'Bio map keys: ${bioMap.keys.join(', ')}');
+      
+      await db.insert('generated_bio', bioMap, conflictAlgorithm: ConflictAlgorithm.replace);
+      
+      AppLogger.logInfo(_component, 'Generated bio saved successfully to database');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to save generated bio', e);
+      rethrow;
+    }
+  }
+
+  /// Get generated bio for a user
+  Future<GeneratedBio?> getGeneratedBio({required String userId}) async {
+    try {
+      AppLogger.logInfo(_component, 'Getting generated bio for user: $userId');
+      
+      final Database db = await _databaseService.database;
+      
+      final results = await db.query(
+        'generated_bio',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
+      
+      AppLogger.logInfo(_component, 'Query returned ${results.length} results');
+      
+      if (results.isEmpty) {
+        AppLogger.logInfo(_component, 'No generated bio found for user: $userId');
+        return null;
+      }
+      
+      final bioMap = results.first;
+      AppLogger.logInfo(_component, 'Bio map keys: ${bioMap.keys.join(', ')}');
+      
+      final generatedBio = GeneratedBio.fromMap(bioMap);
+      AppLogger.logInfo(_component, 'Generated bio loaded with ${generatedBio.sections.length} sections');
+      
+      return generatedBio;
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to get generated bio for user: $userId', e);
+      return null;
+    }
+  }
+
+  /// Update bio last used timestamp
+  Future<void> updateBioLastUsed({required String userId}) async {
+    try {
+      final Database db = await _databaseService.database;
+      
+      await db.update(
+        'generated_bio',
+        {'last_used_at': DateTime.now().millisecondsSinceEpoch},
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to update bio last used for user: $userId', e);
+      // Don't rethrow - this is not critical
+    }
+  }
+
+  /// Generate UUID for IDs
+  String _generateUuid() {
+    final random = DateTime.now().millisecondsSinceEpoch;
+    return 'bio_${random}_${(random * 1000) % 1000000}';
   }
 }

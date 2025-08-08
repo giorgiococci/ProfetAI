@@ -5,7 +5,7 @@ import '../models/vision_feedback.dart';
 import '../models/profet.dart';
 import '../services/vision_storage_service.dart';
 import 'bio/bio_analysis_agent.dart';
-import 'bio/bio_context_service.dart';
+import 'bio/bio_generation_service.dart';
 import '../utils/app_logger.dart';
 
 /// Enhanced vision service that handles vision generation AND automatic storage
@@ -17,7 +17,6 @@ class VisionIntegrationService {
   
   final VisionStorageService _storageService = VisionStorageService();
   final BioAnalysisAgent _bioAgent = BioAnalysisAgent();
-  final BioContextService _bioContext = BioContextService();
   
   // Singleton pattern
   static final VisionIntegrationService _instance = VisionIntegrationService._internal();
@@ -42,27 +41,26 @@ class VisionIntegrationService {
       if (isAIEnabled) {
         try {
           // Generate personalized context from biographical insights
-          String? personalizedContext;
+          String personalizedContext = '';
           try {
-            personalizedContext = await _bioContext.generatePersonalizedContext(
-              profet: profet,
-              userQuestion: question,
-              userId: null, // Could be extracted from context if available
-              maxInsights: 3,
+            final bioGeneration = BioGenerationService.instance;
+            personalizedContext = await bioGeneration.generateContextForProphet(
+              userId: 'default_user',
+              prophetType: profet.type,
             );
             
-            if (personalizedContext != null) {
+            if (personalizedContext.isNotEmpty) {
               AppLogger.logInfo(_component, 'Generated personalized context for response');
             } else {
               AppLogger.logInfo(_component, 'No personalized context available');
             }
           } catch (e) {
             AppLogger.logWarning(_component, 'Failed to generate personalized context: $e');
-            personalizedContext = null;
+            personalizedContext = '';
           }
           
           // Use enhanced method with personalization if available
-          if (personalizedContext != null) {
+          if (personalizedContext.isNotEmpty) {
             content = await profet.getAIPersonalizedResponseWithContext(
               question, 
               context, 
@@ -168,25 +166,26 @@ class VisionIntegrationService {
       if (isAIEnabled) {
         try {
           // Generate personalized context from biographical insights for random vision
-          String? personalizedContext;
+          String personalizedContext = '';
           try {
-            personalizedContext = await _bioContext.getUserInterestsSummary(
-              userId: null, // Could be extracted from context if available
-              maxInterests: 5,
+            final bioGeneration = BioGenerationService.instance;
+            personalizedContext = await bioGeneration.generateContextForProphet(
+              userId: 'default_user',
+              prophetType: profet.type,
             );
             
-            if (personalizedContext != null) {
+            if (personalizedContext.isNotEmpty) {
               AppLogger.logInfo(_component, 'Generated personalized interests context for random vision');
             } else {
               AppLogger.logInfo(_component, 'No personalized interests context available for random vision');
             }
           } catch (e) {
             AppLogger.logWarning(_component, 'Failed to generate personalized interests context: $e');
-            personalizedContext = null;
+            personalizedContext = '';
           }
           
           // Use enhanced method with personalization if available
-          if (personalizedContext != null) {
+          if (personalizedContext.isNotEmpty) {
             content = await profet.getAIRandomVisionWithContext(
               context, 
               personalizedContext: personalizedContext,

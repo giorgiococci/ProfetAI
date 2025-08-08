@@ -6,7 +6,7 @@ import '../services/onboarding_service.dart';
 import 'settings/user_profile_settings_screen.dart';
 import 'settings/localization_settings_screen.dart';
 import 'settings/delete_data_settings_screen.dart';
-import 'settings/bio_management_screen.dart';
+import 'settings/bio_profile_screen.dart';
 import 'ad_debug_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -51,8 +51,8 @@ class SettingsScreen extends StatelessWidget {
           
           _buildSettingsCard(
             context: context,
-            title: 'Biographical Insights',
-            subtitle: 'Manage your AI-collected profile and privacy settings',
+            title: 'Your AI Profile',
+            subtitle: 'View your generated biographical profile and privacy settings',
             icon: Icons.psychology,
             iconColor: Colors.blueAccent,
             onTap: () => _navigateToBioManagement(context),
@@ -212,7 +212,7 @@ class SettingsScreen extends StatelessWidget {
   void _navigateToBioManagement(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const BioManagementScreen(),
+        builder: (context) => const BioProfileScreen(),
       ),
     );
   }

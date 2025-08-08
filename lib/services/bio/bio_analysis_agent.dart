@@ -4,6 +4,7 @@ import '../../models/profet.dart';
 import '../../utils/privacy/privacy_levels.dart';
 import '../../services/ai_service_manager.dart';
 import 'bio_storage_service.dart';
+import 'bio_generation_service.dart';
 import 'privacy_filter_service.dart';
 import '../../utils/app_logger.dart';
 
@@ -61,9 +62,24 @@ class BioAnalysisAgent {
       
       AppLogger.logInfo(_component, 'Bio analysis completed successfully');
       
+      // Trigger bio generation if needed
+      await _triggerBioGenerationIfNeeded(userId: userId);
+      
     } catch (e) {
       // Bio analysis errors should never break the user experience
       AppLogger.logError(_component, 'Bio analysis failed - continuing gracefully: $e');
+    }
+  }
+
+  /// Trigger bio generation if conditions are met
+  Future<void> _triggerBioGenerationIfNeeded({String? userId}) async {
+    try {
+      final bioGenerator = BioGenerationService.instance;
+      await bioGenerator.initialize();
+      await bioGenerator.checkAndRegenerateBio(userId: userId ?? 'default_user');
+    } catch (e) {
+      AppLogger.logError(_component, 'Bio generation trigger failed: $e');
+      // Don't rethrow - bio generation is not critical
     }
   }
 
@@ -245,6 +261,7 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
         // Store the insight using the correct API
         await _bioStorage.addInsight(
           content: content,
+          category: category,
           sourceQuestionId: sourceQuestion,
           sourceAnswer: sourceAnswer,
           extractedFrom: 'bio_analysis_agent',
