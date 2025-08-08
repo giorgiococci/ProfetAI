@@ -538,8 +538,63 @@ class AppLocalizationsIt extends AppLocalizations {
   String get enterYourNameOptional => 'Inserisci il tuo nome (opzionale)';
 
   @override
-  String get doYouHavePreferredOracle => 'Hai un oracolo preferito? (Top 5)';
+  String get doYouHavePreferredOracle => 'Hai un oracolo preferito?';
 
   @override
   String get enterTheMysticalRealm => 'Entra nel Regno Mistico';
+
+  @override
+  String get lifeFocusAreasLabel => 'In quali aree della vita cerchi guida?';
+
+  @override
+  String get lifeFocusAreasHint => 'Seleziona fino a 3 aree (opzionale)';
+
+  @override
+  String get lifeStageLabel =>
+      'Cosa descrive meglio la tua fase di vita attuale?';
+
+  @override
+  String get lifeStageHint => 'Seleziona la tua fase attuale (opzionale)';
+
+  @override
+  String get lifeFocusLoveRelationships => 'Amore e Relazioni';
+
+  @override
+  String get lifeFocusCareerPurpose => 'Carriera e Scopo';
+
+  @override
+  String get lifeFocusFamilyHome => 'Famiglia e Casa';
+
+  @override
+  String get lifeFocusHealthWellness => 'Salute e Benessere';
+
+  @override
+  String get lifeFocusMoneyAbundance => 'Denaro e Abbondanza';
+
+  @override
+  String get lifeFocusSpiritualGrowth => 'Crescita Spirituale';
+
+  @override
+  String get lifeFocusPersonalDevelopment => 'Sviluppo Personale';
+
+  @override
+  String get lifeFocusCreativityPassion => 'Creatività e Passione';
+
+  @override
+  String get lifeStageStartingNewChapter => 'Sto iniziando un nuovo capitolo';
+
+  @override
+  String get lifeStageSeekingDirection => 'Sto cercando una direzione';
+
+  @override
+  String get lifeStageFacingChallenges => 'Sto affrontando delle sfide';
+
+  @override
+  String get lifeStagePeriodOfGrowth => 'Sono in un periodo di crescita';
+
+  @override
+  String get lifeStageLookingForStability => 'Sto cercando stabilità';
+
+  @override
+  String get lifeStageEmbracingChange => 'Sto abbracciando il cambiamento';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/profet_manager.dart';
 import '../../l10n/app_localizations.dart';
+import '../../l10n/prophet_localization_loader.dart';
 
 class OnboardingWelcomeScreen extends StatelessWidget {
   final VoidCallback onNext;
@@ -107,7 +108,7 @@ class OnboardingWelcomeScreen extends StatelessWidget {
           const SizedBox(height: 40),
           
           // Oracle examples preview
-          _buildOracleExamples(),
+          _buildOracleExamplesAsync(context),
           
           const SizedBox(height: 60), // Increased spacing before button
           
@@ -149,22 +150,77 @@ class OnboardingWelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOracleExamples() {
+  Widget _buildOracleExamplesAsync(BuildContext context) {
     final oracles = ProfetManager.getAllProfeti();
     // Show only first 3 as examples
     final exampleOracles = oracles.take(3).toList();
     
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: exampleOracles.map((oracle) => 
-        _buildOraclePreview(
+    return FutureBuilder<List<Widget>>(
+      future: _loadOracleWidgets(context, exampleOracles),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show loading state with placeholder circles
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: exampleOracles.map((oracle) => 
+              _buildOraclePreview(
+                imagePath: oracle.profetImagePath,
+                icon: oracle.icon,
+                name: '...', // Loading placeholder
+                color: oracle.primaryColor,
+              ),
+            ).toList(),
+          );
+        } else if (snapshot.hasData) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: snapshot.data!,
+          );
+        } else {
+          // Fallback to original names if loading fails
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: exampleOracles.map((oracle) => 
+              _buildOraclePreview(
+                imagePath: oracle.profetImagePath,
+                icon: oracle.icon,
+                name: oracle.name, // Fallback to original name
+                color: oracle.primaryColor,
+              ),
+            ).toList(),
+          );
+        }
+      },
+    );
+  }
+
+  Future<List<Widget>> _loadOracleWidgets(BuildContext context, List<dynamic> oracles) async {
+    final widgets = <Widget>[];
+    
+    for (final oracle in oracles) {
+      try {
+        final localizedName = await ProphetLocalizationLoader.getProphetName(
+          context, 
+          oracle.type
+        );
+        widgets.add(_buildOraclePreview(
           imagePath: oracle.profetImagePath,
-          icon: oracle.icon, // Fallback icon
+          icon: oracle.icon,
+          name: localizedName,
+          color: oracle.primaryColor,
+        ));
+      } catch (e) {
+        // Fallback to original name if localization fails
+        widgets.add(_buildOraclePreview(
+          imagePath: oracle.profetImagePath,
+          icon: oracle.icon,
           name: oracle.name,
           color: oracle.primaryColor,
-        ),
-      ).toList(),
-    );
+        ));
+      }
+    }
+    
+    return widgets;
   }
 
   Widget _buildOraclePreview({

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/theme_utils.dart';
+import '../services/onboarding_service.dart';
 import 'settings/user_profile_settings_screen.dart';
 import 'settings/localization_settings_screen.dart';
 import 'settings/delete_data_settings_screen.dart';
@@ -76,6 +77,17 @@ class SettingsScreen extends StatelessWidget {
               icon: Icons.bug_report,
               iconColor: Colors.orange,
               onTap: () => _navigateToAdDebug(context),
+            ),
+            
+            const SizedBox(height: 8),
+            
+            _buildSettingsCard(
+              context: context,
+              title: 'Reset Onboarding',
+              subtitle: 'Force onboarding to show again on app restart',
+              icon: Icons.restart_alt,
+              iconColor: Colors.amber,
+              onTap: () => _resetOnboarding(context),
             ),
           ],
         ],
@@ -199,5 +211,53 @@ class SettingsScreen extends StatelessWidget {
         builder: (context) => const AdDebugScreen(),
       ),
     );
+  }
+  
+  Future<void> _resetOnboarding(BuildContext context) async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Reset Onboarding'),
+          content: const Text(
+            'This will reset the onboarding status. The onboarding flow will be shown again when you restart the app.\n\nAre you sure?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Reset'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      try {
+        await OnboardingService().resetOnboarding();
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Onboarding reset successfully. Restart the app to see the onboarding flow.'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to reset onboarding: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
   }
 }

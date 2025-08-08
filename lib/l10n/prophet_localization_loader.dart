@@ -61,6 +61,27 @@ class ProphetLocalizationLoader {
     }
   }
   
+  /// Get the localized name for a prophet
+  static Future<String> getProphetName(BuildContext context, String prophetType) async {
+    final locale = Localizations.localeOf(context).languageCode;
+    final data = await loadProphetLocalization(prophetType, locale);
+    return data['name'] ?? 'Unknown Oracle';
+  }
+  
+  /// Get the localized description for a prophet
+  static Future<String> getProphetDescription(BuildContext context, String prophetType) async {
+    final locale = Localizations.localeOf(context).languageCode;
+    final data = await loadProphetLocalization(prophetType, locale);
+    return data['description'] ?? 'A wise oracle providing guidance.';
+  }
+  
+  /// Get the localized location for a prophet
+  static Future<String> getProphetLocation(BuildContext context, String prophetType) async {
+    final locale = Localizations.localeOf(context).languageCode;
+    final data = await loadProphetLocalization(prophetType, locale);
+    return data['location'] ?? 'Unknown Realm';
+  }
+  
   /// Get the AI system prompt for a prophet in the current locale
   static Future<String> getAISystemPrompt(BuildContext context, String prophetType) async {
     final locale = Localizations.localeOf(context).languageCode;

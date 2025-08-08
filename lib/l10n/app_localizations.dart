@@ -1035,7 +1035,7 @@ abstract class AppLocalizations {
   /// Label for oracle preference selection
   ///
   /// In en, this message translates to:
-  /// **'Do you have a preferred oracle? (Top 5)'**
+  /// **'Do you have a preferred oracle?'**
   String get doYouHavePreferredOracle;
 
   /// Final onboarding button text
@@ -1043,6 +1043,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the Mystical Realm'**
   String get enterTheMysticalRealm;
+
+  /// Label for life focus areas selection
+  ///
+  /// In en, this message translates to:
+  /// **'What areas of life are you seeking guidance on?'**
+  String get lifeFocusAreasLabel;
+
+  /// Hint for life focus areas selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select up to 3 areas (optional)'**
+  String get lifeFocusAreasHint;
+
+  /// Label for life stage selection
+  ///
+  /// In en, this message translates to:
+  /// **'What best describes your current life phase?'**
+  String get lifeStageLabel;
+
+  /// Hint for life stage selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select your current phase (optional)'**
+  String get lifeStageHint;
+
+  /// No description provided for @lifeFocusLoveRelationships.
+  ///
+  /// In en, this message translates to:
+  /// **'Love & Relationships'**
+  String get lifeFocusLoveRelationships;
+
+  /// No description provided for @lifeFocusCareerPurpose.
+  ///
+  /// In en, this message translates to:
+  /// **'Career & Purpose'**
+  String get lifeFocusCareerPurpose;
+
+  /// No description provided for @lifeFocusFamilyHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Family & Home'**
+  String get lifeFocusFamilyHome;
+
+  /// No description provided for @lifeFocusHealthWellness.
+  ///
+  /// In en, this message translates to:
+  /// **'Health & Wellness'**
+  String get lifeFocusHealthWellness;
+
+  /// No description provided for @lifeFocusMoneyAbundance.
+  ///
+  /// In en, this message translates to:
+  /// **'Money & Abundance'**
+  String get lifeFocusMoneyAbundance;
+
+  /// No description provided for @lifeFocusSpiritualGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'Spiritual Growth'**
+  String get lifeFocusSpiritualGrowth;
+
+  /// No description provided for @lifeFocusPersonalDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Development'**
+  String get lifeFocusPersonalDevelopment;
+
+  /// No description provided for @lifeFocusCreativityPassion.
+  ///
+  /// In en, this message translates to:
+  /// **'Creativity & Passion'**
+  String get lifeFocusCreativityPassion;
+
+  /// No description provided for @lifeStageStartingNewChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting a new chapter'**
+  String get lifeStageStartingNewChapter;
+
+  /// No description provided for @lifeStageSeekingDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeking direction'**
+  String get lifeStageSeekingDirection;
+
+  /// No description provided for @lifeStageFacingChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'Facing challenges'**
+  String get lifeStageFacingChallenges;
+
+  /// No description provided for @lifeStagePeriodOfGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'In a period of growth'**
+  String get lifeStagePeriodOfGrowth;
+
+  /// No description provided for @lifeStageLookingForStability.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for stability'**
+  String get lifeStageLookingForStability;
+
+  /// No description provided for @lifeStageEmbracingChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Embracing change'**
+  String get lifeStageEmbracingChange;
 }
 
 class _AppLocalizationsDelegate

@@ -881,7 +881,7 @@
     "description": "Placeholder text for name input"
   },
 
-  "doYouHavePreferredOracle": "Do you have a preferred oracle? (Top 5)",
+  "doYouHavePreferredOracle": "Do you have a preferred oracle?",
   "@doYouHavePreferredOracle": {
     "description": "Label for oracle preference selection"
   },
@@ -889,5 +889,38 @@
   "enterTheMysticalRealm": "Enter the Mystical Realm",
   "@enterTheMysticalRealm": {
     "description": "Final onboarding button text"
-  }
+  },
+
+  "lifeFocusAreasLabel": "What areas of life are you seeking guidance on?",
+  "@lifeFocusAreasLabel": {
+    "description": "Label for life focus areas selection"
+  },
+  "lifeFocusAreasHint": "Select up to 3 areas (optional)",
+  "@lifeFocusAreasHint": {
+    "description": "Hint for life focus areas selection"
+  },
+  "lifeStageLabel": "What best describes your current life phase?",
+  "@lifeStageLabel": {
+    "description": "Label for life stage selection"
+  },
+  "lifeStageHint": "Select your current phase (optional)",
+  "@lifeStageHint": {
+    "description": "Hint for life stage selection"
+  },
+
+  "lifeFocusLoveRelationships": "Love & Relationships",
+  "lifeFocusCareerPurpose": "Career & Purpose",
+  "lifeFocusFamilyHome": "Family & Home",
+  "lifeFocusHealthWellness": "Health & Wellness",
+  "lifeFocusMoneyAbundance": "Money & Abundance",
+  "lifeFocusSpiritualGrowth": "Spiritual Growth",
+  "lifeFocusPersonalDevelopment": "Personal Development",
+  "lifeFocusCreativityPassion": "Creativity & Passion",
+
+  "lifeStageStartingNewChapter": "Starting a new chapter",
+  "lifeStageSeekingDirection": "Seeking direction",
+  "lifeStageFacingChallenges": "Facing challenges",
+  "lifeStagePeriodOfGrowth": "In a period of growth",
+  "lifeStageLookingForStability": "Looking for stability",
+  "lifeStageEmbracingChange": "Embracing change"
 }

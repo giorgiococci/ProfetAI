@@ -55,6 +55,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   Future<void> _savePersonalization({
     String? name,
     String? favoriteProphet,
+    List<String>? lifeFocusAreas,
+    String? lifeStage,
   }) async {
     try {
       await _userProfileService.loadProfile();
@@ -63,6 +65,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       final updatedProfile = currentProfile.copyWith(
         name: name?.isNotEmpty == true ? name : null,
         favoriteProphet: favoriteProphet,
+        lifeFocusAreas: lifeFocusAreas ?? [],
+        lifeStage: lifeStage,
       );
       
       await _userProfileService.saveProfile(updatedProfile);

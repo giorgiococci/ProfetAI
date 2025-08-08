@@ -535,9 +535,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterYourNameOptional => 'Enter your name (optional)';
 
   @override
-  String get doYouHavePreferredOracle =>
-      'Do you have a preferred oracle? (Top 5)';
+  String get doYouHavePreferredOracle => 'Do you have a preferred oracle?';
 
   @override
   String get enterTheMysticalRealm => 'Enter the Mystical Realm';
+
+  @override
+  String get lifeFocusAreasLabel =>
+      'What areas of life are you seeking guidance on?';
+
+  @override
+  String get lifeFocusAreasHint => 'Select up to 3 areas (optional)';
+
+  @override
+  String get lifeStageLabel => 'What best describes your current life phase?';
+
+  @override
+  String get lifeStageHint => 'Select your current phase (optional)';
+
+  @override
+  String get lifeFocusLoveRelationships => 'Love & Relationships';
+
+  @override
+  String get lifeFocusCareerPurpose => 'Career & Purpose';
+
+  @override
+  String get lifeFocusFamilyHome => 'Family & Home';
+
+  @override
+  String get lifeFocusHealthWellness => 'Health & Wellness';
+
+  @override
+  String get lifeFocusMoneyAbundance => 'Money & Abundance';
+
+  @override
+  String get lifeFocusSpiritualGrowth => 'Spiritual Growth';
+
+  @override
+  String get lifeFocusPersonalDevelopment => 'Personal Development';
+
+  @override
+  String get lifeFocusCreativityPassion => 'Creativity & Passion';
+
+  @override
+  String get lifeStageStartingNewChapter => 'Starting a new chapter';
+
+  @override
+  String get lifeStageSeekingDirection => 'Seeking direction';
+
+  @override
+  String get lifeStageFacingChallenges => 'Facing challenges';
+
+  @override
+  String get lifeStagePeriodOfGrowth => 'In a period of growth';
+
+  @override
+  String get lifeStageLookingForStability => 'Looking for stability';
+
+  @override
+  String get lifeStageEmbracingChange => 'Embracing change';
 }

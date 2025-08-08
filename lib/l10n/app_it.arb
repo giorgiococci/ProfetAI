@@ -160,6 +160,27 @@
   "personalizeOptional": "Opzionale - Puoi sempre cambiarlo dopo",
   "whatShouldOraclesCallYou": "Come dovrebbero chiamarti gli oracoli?",
   "enterYourNameOptional": "Inserisci il tuo nome (opzionale)",
-  "doYouHavePreferredOracle": "Hai un oracolo preferito? (Top 5)",
-  "enterTheMysticalRealm": "Entra nel Regno Mistico"
+  "doYouHavePreferredOracle": "Hai un oracolo preferito?",
+  "enterTheMysticalRealm": "Entra nel Regno Mistico",
+
+  "lifeFocusAreasLabel": "In quali aree della vita cerchi guida?",
+  "lifeFocusAreasHint": "Seleziona fino a 3 aree (opzionale)",
+  "lifeStageLabel": "Cosa descrive meglio la tua fase di vita attuale?",
+  "lifeStageHint": "Seleziona la tua fase attuale (opzionale)",
+
+  "lifeFocusLoveRelationships": "Amore e Relazioni",
+  "lifeFocusCareerPurpose": "Carriera e Scopo",
+  "lifeFocusFamilyHome": "Famiglia e Casa",
+  "lifeFocusHealthWellness": "Salute e Benessere",
+  "lifeFocusMoneyAbundance": "Denaro e Abbondanza",
+  "lifeFocusSpiritualGrowth": "Crescita Spirituale",
+  "lifeFocusPersonalDevelopment": "Sviluppo Personale",
+  "lifeFocusCreativityPassion": "Creatività e Passione",
+
+  "lifeStageStartingNewChapter": "Sto iniziando un nuovo capitolo",
+  "lifeStageSeekingDirection": "Sto cercando una direzione",
+  "lifeStageFacingChallenges": "Sto affrontando delle sfide",
+  "lifeStagePeriodOfGrowth": "Sono in un periodo di crescita",
+  "lifeStageLookingForStability": "Sto cercando stabilità",
+  "lifeStageEmbracingChange": "Sto abbracciando il cambiamento"
 }
