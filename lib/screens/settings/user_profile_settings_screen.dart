@@ -21,6 +21,10 @@ class _UserProfileSettingsScreenState extends State<UserProfileSettingsScreen>
   Country? _selectedCountry;
   Gender? _selectedGender;
   List<Interest> _selectedInterests = [];
+  
+  // New personalization state
+  List<String> _selectedLifeFocusAreas = [];
+  String? _selectedLifeStage;
 
   @override
   void initState() {
@@ -54,6 +58,10 @@ class _UserProfileSettingsScreenState extends State<UserProfileSettingsScreen>
         _selectedInterests = UserProfileService.getInterests()
             .where((interest) => _currentProfile.interests.contains(interest.key))
             .toList();
+            
+        // Load personalization data
+        _selectedLifeFocusAreas = List.from(_currentProfile.lifeFocusAreas);
+        _selectedLifeStage = _currentProfile.lifeStage;
       }
     } catch (e) {
       if (mounted) {
@@ -82,6 +90,9 @@ class _UserProfileSettingsScreenState extends State<UserProfileSettingsScreen>
         gender: _selectedGender,
         languages: _currentProfile.languages, // Keep existing language settings
         interests: _selectedInterests.map((interest) => interest.key).toList(),
+        favoriteProphet: _currentProfile.favoriteProphet, // Keep existing favorite prophet
+        lifeFocusAreas: _selectedLifeFocusAreas,
+        lifeStage: _selectedLifeStage,
       );
 
       await _profileService.saveProfile(updatedProfile);
@@ -151,6 +162,18 @@ class _UserProfileSettingsScreenState extends State<UserProfileSettingsScreen>
               title: localizations.interestsAndTopics,
               children: [
                 _buildInterestsField(localizations),
+              ],
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Personalization Preferences Section
+            _buildSectionCard(
+              title: localizations.personalizeYourExperience,
+              children: [
+                _buildLifeFocusAreasField(localizations),
+                const SizedBox(height: 16),
+                _buildLifeStageField(localizations),
               ],
             ),
             
@@ -434,5 +457,153 @@ class _UserProfileSettingsScreenState extends State<UserProfileSettingsScreen>
       default:
         return interest.key;
     }
+  }
+
+  // New personalization field builders
+  Widget _buildLifeFocusAreasField(AppLocalizations localizations) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          localizations.lifeFocusAreasLabel,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          localizations.lifeFocusAreasHint,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: _getLifeFocusOptions(localizations).map((option) {
+            final isSelected = _selectedLifeFocusAreas.contains(option['key']);
+            return FilterChip(
+              label: Text(option['label']!),
+              selected: isSelected,
+              onSelected: (selected) {
+                setState(() {
+                  if (selected && _selectedLifeFocusAreas.length < 3) {
+                    _selectedLifeFocusAreas.add(option['key']!);
+                  } else if (!selected) {
+                    _selectedLifeFocusAreas.remove(option['key']);
+                  }
+                });
+              },
+              backgroundColor: Colors.grey.withOpacity(0.2),
+              selectedColor: Colors.deepPurpleAccent.withOpacity(0.3),
+              labelStyle: TextStyle(
+                color: isSelected ? Colors.white : Colors.grey,
+              ),
+              side: BorderSide(
+                color: isSelected ? Colors.deepPurpleAccent : Colors.grey.withOpacity(0.3),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLifeStageField(AppLocalizations localizations) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          localizations.lifeStageLabel,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          localizations.lifeStageHint,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ..._getLifeStageOptions(localizations).map((option) {
+          final isSelected = _selectedLifeStage == option['key'];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedLifeStage = _selectedLifeStage == option['key'] ? null : option['key'];
+                });
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey.withOpacity(0.1),
+                  border: Border.all(
+                    color: isSelected ? Colors.deepPurpleAccent : Colors.transparent,
+                    width: 2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                      color: isSelected ? Colors.deepPurpleAccent : Colors.grey,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        option['label']!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isSelected ? Colors.white : Colors.grey,
+                          fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  List<Map<String, String>> _getLifeFocusOptions(AppLocalizations localizations) {
+    return [
+      {'key': 'loveRelationships', 'label': localizations.lifeFocusLoveRelationships},
+      {'key': 'careerPurpose', 'label': localizations.lifeFocusCareerPurpose},
+      {'key': 'familyHome', 'label': localizations.lifeFocusFamilyHome},
+      {'key': 'healthWellness', 'label': localizations.lifeFocusHealthWellness},
+      {'key': 'moneyAbundance', 'label': localizations.lifeFocusMoneyAbundance},
+      {'key': 'spiritualGrowth', 'label': localizations.lifeFocusSpiritualGrowth},
+      {'key': 'personalDevelopment', 'label': localizations.lifeFocusPersonalDevelopment},
+      {'key': 'creativityPassion', 'label': localizations.lifeFocusCreativityPassion},
+    ];
+  }
+
+  List<Map<String, String>> _getLifeStageOptions(AppLocalizations localizations) {
+    return [
+      {'key': 'startingNewChapter', 'label': localizations.lifeStageStartingNewChapter},
+      {'key': 'seekingDirection', 'label': localizations.lifeStageSeekingDirection},
+      {'key': 'facingChallenges', 'label': localizations.lifeStageFacingChallenges},
+      {'key': 'periodOfGrowth', 'label': localizations.lifeStagePeriodOfGrowth},
+      {'key': 'lookingForStability', 'label': localizations.lifeStageLookingForStability},
+      {'key': 'embracingChange', 'label': localizations.lifeStageEmbracingChange},
+    ];
   }
 }

@@ -5,7 +5,11 @@ class UserProfile {
   final List<String> languages;
   final List<String> interests;
   final String? favoriteProphet; // Added favorite prophet field
-
+  
+  // New personalization fields
+  final List<String> lifeFocusAreas; // Areas of life seeking guidance on
+  final String? lifeStage; // Current life phase
+  
   const UserProfile({
     this.name,
     this.country,
@@ -13,6 +17,8 @@ class UserProfile {
     this.languages = const [],
     this.interests = const [],
     this.favoriteProphet,
+    this.lifeFocusAreas = const [],
+    this.lifeStage,
   });
 
   UserProfile copyWith({
@@ -22,6 +28,8 @@ class UserProfile {
     List<String>? languages,
     List<String>? interests,
     String? favoriteProphet,
+    List<String>? lifeFocusAreas,
+    String? lifeStage,
   }) {
     return UserProfile(
       name: name ?? this.name,
@@ -30,6 +38,8 @@ class UserProfile {
       languages: languages ?? this.languages,
       interests: interests ?? this.interests,
       favoriteProphet: favoriteProphet ?? this.favoriteProphet,
+      lifeFocusAreas: lifeFocusAreas ?? this.lifeFocusAreas,
+      lifeStage: lifeStage ?? this.lifeStage,
     );
   }
 
@@ -41,6 +51,8 @@ class UserProfile {
       'languages': languages,
       'interests': interests,
       'favoriteProphet': favoriteProphet,
+      'lifeFocusAreas': lifeFocusAreas,
+      'lifeStage': lifeStage,
     };
   }
 
@@ -55,12 +67,14 @@ class UserProfile {
       languages: List<String>.from(json['languages'] ?? []),
       interests: List<String>.from(json['interests'] ?? []),
       favoriteProphet: json['favoriteProphet'] as String?,
+      lifeFocusAreas: List<String>.from(json['lifeFocusAreas'] ?? []),
+      lifeStage: json['lifeStage'] as String?,
     );
   }
 
   @override
   String toString() {
-    return 'UserProfile(name: $name, country: $country, gender: $gender, languages: $languages, interests: $interests, favoriteProphet: $favoriteProphet)';
+    return 'UserProfile(name: $name, country: $country, gender: $gender, languages: $languages, interests: $interests, favoriteProphet: $favoriteProphet, lifeFocusAreas: $lifeFocusAreas, lifeStage: $lifeStage)';
   }
 }
 
@@ -137,4 +151,69 @@ class Interest {
 
   @override
   int get hashCode => key.hashCode;
+}
+
+// New personalization enums and classes
+enum LifeFocusArea {
+  loveRelationships,
+  careerPurpose,
+  familyHome,
+  healthWellness,
+  moneyAbundance,
+  spiritualGrowth,
+  personalDevelopment,
+  creativityPassion,
+}
+
+enum LifeStage {
+  startingNewChapter,
+  seekingDirection,
+  facingChallenges,
+  periodOfGrowth,
+  lookingForStability,
+  embracingChange,
+}
+
+class LifeFocus {
+  final LifeFocusArea area;
+  final String localizedKey;
+
+  const LifeFocus({
+    required this.area,
+    required this.localizedKey,
+  });
+
+  @override
+  String toString() => area.toString();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is LifeFocus && other.area == area;
+  }
+
+  @override
+  int get hashCode => area.hashCode;
+}
+
+class LifeStageOption {
+  final LifeStage stage;
+  final String localizedKey;
+
+  const LifeStageOption({
+    required this.stage,
+    required this.localizedKey,
+  });
+
+  @override
+  String toString() => stage.toString();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is LifeStageOption && other.stage == stage;
+  }
+
+  @override
+  int get hashCode => stage.hashCode;
 }

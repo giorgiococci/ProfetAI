@@ -6,8 +6,8 @@ import '../utils/app_logger.dart';
 
 class OracoloRoaster extends Profet {
   const OracoloRoaster() : super(
-    name: 'The Prophet Who Roasts',
-    description: 'Divine sass with brutal honesty',
+    name: 'Oracolo Satirico',
+    description: 'Sarcasmo divino con onestà brutale',
     location: 'TEMPLE OF DIVINE JUDGMENT',
     primaryColor: const Color(0xFFFF3D00), // Burning red-orange
     secondaryColor: const Color(0xFFFF5722), // Fiery orange

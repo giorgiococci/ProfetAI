@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../services/ai_service_manager.dart';
 import '../services/database_service.dart';
+import '../services/onboarding_service.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
 import '../utils/utils.dart';
 import '../l10n/app_localizations.dart';
+import 'onboarding/onboarding.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -100,9 +102,26 @@ class _SplashScreenState extends State<SplashScreen>
         await _checkAndShowAIStatus();
       }
       
-      // Navigate to home screen
+      // Check onboarding status and navigate accordingly
+      final onboardingService = OnboardingService();
+      final isOnboardingComplete = await onboardingService.isOnboardingComplete();
+      
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        if (isOnboardingComplete) {
+          // Navigate to home screen
+          Navigator.of(context).pushReplacementNamed('/home');
+        } else {
+          // Navigate to onboarding
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => OnboardingFlow(
+                onComplete: () {
+                  Navigator.of(context).pushReplacementNamed('/home');
+                },
+              ),
+            ),
+          );
+        }
       }
     });
   }

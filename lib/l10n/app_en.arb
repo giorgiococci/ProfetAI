@@ -789,5 +789,138 @@
   "deleteDataPageTitle": "Delete Data",
   "@deleteDataPageTitle": {
     "description": "Title for the delete data settings page"
-  }
+  },
+
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip button text for onboarding screens"
+  },
+
+  "welcomeToProfetAI": "Welcome to Profet AI",
+  "@welcomeToProfetAI": {
+    "description": "Main welcome title for onboarding"
+  },
+
+  "discoverMysticalInsights": "Discover mystical insights through unique oracles",
+  "@discoverMysticalInsights": {
+    "description": "Welcome screen subtitle"
+  },
+
+  "beginJourney": "Begin Journey",
+  "@beginJourney": {
+    "description": "Button text to start the onboarding journey"
+  },
+
+  "unlockMysticalPowers": "Unlock Mystical Powers",
+  "@unlockMysticalPowers": {
+    "description": "Features screen title"
+  },
+
+  "personalizedPredictions": "Personalized Predictions",
+  "@personalizedPredictions": {
+    "description": "Feature title for personalized predictions"
+  },
+
+  "personalizedPredictionsDesc": "Ask questions and receive tailored insights from your chosen oracle",
+  "@personalizedPredictionsDesc": {
+    "description": "Feature description for personalized predictions"
+  },
+
+  "randomVisions": "Random Visions",
+  "@randomVisions": {
+    "description": "Feature title for random visions"
+  },
+
+  "randomVisionsDesc": "Get spontaneous wisdom when you need guidance most",
+  "@randomVisionsDesc": {
+    "description": "Feature description for random visions"
+  },
+
+  "visionBook": "Vision Book",
+  "@visionBook": {
+    "description": "Feature title for vision book"
+  },
+
+  "visionBookDesc": "Save and revisit your favorite predictions and insights",
+  "@visionBookDesc": {
+    "description": "Feature description for vision book"
+  },
+
+  "uniqueThemes": "Unique Themes",
+  "@uniqueThemes": {
+    "description": "Feature title for unique themes"
+  },
+
+  "uniqueThemesDesc": "Each oracle has its own mystical visual identity",
+  "@uniqueThemesDesc": {
+    "description": "Feature description for unique themes"
+  },
+
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Continue button text"
+  },
+
+  "personalizeYourExperience": "Personalize Your Experience",
+  "@personalizeYourExperience": {
+    "description": "Personalization screen title"
+  },
+
+  "personalizeOptional": "Optional - You can always change this later",
+  "@personalizeOptional": {
+    "description": "Subtitle indicating personalization is optional"
+  },
+
+  "whatShouldOraclesCallYou": "What should the oracles call you?",
+  "@whatShouldOraclesCallYou": {
+    "description": "Label for name input field"
+  },
+
+  "enterYourNameOptional": "Enter your name (optional)",
+  "@enterYourNameOptional": {
+    "description": "Placeholder text for name input"
+  },
+
+  "doYouHavePreferredOracle": "Do you have a preferred oracle?",
+  "@doYouHavePreferredOracle": {
+    "description": "Label for oracle preference selection"
+  },
+
+  "enterTheMysticalRealm": "Enter the Mystical Realm",
+  "@enterTheMysticalRealm": {
+    "description": "Final onboarding button text"
+  },
+
+  "lifeFocusAreasLabel": "What areas of life are you seeking guidance on?",
+  "@lifeFocusAreasLabel": {
+    "description": "Label for life focus areas selection"
+  },
+  "lifeFocusAreasHint": "Select up to 3 areas (optional)",
+  "@lifeFocusAreasHint": {
+    "description": "Hint for life focus areas selection"
+  },
+  "lifeStageLabel": "What best describes your current life phase?",
+  "@lifeStageLabel": {
+    "description": "Label for life stage selection"
+  },
+  "lifeStageHint": "Select your current phase (optional)",
+  "@lifeStageHint": {
+    "description": "Hint for life stage selection"
+  },
+
+  "lifeFocusLoveRelationships": "Love & Relationships",
+  "lifeFocusCareerPurpose": "Career & Purpose",
+  "lifeFocusFamilyHome": "Family & Home",
+  "lifeFocusHealthWellness": "Health & Wellness",
+  "lifeFocusMoneyAbundance": "Money & Abundance",
+  "lifeFocusSpiritualGrowth": "Spiritual Growth",
+  "lifeFocusPersonalDevelopment": "Personal Development",
+  "lifeFocusCreativityPassion": "Creativity & Passion",
+
+  "lifeStageStartingNewChapter": "Starting a new chapter",
+  "lifeStageSeekingDirection": "Seeking direction",
+  "lifeStageFacingChallenges": "Facing challenges",
+  "lifeStagePeriodOfGrowth": "In a period of growth",
+  "lifeStageLookingForStability": "Looking for stability",
+  "lifeStageEmbracingChange": "Embracing change"
 }

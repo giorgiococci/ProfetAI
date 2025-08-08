@@ -476,4 +476,125 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get deleteDataPageTitle => 'Elimina Dati';
+
+  @override
+  String get skip => 'Salta';
+
+  @override
+  String get welcomeToProfetAI => 'Benvenuto in Profet AI';
+
+  @override
+  String get discoverMysticalInsights =>
+      'Scopri intuizioni mistiche attraverso oracoli unici';
+
+  @override
+  String get beginJourney => 'Inizia il Viaggio';
+
+  @override
+  String get unlockMysticalPowers => 'Sblocca Poteri Mistici';
+
+  @override
+  String get personalizedPredictions => 'Predizioni Personalizzate';
+
+  @override
+  String get personalizedPredictionsDesc =>
+      'Fai domande e ricevi intuizioni su misura dal tuo oracolo scelto';
+
+  @override
+  String get randomVisions => 'Visioni Casuali';
+
+  @override
+  String get randomVisionsDesc =>
+      'Ottieni saggezza spontanea quando hai più bisogno di guida';
+
+  @override
+  String get visionBook => 'Libro delle Visioni';
+
+  @override
+  String get visionBookDesc =>
+      'Salva e rivedi le tue predizioni e intuizioni preferite';
+
+  @override
+  String get uniqueThemes => 'Temi Unici';
+
+  @override
+  String get uniqueThemesDesc =>
+      'Ogni oracolo ha la propria identità visiva mistica';
+
+  @override
+  String get continueButton => 'Continua';
+
+  @override
+  String get personalizeYourExperience => 'Personalizza la Tua Esperienza';
+
+  @override
+  String get personalizeOptional => 'Opzionale - Puoi sempre cambiarlo dopo';
+
+  @override
+  String get whatShouldOraclesCallYou =>
+      'Come dovrebbero chiamarti gli oracoli?';
+
+  @override
+  String get enterYourNameOptional => 'Inserisci il tuo nome (opzionale)';
+
+  @override
+  String get doYouHavePreferredOracle => 'Hai un oracolo preferito?';
+
+  @override
+  String get enterTheMysticalRealm => 'Entra nel Regno Mistico';
+
+  @override
+  String get lifeFocusAreasLabel => 'In quali aree della vita cerchi guida?';
+
+  @override
+  String get lifeFocusAreasHint => 'Seleziona fino a 3 aree (opzionale)';
+
+  @override
+  String get lifeStageLabel =>
+      'Cosa descrive meglio la tua fase di vita attuale?';
+
+  @override
+  String get lifeStageHint => 'Seleziona la tua fase attuale (opzionale)';
+
+  @override
+  String get lifeFocusLoveRelationships => 'Amore e Relazioni';
+
+  @override
+  String get lifeFocusCareerPurpose => 'Carriera e Scopo';
+
+  @override
+  String get lifeFocusFamilyHome => 'Famiglia e Casa';
+
+  @override
+  String get lifeFocusHealthWellness => 'Salute e Benessere';
+
+  @override
+  String get lifeFocusMoneyAbundance => 'Denaro e Abbondanza';
+
+  @override
+  String get lifeFocusSpiritualGrowth => 'Crescita Spirituale';
+
+  @override
+  String get lifeFocusPersonalDevelopment => 'Sviluppo Personale';
+
+  @override
+  String get lifeFocusCreativityPassion => 'Creatività e Passione';
+
+  @override
+  String get lifeStageStartingNewChapter => 'Sto iniziando un nuovo capitolo';
+
+  @override
+  String get lifeStageSeekingDirection => 'Sto cercando una direzione';
+
+  @override
+  String get lifeStageFacingChallenges => 'Sto affrontando delle sfide';
+
+  @override
+  String get lifeStagePeriodOfGrowth => 'Sono in un periodo di crescita';
+
+  @override
+  String get lifeStageLookingForStability => 'Sto cercando stabilità';
+
+  @override
+  String get lifeStageEmbracingChange => 'Sto abbracciando il cambiamento';
 }
