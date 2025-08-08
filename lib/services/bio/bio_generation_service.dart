@@ -3,6 +3,7 @@ import '../ai_service_manager.dart';
 import '../../models/bio/biographical_insight.dart';
 import '../../models/bio/generated_bio.dart';
 import '../../utils/privacy/privacy_levels.dart';
+import '../../utils/bio/insight_source_type.dart';
 import 'bio_storage_service.dart';
 
 /// Service for generating cohesive biographical narratives from insights
@@ -94,8 +95,8 @@ class BioGenerationService {
       
       final insights = await _bioStorageService!.getInsights(userId: userId);
       if (insights.isEmpty) {
-        AppLogger.logInfo(_component, 'No insights available for bio generation for user: $userId');
-        return;
+        AppLogger.logInfo(_component, 'No insights available for bio generation for user: $userId - bio will show fallback message');
+        return; // Let the UI show "No bio still available. The prophets need more information"
       }
       
       AppLogger.logInfo(_component, 'Forcing bio generation with ${insights.length} insights for user: $userId');
@@ -113,13 +114,24 @@ class BioGenerationService {
     required List<BiographicalInsight> insights,
   }) async {
     try {
-      // Filter only usable insights (public/personal only)
+      AppLogger.logInfo(_component, 'Starting bio generation with ${insights.length} total insights');
+      
+      // Debug: Log all insights with their source types
+      for (int i = 0; i < insights.length; i++) {
+        final insight = insights[i];
+        AppLogger.logInfo(_component, 'Insight $i: sourceType=${insight.sourceType.displayName}, privacyLevel=${insight.privacyLevel.displayName}, content="${insight.content.substring(0, insight.content.length > 50 ? 50 : insight.content.length)}..."');
+      }
+      
+      // Filter only usable insights (public/personal only) - TEMPORARILY REMOVE SOURCE TYPE FILTERING
       final usableInsights = insights
           .where((insight) => insight.privacyLevel.canUseForContext)
           .toList();
       
+      AppLogger.logInfo(_component, 'After filtering: ${usableInsights.length} usable insights from ${insights.length} total insights');
+      
       if (usableInsights.isEmpty) {
         AppLogger.logInfo(_component, 'No usable insights found for bio generation');
+        AppLogger.logWarning(_component, 'Bio generation failed: No insights available with suitable privacy level.');
         return;
       }
       
@@ -132,7 +144,7 @@ class BioGenerationService {
       await _bioStorageService!.saveGeneratedBio(
         userId: userId,
         generatedBio: generatedBio.copyWith(
-          totalInsightsUsed: insights.length,
+          totalInsightsUsed: usableInsights.length,
           generatedAt: DateTime.now(),
         ),
       );
@@ -162,11 +174,11 @@ class BioGenerationService {
       AppLogger.logInfo(_component, 'Sending bio generation request to AI service');
       AppLogger.logInfo(_component, 'Bio generation prompt length: ${prompt.length} characters');
       
-      // Get AI response
+      // Get AI response with increased token limit for detailed sections
       final aiResponse = await AIServiceManager.generateResponse(
         prompt: prompt,
         systemMessage: _getSystemPromptForBioGeneration(),
-        maxTokens: 1000,
+        maxTokens: 3000, // Increased from 1000 to accommodate detailed sections
       );
       
       if (aiResponse == null || aiResponse.isEmpty) {
@@ -226,8 +238,8 @@ class BioGenerationService {
     buffer.writeln();
     buffer.writeln('IMPORTANT: Analyze ALL the insights above and extract information for each section, regardless of how they are categorized.');
     buffer.writeln('For example, if an insight says "User has programming experience" (even if categorized as interests), it should go in BACKGROUND.');
-    buffer.writeln('Each section should be 2-3 sentences that synthesize the insights into coherent narratives.');
-    buffer.writeln('Be concise, natural, and avoid listing individual insights.');
+    buffer.writeln('Each section should be comprehensive but stay under 1000 words. Write detailed, flowing narratives.');
+    buffer.writeln('Be natural and engaging, creating a complete picture of the person in each section.');
     buffer.writeln('If you cannot find relevant information for a section, write "No specific information available".');
     
     return buffer.toString();
@@ -238,11 +250,11 @@ class BioGenerationService {
     return '''You are a biographical profile generator. Your task is to create cohesive, natural biographical narratives from user insights.
 
 Rules:
-1. Synthesize insights into flowing narratives, not lists
-2. Use natural language that sounds like a biography
+1. Create comprehensive, detailed narratives for each section (up to 1000 words per section)
+2. Use natural, engaging language that tells a complete story
 3. Be respectful and positive in tone
 4. Focus on patterns and themes across insights
-5. Keep each section concise (2-3 sentences)
+5. Write detailed paragraphs that fully explore each aspect of the person
 6. Analyze ALL insights and categorize information appropriately, regardless of original category labels
 7. If a section has no relevant insights, write "No specific information available"
 
@@ -253,15 +265,15 @@ CRITICAL: Look at the CONTENT of each insight, not just its category. For exampl
 
 Format your response exactly like this:
 
-INTERESTS: [2-3 sentences about interests and hobbies]
+INTERESTS: [Comprehensive narrative about interests, hobbies, and preferences - up to 1000 words]
 
-PERSONALITY: [2-3 sentences about personality traits]
+PERSONALITY: [Detailed description of personality traits and characteristics - up to 1000 words]
 
-BACKGROUND: [2-3 sentences about background and experience]
+BACKGROUND: [Complete background story including education, work, culture - up to 1000 words]
 
-GOALS: [2-3 sentences about aspirations and objectives]
+GOALS: [Full exploration of aspirations, objectives, and motivations - up to 1000 words]
 
-PREFERENCES: [2-3 sentences about communication and learning preferences]''';
+PREFERENCES: [Detailed account of communication style, learning preferences, etc. - up to 1000 words]''';
   }
   
   /// Parse AI response into structured bio sections

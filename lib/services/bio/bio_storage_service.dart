@@ -4,6 +4,7 @@ import '../../models/bio/biographical_insight.dart';
 import '../../models/bio/generated_bio.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/privacy/privacy_levels.dart';
+import '../../utils/bio/insight_source_type.dart';
 import '../database_service.dart';
 
 /// Service for managing user biographical data storage and retrieval
@@ -98,12 +99,14 @@ class BioStorageService {
     required String sourceAnswer,
     required String extractedFrom,
     required PrivacyLevel privacyLevel,
+    required InsightSourceType sourceType,
     String? userId,
   }) async {
     try {
       userId = userId ?? _defaultUserId;
       AppLogger.logInfo(_component, 'Adding new insight for user: $userId');
       AppLogger.logInfo(_component, 'Insight content: ${content.substring(0, content.length > 50 ? 50 : content.length)}...');
+      AppLogger.logInfo(_component, 'Source type: ${sourceType.displayName}');
       
       // Get or create user bio
       final userBio = await initializeUserBio(userId: userId);
@@ -119,6 +122,7 @@ class BioStorageService {
         sourceAnswer: sourceAnswer,
         extractedFrom: extractedFrom,
         privacyLevel: privacyLevel,
+        sourceType: sourceType,
         confidenceScore: 0.8, // Default confidence score
         extractedAt: DateTime.now(),
       );

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/profet.dart';
 import '../../utils/privacy/privacy_levels.dart';
+import '../../utils/bio/insight_source_type.dart';
 import '../../services/ai_service_manager.dart';
 import 'bio_storage_service.dart';
 import 'bio_generation_service.dart';
@@ -71,12 +72,16 @@ class BioAnalysisAgent {
     }
   }
 
-  /// Trigger bio generation if conditions are met
+  /// Trigger bio generation after each prophet interaction
   Future<void> _triggerBioGenerationIfNeeded({String? userId}) async {
     try {
       final bioGenerator = BioGenerationService.instance;
       await bioGenerator.initialize();
-      await bioGenerator.checkAndRegenerateBio(userId: userId ?? 'default_user');
+      
+      // AUTOMATIC GENERATION: Always generate bio after prophet responses
+      // This ensures users get updated bio profiles immediately
+      AppLogger.logInfo(_component, 'Triggering automatic bio generation after prophet interaction');
+      await bioGenerator.generateBioOnDemand(userId: userId ?? 'default_user');
     } catch (e) {
       AppLogger.logError(_component, 'Bio generation trigger failed: $e');
       // Don't rethrow - bio generation is not critical
@@ -266,6 +271,7 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
           sourceAnswer: sourceAnswer,
           extractedFrom: 'bio_analysis_agent',
           privacyLevel: privacyLevel,
+          sourceType: InsightSourceType.prophet, // This analyzes prophet responses
           userId: userId,
         );
         

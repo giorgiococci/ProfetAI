@@ -1,9 +1,14 @@
 import '../../utils/privacy/privacy_levels.dart';
+import '../../utils/bio/insight_source_type.dart';
 
 /// Represents a single biographical insight about the user
 /// 
 /// This model stores individual pieces of information learned about the user
-/// from their interactions with prophets, filtered for privacy compliance
+/// from their interactions with prophets, filtered for privacy compliance.
+/// 
+/// Insights are now classified by source type to distinguish between:
+/// - USER insights: Extracted from user questions/statements
+/// - PROPHET insights: Inferred from prophet responses
 class BiographicalInsight {
   final int? id;
   final String content;
@@ -12,6 +17,7 @@ class BiographicalInsight {
   final String sourceAnswer; // The prophet's answer that contained this information
   final String extractedFrom; // Which prophet interaction this came from
   final PrivacyLevel privacyLevel;
+  final InsightSourceType sourceType; // Whether this insight comes from user or prophet
   final double confidenceScore; // AI confidence in this insight (0.0-1.0)
   final DateTime extractedAt;
   final DateTime? lastUsedAt; // When this insight was last used to enhance a response
@@ -26,6 +32,7 @@ class BiographicalInsight {
     required this.sourceAnswer,
     required this.extractedFrom,
     required this.privacyLevel,
+    this.sourceType = InsightSourceType.user, // DEFAULT TO USER for compatibility
     required this.confidenceScore,
     required this.extractedAt,
     this.lastUsedAt,
@@ -42,6 +49,7 @@ class BiographicalInsight {
     String? sourceAnswer,
     String? extractedFrom,
     PrivacyLevel? privacyLevel,
+    InsightSourceType? sourceType,
     double? confidenceScore,
     DateTime? extractedAt,
     DateTime? lastUsedAt,
@@ -56,6 +64,7 @@ class BiographicalInsight {
       sourceAnswer: sourceAnswer ?? this.sourceAnswer,
       extractedFrom: extractedFrom ?? this.extractedFrom,
       privacyLevel: privacyLevel ?? this.privacyLevel,
+      sourceType: sourceType ?? this.sourceType,
       confidenceScore: confidenceScore ?? this.confidenceScore,
       extractedAt: extractedAt ?? this.extractedAt,
       lastUsedAt: lastUsedAt ?? this.lastUsedAt,
@@ -74,6 +83,7 @@ class BiographicalInsight {
       'source_answer': sourceAnswer,
       'extracted_from': extractedFrom,
       'privacy_level': privacyLevel.name,
+      'source_type': sourceType.dbValue,
       'confidence_score': confidenceScore,
       'extracted_at': extractedAt.millisecondsSinceEpoch,
       'last_used_at': lastUsedAt?.millisecondsSinceEpoch,
@@ -95,6 +105,7 @@ class BiographicalInsight {
         (e) => e.name == map['privacy_level'],
         orElse: () => PrivacyLevel.confidential, // Default to most restrictive for safety
       ),
+      sourceType: InsightSourceTypeHelper.fromDbValue(map['source_type'] ?? 0),
       confidenceScore: (map['confidence_score'] ?? 0.0) as double,
       extractedAt: DateTime.fromMillisecondsSinceEpoch(map['extracted_at'] ?? 0),
       lastUsedAt: map['last_used_at'] != null 
@@ -115,6 +126,7 @@ class BiographicalInsight {
       'sourceAnswer': sourceAnswer,
       'extractedFrom': extractedFrom,
       'privacyLevel': privacyLevel.name,
+      'sourceType': sourceType.dbValue,
       'confidenceScore': confidenceScore,
       'extractedAt': extractedAt.toIso8601String(),
       'lastUsedAt': lastUsedAt?.toIso8601String(),
@@ -136,6 +148,7 @@ class BiographicalInsight {
         (e) => e.name == json['privacyLevel'],
         orElse: () => PrivacyLevel.confidential,
       ),
+      sourceType: InsightSourceTypeHelper.fromDbValue(json['sourceType'] ?? 0),
       confidenceScore: (json['confidenceScore'] ?? 0.0) as double,
       extractedAt: DateTime.parse(json['extractedAt']),
       lastUsedAt: json['lastUsedAt'] != null 

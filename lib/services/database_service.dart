@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import '../utils/app_logger.dart';
+import '../utils/bio/insight_migration.dart';
 
 /// Database service for managing SQLite database operations
 /// 
@@ -13,7 +14,7 @@ import '../utils/app_logger.dart';
 class DatabaseService {
   static const String _component = 'DatabaseService';
   static const String _databaseName = 'profet_ai.db';
-  static const int _databaseVersion = 4;
+  static const int _databaseVersion = 5;
   
   static Database? _database;
   static bool? _fts5Available;
@@ -337,6 +338,7 @@ class DatabaseService {
           source_answer TEXT NOT NULL,
           extracted_from TEXT NOT NULL,
           privacy_level TEXT NOT NULL,
+          source_type INTEGER NOT NULL DEFAULT 0,
           confidence_score REAL NOT NULL DEFAULT 0.0,
           extracted_at INTEGER NOT NULL,
           last_used_at INTEGER,
@@ -373,6 +375,10 @@ class DatabaseService {
       
       await db.execute('''
         CREATE INDEX idx_biographical_insights_confidence ON biographical_insights(confidence_score DESC)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_source_type ON biographical_insights(source_type)
       ''');
 
       AppLogger.logInfo(_component, 'Biographical data tables created successfully');
@@ -454,6 +460,7 @@ class DatabaseService {
             source_answer TEXT NOT NULL,
             extracted_from TEXT NOT NULL,
             privacy_level TEXT NOT NULL,
+            source_type INTEGER NOT NULL DEFAULT 0,
             confidence_score REAL NOT NULL DEFAULT 0.0,
             extracted_at INTEGER NOT NULL,
             last_used_at INTEGER,
@@ -470,8 +477,21 @@ class DatabaseService {
         await db.execute('CREATE INDEX idx_biographical_insights_extracted_at ON biographical_insights(extracted_at DESC)');
         await db.execute('CREATE INDEX idx_biographical_insights_category ON biographical_insights(category)');
         await db.execute('CREATE INDEX idx_biographical_insights_confidence ON biographical_insights(confidence_score DESC)');
+        await db.execute('CREATE INDEX idx_biographical_insights_source_type ON biographical_insights(source_type)');
         
         AppLogger.logInfo(_component, 'Biographical insights table recreated successfully');
+      }
+      
+      // Migration from version 4 to 5: Add source_type column to biographical_insights
+      if (oldVersion < 5) {
+        AppLogger.logInfo(_component, 'Migrating to v5: Adding source_type column to biographical_insights');
+        
+        // Execute the migration SQL
+        for (final sql in BiographicalInsightSourceTypeMigration.migrationSql) {
+          await db.execute(sql);
+        }
+        
+        AppLogger.logInfo(_component, 'Source type migration completed successfully');
       }
       
       // Future schema migrations will be handled here
