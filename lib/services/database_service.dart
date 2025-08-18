@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import '../utils/app_logger.dart';
+import '../utils/bio/insight_migration.dart';
 
 /// Database service for managing SQLite database operations
 /// 
@@ -13,7 +14,7 @@ import '../utils/app_logger.dart';
 class DatabaseService {
   static const String _component = 'DatabaseService';
   static const String _databaseName = 'profet_ai.db';
-  static const int _databaseVersion = 1;
+  static const int _databaseVersion = 5;
   
   static Database? _database;
   static bool? _fts5Available;
@@ -233,6 +234,12 @@ class DatabaseService {
         CREATE INDEX idx_visions_feedback_type ON visions(feedback_type)
       ''');
 
+      // Create bio-related tables
+      await _createBioTables(db);
+
+      // Create generated bio table
+      await _createGeneratedBioTable(db);
+
       // Create full-text search virtual table only if FTS5 is available
       await _createFtsTableIfSupported(db);
 
@@ -304,12 +311,196 @@ class DatabaseService {
     }
   }
 
+  /// Create biographical data tables
+  Future<void> _createBioTables(Database db) async {
+    AppLogger.logInfo(_component, 'Creating biographical data tables...');
+    
+    try {
+      // Create user_bio table (main bio record per user)
+      await db.execute('''
+        CREATE TABLE user_bio (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id TEXT NOT NULL UNIQUE,
+          created_at INTEGER NOT NULL,
+          updated_at INTEGER NOT NULL,
+          is_enabled INTEGER DEFAULT 1
+        )
+      ''');
+
+      // Create biographical_insights table (individual insights)
+      await db.execute('''
+        CREATE TABLE biographical_insights (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_bio_id INTEGER NOT NULL,
+          content TEXT NOT NULL,
+          category TEXT NOT NULL DEFAULT 'general',
+          source_question_id TEXT NOT NULL,
+          source_answer TEXT NOT NULL,
+          extracted_from TEXT NOT NULL,
+          privacy_level TEXT NOT NULL,
+          source_type INTEGER NOT NULL DEFAULT 0,
+          confidence_score REAL NOT NULL DEFAULT 0.0,
+          extracted_at INTEGER NOT NULL,
+          last_used_at INTEGER,
+          usage_count INTEGER DEFAULT 0,
+          is_active INTEGER DEFAULT 1,
+          FOREIGN KEY (user_bio_id) REFERENCES user_bio (id) ON DELETE CASCADE
+        )
+      ''');
+
+      // Create indexes for efficient bio querying
+      await db.execute('''
+        CREATE INDEX idx_user_bio_user_id ON user_bio(user_id)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_user_bio_id ON biographical_insights(user_bio_id)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_privacy_level ON biographical_insights(privacy_level)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_active ON biographical_insights(is_active)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_extracted_at ON biographical_insights(extracted_at DESC)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_category ON biographical_insights(category)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_confidence ON biographical_insights(confidence_score DESC)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_biographical_insights_source_type ON biographical_insights(source_type)
+      ''');
+
+      AppLogger.logInfo(_component, 'Biographical data tables created successfully');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to create biographical data tables', e);
+      rethrow;
+    }
+  }
+
+  /// Create generated_bio table for AI-generated biographical narratives
+  Future<void> _createGeneratedBioTable(Database db) async {
+    AppLogger.logInfo(_component, 'Creating generated_bio table...');
+    
+    try {
+      // Create generated_bio table (AI-generated biographical narratives)
+      await db.execute('''
+        CREATE TABLE generated_bio (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL UNIQUE,
+          sections_json TEXT NOT NULL,
+          total_insights_used INTEGER NOT NULL,
+          confidence_score REAL NOT NULL,
+          generated_at INTEGER NOT NULL,
+          last_used_at INTEGER,
+          FOREIGN KEY (user_id) REFERENCES user_bio (user_id) ON DELETE CASCADE
+        )
+      ''');
+
+      // Create indexes for generated_bio table
+      await db.execute('''
+        CREATE INDEX idx_generated_bio_user_id ON generated_bio(user_id)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_generated_bio_generated_at ON generated_bio(generated_at DESC)
+      ''');
+
+      AppLogger.logInfo(_component, 'Generated bio table created successfully');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to create generated bio table', e);
+      rethrow;
+    }
+  }
+
   /// Handle database upgrades
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     AppLogger.logInfo(_component, 'Upgrading database from v$oldVersion to v$newVersion');
     
-    // Future schema migrations will be handled here
-    // For now, we only have version 1
+    try {
+      // Migration from version 1 to 2: Add biographical data tables
+      if (oldVersion < 2) {
+        AppLogger.logInfo(_component, 'Migrating to v2: Adding biographical data tables');
+        await _createBioTables(db);
+      }
+      
+      // Migration from version 2 to 3: Add generated_bio table
+      if (oldVersion < 3) {
+        AppLogger.logInfo(_component, 'Migrating to v3: Adding generated_bio table');
+        await _createGeneratedBioTable(db);
+      }
+      
+      // Migration from version 3 to 4: Fix biographical_insights schema
+      if (oldVersion < 4) {
+        AppLogger.logInfo(_component, 'Migrating to v4: Fixing biographical_insights schema');
+        
+        // Drop and recreate biographical_insights table with proper schema
+        await db.execute('DROP TABLE IF EXISTS biographical_insights');
+        
+        // Recreate with proper schema
+        await db.execute('''
+          CREATE TABLE biographical_insights (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_bio_id INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            category TEXT NOT NULL DEFAULT 'general',
+            source_question_id TEXT NOT NULL,
+            source_answer TEXT NOT NULL,
+            extracted_from TEXT NOT NULL,
+            privacy_level TEXT NOT NULL,
+            source_type INTEGER NOT NULL DEFAULT 0,
+            confidence_score REAL NOT NULL DEFAULT 0.0,
+            extracted_at INTEGER NOT NULL,
+            last_used_at INTEGER,
+            usage_count INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            FOREIGN KEY (user_bio_id) REFERENCES user_bio (id) ON DELETE CASCADE
+          )
+        ''');
+        
+        // Recreate indexes
+        await db.execute('CREATE INDEX idx_biographical_insights_user_bio_id ON biographical_insights(user_bio_id)');
+        await db.execute('CREATE INDEX idx_biographical_insights_privacy_level ON biographical_insights(privacy_level)');
+        await db.execute('CREATE INDEX idx_biographical_insights_active ON biographical_insights(is_active)');
+        await db.execute('CREATE INDEX idx_biographical_insights_extracted_at ON biographical_insights(extracted_at DESC)');
+        await db.execute('CREATE INDEX idx_biographical_insights_category ON biographical_insights(category)');
+        await db.execute('CREATE INDEX idx_biographical_insights_confidence ON biographical_insights(confidence_score DESC)');
+        await db.execute('CREATE INDEX idx_biographical_insights_source_type ON biographical_insights(source_type)');
+        
+        AppLogger.logInfo(_component, 'Biographical insights table recreated successfully');
+      }
+      
+      // Migration from version 4 to 5: Add source_type column to biographical_insights
+      if (oldVersion < 5) {
+        AppLogger.logInfo(_component, 'Migrating to v5: Adding source_type column to biographical_insights');
+        
+        // Execute the migration SQL
+        for (final sql in BiographicalInsightSourceTypeMigration.migrationSql) {
+          await db.execute(sql);
+        }
+        
+        AppLogger.logInfo(_component, 'Source type migration completed successfully');
+      }
+      
+      // Future schema migrations will be handled here
+      AppLogger.logInfo(_component, 'Database upgrade completed successfully');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Database upgrade failed', e);
+      rethrow;
+    }
   }
 
   /// Handle database open

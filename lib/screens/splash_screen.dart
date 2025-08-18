@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import '../services/ai_service_manager.dart';
 import '../services/database_service.dart';
 import '../services/onboarding_service.dart';
+import '../services/bio/bio_generation_service.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
 import '../widgets/dialogs/dialog_widgets.dart';
@@ -82,6 +83,18 @@ class _SplashScreenState extends State<SplashScreen>
         AppLogger.logError('SplashScreen', '❌ Failed to initialize database', e);
         AppLogger.logWarning('SplashScreen', '⚠️  App will continue with limited vision storage functionality');
         // Continue anyway - app should still work without storage
+      }
+      
+      // Initialize bio services
+      try {
+        AppLogger.logInfo('SplashScreen', 'Initializing bio services...');
+        final bioGenerationService = BioGenerationService.instance;
+        await bioGenerationService.initialize();
+        AppLogger.logInfo('SplashScreen', '✅ Bio services initialized successfully');
+      } catch (e) {
+        AppLogger.logError('SplashScreen', '❌ Failed to initialize bio services', e);
+        AppLogger.logWarning('SplashScreen', '⚠️  App will continue with limited bio functionality');
+        // Continue anyway - app should still work without bio features
       }
       
       setState(() {

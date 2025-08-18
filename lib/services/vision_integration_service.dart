@@ -4,6 +4,8 @@ import '../models/vision.dart';
 import '../models/vision_feedback.dart';
 import '../models/profet.dart';
 import '../services/vision_storage_service.dart';
+import 'bio/bio_analysis_agent.dart';
+import 'bio/bio_generation_service.dart';
 import '../utils/app_logger.dart';
 
 /// Enhanced vision service that handles vision generation AND automatic storage
@@ -14,6 +16,7 @@ class VisionIntegrationService {
   static const String _component = 'VisionIntegrationService';
   
   final VisionStorageService _storageService = VisionStorageService();
+  final BioAnalysisAgent _bioAgent = BioAnalysisAgent();
   
   // Singleton pattern
   static final VisionIntegrationService _instance = VisionIntegrationService._internal();
@@ -37,9 +40,40 @@ class VisionIntegrationService {
       
       if (isAIEnabled) {
         try {
-          content = await profet.getAIPersonalizedResponse(question, context);
+          // Generate personalized context from biographical insights
+          String personalizedContext = '';
+          try {
+            final bioGeneration = BioGenerationService.instance;
+            personalizedContext = await bioGeneration.generateContextForProphet(
+              userId: 'default_user',
+              prophetType: profet.type,
+            );
+            
+            if (personalizedContext.isNotEmpty) {
+              AppLogger.logInfo(_component, 'Generated personalized context for response');
+            } else {
+              AppLogger.logInfo(_component, 'No personalized context available');
+            }
+          } catch (e) {
+            AppLogger.logWarning(_component, 'Failed to generate personalized context: $e');
+            personalizedContext = '';
+          }
+          
+          // Use enhanced method with personalization if available
+          if (personalizedContext.isNotEmpty) {
+            content = await profet.getAIPersonalizedResponseWithContext(
+              question, 
+              context, 
+              personalizedContext: personalizedContext,
+            );
+            AppLogger.logInfo(_component, 'AI-generated personalized response received');
+          } else {
+            // Fall back to standard AI response
+            content = await profet.getAIPersonalizedResponse(question, context);
+            AppLogger.logInfo(_component, 'AI-generated standard response received');
+          }
+          
           actuallyAIGenerated = true;
-          AppLogger.logInfo(_component, 'AI-generated response received');
         } catch (e) {
           AppLogger.logWarning(_component, 'AI failed, using fallback response');
           content = await profet.getLocalizedPersonalizedResponse(context, question);
@@ -91,6 +125,18 @@ class VisionIntegrationService {
         );
       }
       
+      // PHASE 2: Bio Analysis Integration
+      // Analyze the interaction for biographical insights (async, non-blocking)
+      _bioAgent.analyzeInteraction(
+        context: context,
+        profet: profet,
+        response: content,
+        question: question,
+      ).catchError((error) {
+        // Bio analysis errors should not affect the user experience
+        AppLogger.logWarning(_component, 'Bio analysis failed but continuing: $error');
+      });
+      
       return VisionResult(
         content: content,
         vision: storedVision,
@@ -119,9 +165,39 @@ class VisionIntegrationService {
       
       if (isAIEnabled) {
         try {
-          content = await profet.getAIRandomVision(context);
+          // Generate personalized context from biographical insights for random vision
+          String personalizedContext = '';
+          try {
+            final bioGeneration = BioGenerationService.instance;
+            personalizedContext = await bioGeneration.generateContextForProphet(
+              userId: 'default_user',
+              prophetType: profet.type,
+            );
+            
+            if (personalizedContext.isNotEmpty) {
+              AppLogger.logInfo(_component, 'Generated personalized interests context for random vision');
+            } else {
+              AppLogger.logInfo(_component, 'No personalized interests context available for random vision');
+            }
+          } catch (e) {
+            AppLogger.logWarning(_component, 'Failed to generate personalized interests context: $e');
+            personalizedContext = '';
+          }
+          
+          // Use enhanced method with personalization if available
+          if (personalizedContext.isNotEmpty) {
+            content = await profet.getAIRandomVisionWithContext(
+              context, 
+              personalizedContext: personalizedContext,
+            );
+            AppLogger.logInfo(_component, 'AI-generated personalized random vision received');
+          } else {
+            // Fall back to standard AI random vision
+            content = await profet.getAIRandomVision(context);
+            AppLogger.logInfo(_component, 'AI-generated standard random vision received');
+          }
+          
           actuallyAIGenerated = true;
-          AppLogger.logInfo(_component, 'AI-generated random vision received');
         } catch (e) {
           AppLogger.logWarning(_component, 'AI failed, using fallback random vision');
           final visions = await profet.getLocalizedRandomVisions(context);
@@ -173,6 +249,18 @@ class VisionIntegrationService {
           isAIGenerated: actuallyAIGenerated,
         );
       }
+      
+      // PHASE 2: Bio Analysis Integration
+      // Analyze the interaction for biographical insights (async, non-blocking)
+      _bioAgent.analyzeInteraction(
+        context: context,
+        profet: profet,
+        response: content,
+        question: null, // No question for random visions
+      ).catchError((error) {
+        // Bio analysis errors should not affect the user experience
+        AppLogger.logWarning(_component, 'Bio analysis failed but continuing: $error');
+      });
       
       return VisionResult(
         content: content,
