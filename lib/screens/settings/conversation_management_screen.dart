@@ -56,9 +56,10 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
       });
       
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load conversation data: $e'),
+            content: Text(localizations.failedToLoadConversationData(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -72,10 +73,8 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear All Conversations'),
-        content: const Text(
-          '⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?',
-        ),
+        title: Text(localizations.clearAllConversationsTitle),
+        content: Text(localizations.clearAllConversationsContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -84,7 +83,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete All'),
+            child: Text(localizations.deleteAll),
           ),
         ],
       ),
@@ -97,7 +96,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
         // Show loading indicator
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Row(
                 children: [
                   SizedBox(
@@ -106,7 +105,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                   SizedBox(width: 16),
-                  Text('Deleting all conversations...'),
+                  Text(localizations.deletingAllConversations),
                 ],
               ),
               duration: Duration(seconds: 30),
@@ -129,12 +128,12 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Row(
                 children: [
                   Icon(Icons.check_circle, color: Colors.white),
                   SizedBox(width: 8),
-                  Text('All conversations deleted successfully'),
+                  Text(localizations.conversationsDeletedSuccess),
                 ],
               ),
               backgroundColor: Colors.green,
@@ -150,7 +149,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to delete conversations: $e'),
+              content: Text(localizations.conversationsDeleteFailed(e.toString())),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 5),
             ),
@@ -162,10 +161,12 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Vision Management'),
+        title: Text(localizations.visionManagement),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -190,7 +191,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Conversation Statistics',
+                            localizations.conversationStatistics,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -201,7 +202,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                             children: [
                               Expanded(
                                 child: _buildStatCard(
-                                  'Total Conversations',
+                                  localizations.totalConversations,
                                   _totalConversations.toString(),
                                   Icons.chat,
                                   Colors.blue,
@@ -210,7 +211,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                               const SizedBox(width: 16),
                               Expanded(
                                 child: _buildStatCard(
-                                  'Total Messages',
+                                  localizations.totalMessages,
                                   _totalMessages.toString(),
                                   Icons.message,
                                   Colors.green,
@@ -220,7 +221,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                           ),
                           const SizedBox(height: 12),
                           _buildStatCard(
-                            'Average Messages per Conversation',
+                            localizations.averageMessagesPerConversation,
                             _totalConversations > 0 
                                 ? (_totalMessages / _totalConversations).toStringAsFixed(1)
                                 : '0',
@@ -245,7 +246,7 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Data Management',
+                              localizations.dataManagement,
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -257,8 +258,8 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                               child: ElevatedButton.icon(
                                 onPressed: _clearAllConversations,
                                 icon: const Icon(Icons.delete_forever, color: Colors.white),
-                                label: const Text(
-                                  'Clear All Conversations',
+                                label: Text(
+                                  localizations.clearAllConversations,
                                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -290,14 +291,14 @@ class _ConversationManagementScreenState extends State<ConversationManagementScr
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'No conversations yet',
+                              localizations.noConversationsYet,
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: Colors.grey[400],
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Start chatting with a prophet to see your conversation statistics here.',
+                              localizations.noConversationsDescription,
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: Colors.grey[500],
                               ),

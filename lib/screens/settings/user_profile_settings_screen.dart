@@ -23,7 +23,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
           _buildNavigationCard(
             context: context,
             title: localizations.personalInformation,
-            subtitle: 'Manage your basic profile information',
+            subtitle: localizations.personalInformationDescription,
             icon: Icons.person,
             iconColor: Colors.green,
             onTap: () => _navigateToPersonalInformation(context),
@@ -34,7 +34,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
           _buildNavigationCard(
             context: context,
             title: localizations.interestsAndTopics,
-            subtitle: 'Select your areas of interest',
+            subtitle: localizations.interestsAndTopicsDescription,
             icon: Icons.interests,
             iconColor: Colors.orange,
             onTap: () => _navigateToInterests(context),
@@ -45,7 +45,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
           _buildNavigationCard(
             context: context,
             title: localizations.personalizeYourExperience,
-            subtitle: 'Customize your guidance preferences',
+            subtitle: localizations.personalizeYourExperienceDescription,
             icon: Icons.tune,
             iconColor: Colors.purple,
             onTap: () => _navigateToPersonalization(context),
@@ -55,8 +55,8 @@ class UserProfileSettingsScreen extends StatelessWidget {
           
           _buildNavigationCard(
             context: context,
-            title: 'Your AI Profile',
-            subtitle: 'View your generated biographical profile and privacy settings',
+            title: localizations.yourAiProfile,
+            subtitle: localizations.yourAiProfileDescription,
             icon: Icons.psychology,
             iconColor: Colors.blueAccent,
             onTap: () => _navigateToBioProfile(context),

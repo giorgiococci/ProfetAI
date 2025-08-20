@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/bio/generated_bio.dart';
 import '../../services/bio/bio_storage_service.dart';
 import '../../widgets/home/error_display_widget.dart';
@@ -58,7 +59,7 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
     } catch (e) {
       AppLogger.logError(_component, 'Failed to load bio profile', e);
       setState(() {
-        _error = 'Failed to load biographical profile: ${e.toString()}';
+        _error = AppLocalizations.of(context)!.failedToLoadBiographicalProfile(e.toString());
         _isLoading = false;
       });
     }
@@ -76,9 +77,10 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
       });
       
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All biographical data deleted successfully'),
+          SnackBar(
+            content: Text(localizations.biographicalDataDeletedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -90,9 +92,10 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
       AppLogger.logError(_component, 'Failed to delete bio data', e);
       
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete data: ${e.toString()}'),
+            content: Text(localizations.failedToDeleteData(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -102,26 +105,24 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
   
   /// Show confirmation dialog for data deletion
   Future<void> _showDeleteConfirmation() async {
+    final localizations = AppLocalizations.of(context)!;
+    
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Biographical Data'),
-        content: const Text(
-          'This will permanently delete all your biographical information. '
-          'This action cannot be undone.\\n\\n'
-          'Are you sure you want to continue?',
-        ),
+        title: Text(localizations.deleteBiographicalData),
+        content: Text(localizations.deleteBiographicalDataContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(localizations.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             style: FilledButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('Delete All Data'),
+            child: Text(localizations.deleteAllData),
           ),
         ],
       ),
@@ -134,9 +135,11 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
   
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Profile'),
+        title: Text(localizations.yourProfile),
         elevation: 0,
         actions: [
           // Debug screen accessible in debug mode
@@ -147,13 +150,13 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
                 context,
                 MaterialPageRoute(builder: (context) => const BioDebugScreen()),
               ),
-              tooltip: 'Debug Tools',
+              tooltip: localizations.debugTools,
             ),
           // Data deletion option
           IconButton(
             icon: const Icon(Icons.delete_outline),
             onPressed: _generatedBio != null ? _showDeleteConfirmation : null,
-            tooltip: 'Delete All Data',
+            tooltip: localizations.deleteAllDataTooltip,
           ),
         ],
       ),
@@ -162,14 +165,16 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
   }
   
   Widget _buildBody() {
+    final localizations = AppLocalizations.of(context)!;
+    
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Loading your profile...'),
+            Text(localizations.loadingYourProfile),
           ],
         ),
       );
@@ -184,7 +189,7 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
             const SizedBox(height: 16),
             FilledButton(
               onPressed: _loadBioProfile,
-              child: const Text('Retry'),
+              child: Text(localizations.retry),
             ),
           ],
         ),
@@ -214,6 +219,8 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
   }
   
   Widget _buildEmptyState() {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -227,7 +234,7 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No bio still available. The prophets need more information.',
+              localizations.noBioAvailable,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Colors.grey[600],
@@ -237,7 +244,7 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
             FilledButton.icon(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.chat),
-              label: const Text('Ask the Prophets'),
+              label: Text(localizations.askTheProphets),
             ),
           ],
         ),
@@ -246,6 +253,8 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
   }
   
   Widget _buildProfileHeader() {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -270,14 +279,14 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Your Profile',
+                    localizations.yourProfileHeader,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Generated from your prophet interactions',
+                    localizations.generatedFromProphetInteractions,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -292,11 +301,13 @@ class _BioProfileScreenState extends State<BioProfileScreen> {
   }
   
   Widget _buildBioSections() {
+    final localizations = AppLocalizations.of(context)!;
+    
     if (_generatedBio?.sections.isEmpty ?? true) {
-      return const Card(
+      return Card(
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Text('No biographical content available'),
+          child: Text(localizations.noBiographicalContentAvailable),
         ),
       );
     }

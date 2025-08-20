@@ -597,4 +597,184 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get lifeStageEmbracingChange => 'Sto abbracciando il cambiamento';
+
+  @override
+  String get visionManagement => 'Gestione Visioni';
+
+  @override
+  String get visionManagementDescription =>
+      'Gestisci la cronologia delle conversazioni e le preferenze';
+
+  @override
+  String get debugTools => 'Strumenti Debug';
+
+  @override
+  String get admobDebugTest => 'Debug AdMob & Test';
+
+  @override
+  String get admobDebugTestDescription =>
+      'Testa la funzionalità e i callback degli annunci';
+
+  @override
+  String get resetOnboarding => 'Reimposta Onboarding';
+
+  @override
+  String get resetOnboardingDescription =>
+      'Forza la visualizzazione dell\'onboarding al riavvio dell\'app';
+
+  @override
+  String get resetOnboardingTitle => 'Reimposta Onboarding';
+
+  @override
+  String get resetOnboardingContent =>
+      'Questo reimposterà lo stato dell\'onboarding. Il flusso di onboarding verrà mostrato di nuovo quando riavvii l\'app.\n\nSei sicuro?';
+
+  @override
+  String get reset => 'Reimposta';
+
+  @override
+  String get onboardingResetSuccess =>
+      'Onboarding reimpostato con successo. Riavvia l\'app per vedere il flusso di onboarding.';
+
+  @override
+  String onboardingResetFailed(String error) {
+    return 'Impossibile reimpostare l\'onboarding: $error';
+  }
+
+  @override
+  String get conversationStatistics => 'Statistiche Conversazioni';
+
+  @override
+  String get totalConversations => 'Conversazioni Totali';
+
+  @override
+  String get totalMessages => 'Messaggi Totali';
+
+  @override
+  String get averageMessagesPerConversation =>
+      'Media Messaggi per Conversazione';
+
+  @override
+  String get dataManagement => 'Gestione Dati';
+
+  @override
+  String get clearAllConversations => 'Cancella Tutte le Conversazioni';
+
+  @override
+  String get clearAllConversationsTitle => 'Cancella Tutte le Conversazioni';
+
+  @override
+  String get clearAllConversationsContent =>
+      '⚠️ Questa azione eliminerà permanentemente TUTTA la cronologia delle conversazioni e non può essere annullata.\n\nSei sicuro di voler continuare?';
+
+  @override
+  String get deleteAll => 'Elimina Tutto';
+
+  @override
+  String get deletingAllConversations =>
+      'Eliminazione di tutte le conversazioni...';
+
+  @override
+  String get conversationsDeletedSuccess =>
+      'Tutte le conversazioni eliminate con successo';
+
+  @override
+  String conversationsDeleteFailed(String error) {
+    return 'Impossibile eliminare le conversazioni: $error';
+  }
+
+  @override
+  String get noConversationsYet => 'Nessuna conversazione ancora';
+
+  @override
+  String get noConversationsDescription =>
+      'Inizia a chattare con un profeta per vedere le statistiche delle tue conversazioni qui.';
+
+  @override
+  String failedToLoadConversationData(String error) {
+    return 'Impossibile caricare i dati delle conversazioni: $error';
+  }
+
+  @override
+  String get personalInformationDescription =>
+      'Gestisci le tue informazioni personali di base';
+
+  @override
+  String get interestsAndTopicsDescription =>
+      'Seleziona le tue aree di interesse';
+
+  @override
+  String get personalizeYourExperienceDescription =>
+      'Personalizza le tue preferenze di guida';
+
+  @override
+  String get yourAiProfile => 'Il Tuo Profilo AI';
+
+  @override
+  String get yourAiProfileDescription =>
+      'Visualizza il tuo profilo biografico generato e le impostazioni sulla privacy';
+
+  @override
+  String failedToLoadProfile(String error) {
+    return 'Impossibile caricare il profilo: $error';
+  }
+
+  @override
+  String failedToSaveProfile(String error) {
+    return 'Impossibile salvare il profilo: $error';
+  }
+
+  @override
+  String get yourProfile => 'Il Tuo Profilo';
+
+  @override
+  String get biographicalDataDeletedSuccess =>
+      'Tutti i dati biografici eliminati con successo';
+
+  @override
+  String failedToDeleteData(String error) {
+    return 'Impossibile eliminare i dati: $error';
+  }
+
+  @override
+  String get deleteBiographicalData => 'Elimina Dati Biografici';
+
+  @override
+  String get deleteBiographicalDataContent =>
+      'Questo eliminerà permanentemente tutte le tue informazioni biografiche. Questa azione non può essere annullata.\n\nSei sicuro di voler continuare?';
+
+  @override
+  String get deleteAllData => 'Elimina Tutti i Dati';
+
+  @override
+  String failedToLoadBiographicalProfile(String error) {
+    return 'Impossibile caricare il profilo biografico: $error';
+  }
+
+  @override
+  String get loadingYourProfile => 'Caricamento del tuo profilo...';
+
+  @override
+  String get retry => 'Riprova';
+
+  @override
+  String get noBioAvailable =>
+      'Nessuna biografia ancora disponibile. I profeti hanno bisogno di più informazioni.';
+
+  @override
+  String get askTheProphets => 'Chiedi ai Profeti';
+
+  @override
+  String get yourProfileHeader => 'Il Tuo Profilo';
+
+  @override
+  String get generatedFromProphetInteractions =>
+      'Generato dalle tue interazioni con i profeti';
+
+  @override
+  String get noBiographicalContentAvailable =>
+      'Nessun contenuto biografico disponibile';
+
+  @override
+  String get deleteAllDataTooltip => 'Elimina Tutti i Dati';
 }

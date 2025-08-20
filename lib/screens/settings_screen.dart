@@ -50,8 +50,8 @@ class SettingsScreen extends StatelessWidget {
           
           _buildSettingsCard(
             context: context,
-            title: 'Vision Management',
-            subtitle: 'Manage your conversation history and preferences',
+            title: localizations.visionManagement,
+            subtitle: localizations.visionManagementDescription,
             icon: Icons.chat,
             iconColor: Colors.green,
             onTap: () => _navigateToConversationManagement(context),
@@ -61,7 +61,7 @@ class SettingsScreen extends StatelessWidget {
           if (kDebugMode) ...[
             const SizedBox(height: 20),
             Text(
-              'Debug Tools',
+              localizations.debugTools,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -72,8 +72,8 @@ class SettingsScreen extends StatelessWidget {
             
             _buildSettingsCard(
               context: context,
-              title: 'AdMob Debug & Test',
-              subtitle: 'Test ad functionality and callbacks',
+              title: localizations.admobDebugTest,
+              subtitle: localizations.admobDebugTestDescription,
               icon: Icons.bug_report,
               iconColor: Colors.orange,
               onTap: () => _navigateToAdDebug(context),
@@ -83,8 +83,8 @@ class SettingsScreen extends StatelessWidget {
             
             _buildSettingsCard(
               context: context,
-              title: 'Reset Onboarding',
-              subtitle: 'Force onboarding to show again on app restart',
+              title: localizations.resetOnboarding,
+              subtitle: localizations.resetOnboardingDescription,
               icon: Icons.restart_alt,
               iconColor: Colors.amber,
               onTap: () => _resetOnboarding(context),
@@ -214,23 +214,23 @@ class SettingsScreen extends StatelessWidget {
   }
   
   Future<void> _resetOnboarding(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+    
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Reset Onboarding'),
-          content: const Text(
-            'This will reset the onboarding status. The onboarding flow will be shown again when you restart the app.\n\nAre you sure?',
-          ),
+          title: Text(localizations.resetOnboardingTitle),
+          content: Text(localizations.resetOnboardingContent),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(localizations.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Reset'),
+              child: Text(localizations.reset),
             ),
           ],
         );
@@ -242,8 +242,8 @@ class SettingsScreen extends StatelessWidget {
         await OnboardingService().resetOnboarding();
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Onboarding reset successfully. Restart the app to see the onboarding flow.'),
+            SnackBar(
+              content: Text(localizations.onboardingResetSuccess),
               duration: Duration(seconds: 3),
             ),
           );
@@ -252,7 +252,7 @@ class SettingsScreen extends StatelessWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to reset onboarding: $e'),
+              content: Text(localizations.onboardingResetFailed(e.toString())),
               backgroundColor: Colors.red,
             ),
           );
