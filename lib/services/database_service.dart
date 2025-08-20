@@ -13,7 +13,7 @@ import '../utils/bio/insight_migration.dart';
 /// and provides a foundation for all database operations
 class DatabaseService {
   static const String _component = 'DatabaseService';
-  static const String _databaseName = 'profet_ai.db';
+  static const String _databaseName = 'orakl.db';
   static const int _databaseVersion = 6;
   
   static Database? _database;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/models/vision.dart';
-import 'package:profet_ai/models/vision_feedback.dart';
-import 'package:profet_ai/widgets/vision_book/vision_card.dart';
+import 'package:orakl/models/vision.dart';
+import 'package:orakl/models/vision_feedback.dart';
+import 'package:orakl/widgets/vision_book/vision_card.dart';
 
 class VisionSearchDelegate extends SearchDelegate<Vision?> {
   final List<Vision> visions;

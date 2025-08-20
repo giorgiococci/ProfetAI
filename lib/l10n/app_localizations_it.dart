@@ -9,7 +9,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get appTitle => 'Profet AI';
+  String get appTitle => 'Orakl';
 
   @override
   String get navigationHome => 'Home';
@@ -481,7 +481,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get skip => 'Salta';
 
   @override
-  String get welcomeToProfetAI => 'Benvenuto in Profet AI';
+  String get welcomeToOrakl => 'Benvenuto in Orakl';
 
   @override
   String get discoverMysticalInsights =>

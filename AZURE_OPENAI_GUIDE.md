@@ -1,7 +1,7 @@
-# ProfetAI - Azure OpenAI Integration Guide
+# Orakl - Azure OpenAI Integration Guide
 
 ## Overview
-ProfetAI now includes Azure OpenAI integration, allowing your oracles to provide AI-powered prophecies while maintaining their unique personalities.
+Orakl now includes Azure OpenAI integration, allowing your oracles to provide AI-powered prophecies while maintaining their unique personalities.
 
 ## Features
 - **Seamless Integration**: Each oracle (Mistico, Caotico, Cinico) can use AI when configured

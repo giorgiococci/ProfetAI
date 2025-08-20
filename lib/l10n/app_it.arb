@@ -1,6 +1,6 @@
 {
   "@@locale": "it",
-  "appTitle": "Profet AI",
+  "appTitle": "Orakl",
   "navigationHome": "Home",
   "navigationOracles": "Oracoli",
   "navigationProfile": "Profilo",
@@ -143,7 +143,7 @@
   "localizationPageTitle": "Localizzazione",
   "deleteDataPageTitle": "Elimina Dati",
   "skip": "Salta",
-  "welcomeToProfetAI": "Benvenuto in Profet AI",
+  "welcomeToOrakl": "Benvenuto in Orakl",
   "discoverMysticalInsights": "Scopri intuizioni mistiche attraverso oracoli unici",
   "beginJourney": "Inizia il Viaggio",
   "unlockMysticalPowers": "Sblocca Poteri Mistici",

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/models/conversation/conversation.dart';
-import 'package:profet_ai/models/conversation/conversation_message.dart';
-import 'package:profet_ai/models/profet_manager.dart';
-import 'package:profet_ai/utils/theme_utils.dart';
+import 'package:orakl/models/conversation/conversation.dart';
+import 'package:orakl/models/conversation/conversation_message.dart';
+import 'package:orakl/models/profet_manager.dart';
+import 'package:orakl/utils/theme_utils.dart';
 import 'package:intl/intl.dart';
 
 /// Card widget for displaying conversation summary in the conversation book

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/models/vision.dart';
-import 'package:profet_ai/l10n/app_localizations.dart';
-import 'package:profet_ai/prophet_localizations.dart';
+import 'package:orakl/models/vision.dart';
+import 'package:orakl/l10n/app_localizations.dart';
+import 'package:orakl/prophet_localizations.dart';
 
 class VisionFilterBar extends StatelessWidget {
   final VisionFilter currentFilter;

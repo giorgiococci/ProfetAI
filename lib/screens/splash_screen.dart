@@ -222,7 +222,7 @@ class _SplashScreenState extends State<SplashScreen>
                   
                   // App title
                   const Text(
-                    'Profet AI',
+                    'Orakl',
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,

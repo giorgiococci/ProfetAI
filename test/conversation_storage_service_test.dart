@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/services/conversation/conversation_storage_service.dart';
-import 'package:profet_ai/models/conversation/conversation.dart';
-import 'package:profet_ai/models/vision_feedback.dart';
+import 'package:orakl/services/conversation/conversation_storage_service.dart';
+import 'package:orakl/models/conversation/conversation.dart';
+import 'package:orakl/models/vision_feedback.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {

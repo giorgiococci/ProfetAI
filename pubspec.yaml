@@ -1,5 +1,5 @@
-name: profet_ai
-description: "A new Flutter project."
+name: orakl
+description: "A mystical oracle app connecting you with AI-powered oracles."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -140,6 +140,7 @@ flutter_launcher_icons:
   web:
     generate: true
   image_path: "assets/images/app_icon.png"
+  remove_alpha_ios: true
   # Optional: You can also specify adaptive icons for Android
   # adaptive_icon_background: "#ffffff"
   # adaptive_icon_foreground: "assets/images/app_icon_foreground.png"

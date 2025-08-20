@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// Application title
   ///
   /// In en, this message translates to:
-  /// **'Profet AI'**
+  /// **'Orakl'**
   String get appTitle;
 
   /// Navigation menu item for Home
@@ -933,8 +933,8 @@ abstract class AppLocalizations {
   /// Main welcome title for onboarding
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Profet AI'**
-  String get welcomeToProfetAI;
+  /// **'Welcome to Orakl'**
+  String get welcomeToOrakl;
 
   /// Welcome screen subtitle
   ///

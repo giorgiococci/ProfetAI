@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/l10n/app_localizations.dart';
+import 'package:orakl/l10n/app_localizations.dart';
 
 /// Widget shown when there are no conversations to display
 class EmptyConversationsWidget extends StatelessWidget {

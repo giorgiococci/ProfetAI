@@ -5,7 +5,7 @@ import '../../models/oracolo_cinico.dart';
 import '../../l10n/prophet_localization_loader.dart';
 import '../common/loading_indicator.dart';
 
-/// Collection of specialized dialog widgets for the ProfetAI app
+/// Collection of specialized dialog widgets for the Orakl app
 /// This includes loading dialogs, status dialogs, error dialogs, and confirmation dialogs
 
 // ================================

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/services/bio/bio_analysis_agent.dart';
-import 'package:profet_ai/services/bio/bio_storage_service.dart';
-import 'package:profet_ai/services/bio/privacy_filter_service.dart';
-import 'package:profet_ai/services/ai_service_manager.dart';
-import 'package:profet_ai/models/profet.dart';
+import 'package:orakl/services/bio/bio_analysis_agent.dart';
+import 'package:orakl/services/bio/bio_storage_service.dart';
+import 'package:orakl/services/bio/privacy_filter_service.dart';
+import 'package:orakl/services/ai_service_manager.dart';
+import 'package:orakl/models/profet.dart';
 
 void main() {
   group('BioAnalysisAgent Tests', () {

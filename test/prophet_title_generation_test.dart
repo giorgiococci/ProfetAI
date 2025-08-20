@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/models/profet_manager.dart';
+import 'package:orakl/models/profet_manager.dart';
 
 void main() {
   group('Prophet Title Generation Tests', () {

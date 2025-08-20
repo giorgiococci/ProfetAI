@@ -1,6 +1,6 @@
-# ProfetAI Documentation
+# Orakl Documentation
 
-This folder contains comprehensive guides for maintaining and extending the ProfetAI application.
+This folder contains comprehensive guides for maintaining and extending the Orakl application.
 
 ## 📚 Available Guides
 
@@ -36,7 +36,7 @@ Advanced guide for managing prophet-specific content including AI prompts, respo
 
 ## 🏗️ Architecture Overview
 
-The ProfetAI app uses a scalable localization architecture:
+The Orakl app uses a scalable localization architecture:
 
 ```
 lib/

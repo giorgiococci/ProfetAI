@@ -412,7 +412,7 @@ class _AIStatusScreenState extends State<AIStatusScreen> with LoadingStateMixin 
 
   Future<void> _copyDebugInfo() async {
     final debugInfo = '''
-=== ProfetAI Debug Information ===
+=== Orakl Debug Information ===
 AI Available: ${AIServiceManager.isAIAvailable}
 Build Config: ${AppConfig.isAIConfigured ? 'Configured' : 'Not Configured'}
 

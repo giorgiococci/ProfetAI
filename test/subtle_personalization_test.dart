@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/services/bio/bio_context_service.dart';
-import 'package:profet_ai/models/bio/biographical_insight.dart';
-import 'package:profet_ai/utils/privacy/privacy_levels.dart';
+import 'package:orakl/services/bio/bio_context_service.dart';
+import 'package:orakl/models/bio/biographical_insight.dart';
+import 'package:orakl/utils/privacy/privacy_levels.dart';
 
 void main() {
   group('Subtle Personalization Tests', () {

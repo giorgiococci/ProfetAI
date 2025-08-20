@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "Profet AI",
+  "appTitle": "Orakl",
   "@appTitle": {
     "description": "Application title"
   },
@@ -796,8 +796,8 @@
     "description": "Skip button text for onboarding screens"
   },
 
-  "welcomeToProfetAI": "Welcome to Profet AI",
-  "@welcomeToProfetAI": {
+  "welcomeToOrakl": "Welcome to Orakl",
+  "@welcomeToOrakl": {
     "description": "Main welcome title for onboarding"
   },
 

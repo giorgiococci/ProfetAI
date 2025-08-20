@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/models/vision.dart';
-import 'package:profet_ai/models/vision_feedback.dart';
-import 'package:profet_ai/models/profet_manager.dart';
-import 'package:profet_ai/utils/theme_utils.dart';
-import 'package:profet_ai/utils/prophet_utils.dart';
-import 'package:profet_ai/l10n/app_localizations.dart';
+import 'package:orakl/models/vision.dart';
+import 'package:orakl/models/vision_feedback.dart';
+import 'package:orakl/models/profet_manager.dart';
+import 'package:orakl/utils/theme_utils.dart';
+import 'package:orakl/utils/prophet_utils.dart';
+import 'package:orakl/l10n/app_localizations.dart';
 
 class VisionCard extends StatelessWidget {
   final Vision vision;

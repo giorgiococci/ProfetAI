@@ -1,6 +1,6 @@
-# ProfetAI Features Documentation
+# Orakl Features Documentation
 
-This document describes the key features implemented in ProfetAI and their specifications.
+This document describes the key features implemented in Orakl and their specifications.
 
 ## Vision Storage and Management System
 
@@ -157,4 +157,4 @@ CREATE TABLE visions (
 
 ---
 
-*This feature enhances ProfetAI's value proposition by providing users with a comprehensive spiritual journal that grows with their journey, while maintaining complete privacy and user control over their personal oracle experiences.*
+*This feature enhances Orakl's value proposition by providing users with a comprehensive spiritual journal that grows with their journey, while maintaining complete privacy and user control over their personal oracle experiences.*

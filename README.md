@@ -1,6 +1,6 @@
-# Profet AI 🔮
+# Orakl 🔮
 
-**Profet AI** is an immersive mystical prediction app that connects users with three unique AI-powered oracles. Each oracle has its own personality, visual theme, and approach to providing insights and predictions.
+**Orakl** is an immersive mystical prediction app that connects users with three unique AI-powered oracles. Each oracle has its own personality, visual theme, and approach to providing insights and predictions.
 
 ## ✨ Features
 
@@ -50,8 +50,8 @@
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/giorgiococci/ProfetAI.git
-   cd ProfetAI
+   git clone https://github.com/giorgiococci/Orakl.git
+   cd Orakl
    ```
 
 2. **Install dependencies**
@@ -110,7 +110,7 @@ lib/
 
 ## 🎨 Design Philosophy
 
-Profet AI embraces a **dark, mystical aesthetic** with:
+Orakl embraces a **dark, mystical aesthetic** with:
 
 - Deep purple and gradient color schemes
 - Atmospheric backgrounds and overlays

@@ -1,4 +1,4 @@
-import 'package:profet_ai/models/vision_feedback.dart';
+import 'package:orakl/models/vision_feedback.dart';
 
 /// Enum for sorting options in vision list
 enum VisionSortBy {

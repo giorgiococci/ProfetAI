@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/models/conversation/conversation.dart';
-import 'package:profet_ai/models/conversation/conversation_message.dart';
-import 'package:profet_ai/models/conversation_filter.dart';
-import 'package:profet_ai/models/profet_manager.dart';
-import 'package:profet_ai/services/conversation/conversation_storage_service.dart';
-import 'package:profet_ai/widgets/vision_book/conversation_card.dart';
-import 'package:profet_ai/widgets/vision_book/empty_conversations_widget.dart';
-import 'package:profet_ai/widgets/vision_book/conversation_search_delegate.dart';
-import 'package:profet_ai/l10n/app_localizations.dart';
-import 'package:profet_ai/utils/theme_utils.dart';
+import 'package:orakl/models/conversation/conversation.dart';
+import 'package:orakl/models/conversation/conversation_message.dart';
+import 'package:orakl/models/conversation_filter.dart';
+import 'package:orakl/models/profet_manager.dart';
+import 'package:orakl/services/conversation/conversation_storage_service.dart';
+import 'package:orakl/widgets/vision_book/conversation_card.dart';
+import 'package:orakl/widgets/vision_book/empty_conversations_widget.dart';
+import 'package:orakl/widgets/vision_book/conversation_search_delegate.dart';
+import 'package:orakl/l10n/app_localizations.dart';
+import 'package:orakl/utils/theme_utils.dart';
 
 class VisionBookScreen extends StatefulWidget {
   final Function(int conversationId, ProfetType prophetType)? onConversationSelected;

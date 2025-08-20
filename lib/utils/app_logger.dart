@@ -1,4 +1,4 @@
-/// Centralized logging system for ProfetAI
+/// Centralized logging system for Orakl
 /// 
 /// This handles all logging throughout the app with configurable debug levels
 /// Debug logging is controlled by build-time flags and can be disabled in production
@@ -13,7 +13,7 @@ class AppLogger {
     defaultValue: false,
   );
   
-  static const String _appName = 'ProfetAI';
+  static const String _appName = 'Orakl';
   static final List<LogEntry> _logs = [];
   static const int _maxLogEntries = 500; // Increased from 100 to 500
   
@@ -109,7 +109,7 @@ class AppLogger {
     try {
       if (_isDesktop) {
         final directory = await getApplicationDocumentsDirectory();
-        final logsDir = Directory('${directory.path}/ProfetAI/logs');
+        final logsDir = Directory('${directory.path}/Orakl/logs');
         
         if (!await logsDir.exists()) {
           await logsDir.create(recursive: true);
@@ -117,11 +117,11 @@ class AppLogger {
         
         final now = DateTime.now();
         final dateStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-        _logFilePath = '${logsDir.path}/profetai_$dateStr.log';
+        _logFilePath = '${logsDir.path}/orakl_$dateStr.log';
         
         // Write session start marker
         final file = File(_logFilePath!);
-        await file.writeAsString('\n=== ProfetAI Session Started: ${DateTime.now().toIso8601String()} ===\n', mode: FileMode.append);
+        await file.writeAsString('\n=== Orakl Session Started: ${DateTime.now().toIso8601String()} ===\n', mode: FileMode.append);
       }
     } catch (e) {
       // Silently fail if file initialization doesn't work
