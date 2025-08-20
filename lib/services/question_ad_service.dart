@@ -5,15 +5,19 @@ import '../utils/app_logger.dart';
 import '../widgets/dialogs/unified_ad_dialog.dart';
 import 'admob_service.dart';
 
-/// Service for tracking questions and managing rewarded ad display with cooldown system
+/// Service for tracking questions and prophet responses, managing rewarded ad display with cooldown system
 /// 
-/// This service counts total questions across all prophets and shows
-/// a rewarded ad every 5 questions. Users who skip ads must wait 4 hours before asking again.
+/// This service counts total questions across all prophets and prophet responses across all conversations.
+/// It shows a rewarded ad when EITHER:
+/// - 5 questions have been asked (existing logic)
+/// - 5 prophet responses have been generated (new logic)
+/// Users who skip ads must wait 4 hours before asking again.
 class QuestionAdService {
   static const String _component = 'QuestionAdService';
   static const String _questionCountKey = 'total_question_count';
+  static const String _prophetResponseCountKey = 'total_prophet_response_count';
   static const String _cooldownEndTimeKey = 'cooldown_end_time';
-  static const int _adFrequency = 5; // Show ad every 5 questions
+  static const int _adFrequency = 5; // Show ad every 5 questions OR 5 prophet responses
   static const int _cooldownHours = 4; // 4 hours cooldown for skipped ads
   
   // Singleton pattern
@@ -23,9 +27,11 @@ class QuestionAdService {
   
   final AdMobService _adMobService = AdMobService();
   int _questionCount = 0;
+  int _prophetResponseCount = 0;
   DateTime? _cooldownEndTime;
   bool _isInitialized = false;
   bool _isProcessingQuestion = false; // Add flag to prevent concurrent processing
+  bool _isProcessingProphetResponse = false; // Add flag to prevent concurrent processing
   
   /// Initialize the service
   Future<void> initialize() async {
@@ -35,8 +41,9 @@ class QuestionAdService {
       // Initialize AdMob
       await _adMobService.initialize();
       
-      // Load question count and cooldown data from persistent storage
+      // Load question count, prophet response count, and cooldown data from persistent storage
       await _loadQuestionCount();
+      await _loadProphetResponseCount();
       await _loadCooldownData();
       
       _isInitialized = true;
@@ -56,6 +63,18 @@ class QuestionAdService {
     } catch (e) {
       AppLogger.logError(_component, 'Failed to load question count', e);
       _questionCount = 0;
+    }
+  }
+  
+  /// Load prophet response count from SharedPreferences
+  Future<void> _loadProphetResponseCount() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _prophetResponseCount = prefs.getInt(_prophetResponseCountKey) ?? 0;
+      AppLogger.logInfo(_component, '🔮 LOADED prophet response count: $_prophetResponseCount');
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to load prophet response count', e);
+      _prophetResponseCount = 0;
     }
   }
   
@@ -81,6 +100,17 @@ class QuestionAdService {
       AppLogger.logInfo(_component, '💾 SAVED question count: $_questionCount');
     } catch (e) {
       AppLogger.logError(_component, 'Failed to save question count', e);
+    }
+  }
+  
+  /// Save prophet response count to SharedPreferences
+  Future<void> _saveProphetResponseCount() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_prophetResponseCountKey, _prophetResponseCount);
+      AppLogger.logInfo(_component, '💾 SAVED prophet response count: $_prophetResponseCount');
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to save prophet response count', e);
     }
   }
   
@@ -160,14 +190,16 @@ class QuestionAdService {
             remainingCooldownTime: remaining,
           );
           
-          // If user watched ad, clear cooldown and reset question count
+          // If user watched ad, clear cooldown and reset both counters
           if (result == true) {
-            AppLogger.logInfo(_component, '✅ SUCCESS: Cooldown cleared by ad - Q reset to 0');
+            AppLogger.logInfo(_component, '✅ SUCCESS: Cooldown cleared by ad - Both counters reset to 0');
             _cooldownEndTime = null;
             _questionCount = 0; // RESET QUESTIONS WHEN BYPASSING COOLDOWN
+            _prophetResponseCount = 0; // RESET PROPHET RESPONSES WHEN BYPASSING COOLDOWN
             await _saveCooldownData();
             await _saveQuestionCount();
-            AppLogger.logInfo(_component, '🎯 COOLDOWN BYPASS COMPLETE: Cooldown=${_cooldownEndTime}, Q=$_questionCount');
+            await _saveProphetResponseCount();
+            AppLogger.logInfo(_component, '🎯 COOLDOWN BYPASS COMPLETE: Cooldown=${_cooldownEndTime}, Q=$_questionCount, Prophet responses=$_prophetResponseCount');
             
             if (context.mounted) {
               _showSuccessFeedback(context, 'Great! You can now ask the oracle again.');
@@ -198,11 +230,13 @@ class QuestionAdService {
           
           // If user watched the ad successfully, reset and proceed
           if (result == true) {
-            AppLogger.logInfo(_component, '✅ AD REWARD: Q count reset to 0 (every ${_adFrequency} questions)');
-            // CRITICAL: Reset question count to restart the ad cycle
+            AppLogger.logInfo(_component, '✅ AD REWARD: Both counters reset to 0 (every ${_adFrequency} questions)');
+            // CRITICAL: Reset BOTH counters to restart both ad cycles
             _questionCount = 0;
+            _prophetResponseCount = 0;
             await _saveQuestionCount();
-            AppLogger.logInfo(_component, '💾 AD REWARD SAVED: Q count now = $_questionCount');
+            await _saveProphetResponseCount();
+            AppLogger.logInfo(_component, '💾 AD REWARD SAVED: Q count = $_questionCount, Prophet responses = $_prophetResponseCount');
             
             if (context.mounted) {
               _showSuccessFeedback(context, 'Thank you! Continue with your question.');
@@ -227,11 +261,125 @@ class QuestionAdService {
       _isProcessingQuestion = false;
     }
   }
+
+  /// Main method to handle prophet response generation
+  /// 
+  /// This method:
+  /// 1. Increments the global prophet response counter
+  /// 2. Checks if ad should be shown (every 5 prophet responses)
+  /// 3. Shows unified dialog if ad is required
+  /// 4. Resets BOTH counters (questions AND prophet responses) if ad is watched
+  /// 5. Applies cooldown if ad is skipped
+  /// 
+  /// Returns true if processing should continue, false if blocked by cooldown
+  Future<bool> handleProphetResponse(BuildContext context) async {
+    if (!_isInitialized) {
+      AppLogger.logWarning(_component, 'Service not initialized, allowing prophet response');
+      return true;
+    }
+
+    // Prevent concurrent processing
+    if (_isProcessingProphetResponse) {
+      AppLogger.logWarning(_component, 'Prophet response already being processed, allowing current response');
+      return true;
+    }
+
+    _isProcessingProphetResponse = true;
+
+    try {
+      // Always increment prophet response count first
+      _prophetResponseCount++;
+      await _saveProphetResponseCount();
+      AppLogger.logInfo(_component, '🔮 PROPHET RESPONSE: Count incremented to $_prophetResponseCount');
+
+      // Check if user is in cooldown first
+      if (isInCooldown()) {
+        final remainingTime = getRemainingCooldownTime();
+        AppLogger.logInfo(_component, '❄️ COOLDOWN ACTIVE for prophet response: ${remainingTime?.inMinutes} minutes remaining');
+        
+        // Show cooldown dialog with option to watch ad
+        final result = await _showUnifiedDialog(
+          context: context,
+          isInCooldown: true,
+          remainingCooldownTime: remainingTime,
+          questionsAsked: null, // Not relevant for cooldown
+        );
+        
+        if (result == true) {
+          // User watched ad to bypass cooldown
+          await _clearCooldown();
+          // CRITICAL: Reset BOTH counters when ad is watched
+          _questionCount = 0;
+          _prophetResponseCount = 0;
+          await _saveQuestionCount();
+          await _saveProphetResponseCount();
+          AppLogger.logInfo(_component, '✅ AD REWARD: Both counters reset to 0 (cooldown bypass)');
+          
+          if (context.mounted) {
+            _showSuccessFeedback(context, 'Thank you! The oracle continues...');
+          }
+          
+          return true;
+        } else {
+          // User chose to stay in cooldown, block this response
+          return false;
+        }
+      } else {
+        // Not in cooldown, check if ad should be shown
+        if (_prophetResponseCount % _adFrequency == 0) {
+          AppLogger.logInfo(_component, '🎬 PROPHET RESPONSE AD: Showing ad after $_prophetResponseCount responses');
+          
+          final result = await _showUnifiedDialog(
+            context: context,
+            isInCooldown: false,
+            questionsAsked: _prophetResponseCount,
+          );
+          
+          // If user watched the ad successfully, reset both counters and proceed
+          if (result == true) {
+            AppLogger.logInfo(_component, '✅ AD REWARD: Both counters reset to 0 (every ${_adFrequency} prophet responses)');
+            // CRITICAL: Reset BOTH counters to restart both ad cycles
+            _questionCount = 0;
+            _prophetResponseCount = 0;
+            await _saveQuestionCount();
+            await _saveProphetResponseCount();
+            AppLogger.logInfo(_component, '💾 AD REWARD SAVED: Q count = $_questionCount, Prophet responses = $_prophetResponseCount');
+            
+            if (context.mounted) {
+              _showSuccessFeedback(context, 'Thank you! The oracle continues...');
+            }
+            
+            return true;
+          } else if (result == false) {
+            // User explicitly skipped the ad, set cooldown and block this response
+            await _setCooldown();
+            return false;
+          } else {
+            // result == null means ad failed to load, allow response to proceed
+            return true;
+          }
+        }
+      }
+      
+      // Always allow the response if no ad was triggered
+      return true;
+      
+    } finally {
+      _isProcessingProphetResponse = false;
+    }
+  }
   
   /// Set cooldown period (4 hours from now)
   Future<void> _setCooldown() async {
     _cooldownEndTime = DateTime.now().add(Duration(hours: _cooldownHours));
     await _saveCooldownData();
+  }
+
+  /// Clear cooldown period
+  Future<void> _clearCooldown() async {
+    _cooldownEndTime = null;
+    await _saveCooldownData();
+    AppLogger.logInfo(_component, '✅ Cooldown cleared');
   }
   
   /// Show unified dialog for both ad display and cooldown scenarios
@@ -413,14 +561,27 @@ class QuestionAdService {
   /// Get current question count
   int get questionCount => _questionCount;
   
+  /// Get current prophet response count
+  int get prophetResponseCount => _prophetResponseCount;
+  
   /// Get questions remaining until next ad
   int get questionsUntilNextAd {
     return _adFrequency - (_questionCount % _adFrequency);
   }
   
+  /// Get prophet responses remaining until next ad
+  int get prophetResponsesUntilNextAd {
+    return _adFrequency - (_prophetResponseCount % _adFrequency);
+  }
+  
   /// Check if next question will trigger an ad
   bool get willShowAdOnNextQuestion {
     return (_questionCount + 1) % _adFrequency == 0;
+  }
+  
+  /// Check if next prophet response will trigger an ad
+  bool get willShowAdOnNextProphetResponse {
+    return (_prophetResponseCount + 1) % _adFrequency == 0;
   }
   
   /// Get ad frequency setting

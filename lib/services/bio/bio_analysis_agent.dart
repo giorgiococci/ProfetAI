@@ -400,4 +400,90 @@ Respond naturally incorporating this understanding without mentioning you have b
     }
     return stats;
   }
+
+  /// Analyze a user message for conversation bio insights
+  /// This method is specifically for conversation message analysis
+  Future<void> analyzeUserMessage({
+    required BuildContext context,
+    required String userMessage,
+    required String prophetResponse,
+    required Profet profet,
+    String? userId,
+  }) async {
+    try {
+      AppLogger.logInfo(_component, 'Analyzing user message for conversation bio insights');
+      
+      // Use the existing analyzeInteraction method but focus on user message analysis
+      await analyzeInteraction(
+        context: context,
+        profet: profet,
+        response: prophetResponse,
+        question: userMessage,
+        userId: userId,
+      );
+      
+    } catch (e) {
+      AppLogger.logWarning(_component, 'User message analysis failed: $e');
+    }
+  }
+
+  /// Analyze conversation patterns for recurring themes
+  /// This method analyzes multiple messages to find conversation patterns
+  Future<void> analyzeConversationPatterns({
+    required BuildContext context,
+    required List<String> userMessages,
+    required Profet profet,
+    String? userId,
+  }) async {
+    try {
+      AppLogger.logInfo(_component, 'Analyzing conversation patterns');
+      
+      if (userMessages.length < 3) {
+        AppLogger.logDebug(_component, 'Not enough messages for pattern analysis');
+        return;
+      }
+      
+      // Create a synthetic analysis of conversation themes
+      final conversationThemes = userMessages.join(' | ');
+      const syntheticResponse = 'Pattern analysis of user conversation themes and interests';
+      
+      // Use the existing analyzeInteraction method with synthesized data
+      await analyzeInteraction(
+        context: context,
+        profet: profet,
+        response: syntheticResponse,
+        question: 'Conversation themes analysis: $conversationThemes',
+        userId: userId,
+      );
+      
+    } catch (e) {
+      AppLogger.logWarning(_component, 'Conversation pattern analysis failed: $e');
+    }
+  }
+
+  /// Analyze message exchange specifically for bio insights
+  /// This is a higher-level method that combines user and prophet analysis
+  Future<void> analyzeMessageExchange({
+    required BuildContext context,
+    required String userMessage,
+    required String prophetResponse,
+    required Profet profet,
+    String? userId,
+  }) async {
+    try {
+      AppLogger.logInfo(_component, 'Analyzing complete message exchange');
+      
+      // Analyze the full interaction
+      await analyzeInteraction(
+        context: context,
+        profet: profet,
+        response: prophetResponse,
+        question: userMessage,
+        userId: userId,
+      );
+      
+    } catch (e) {
+      AppLogger.logWarning(_component, 'Message exchange analysis failed: $e');
+    }
+  }
 }

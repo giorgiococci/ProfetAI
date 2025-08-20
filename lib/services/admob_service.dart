@@ -26,6 +26,10 @@ class AdMobService {
   RewardedAd? _rewardedAd;
   bool _isLoading = false;
   bool _isInitialized = false;
+  int _consecutiveFailures = 0;
+  static const int _maxLoggedFailures = 3; // Only log first 3 failures
+  static const int _maxRetryAttempts = 5; // Stop retrying after 5 failures
+  DateTime? _lastFailureTime;
   
   /// Initialize the Mobile Ads SDK
   Future<void> initialize() async {
@@ -82,19 +86,34 @@ class AdMobService {
           onAdLoaded: (RewardedAd ad) {
             _rewardedAd = ad;
             _isLoading = false;
+            _consecutiveFailures = 0; // Reset failure counter on success
             _setAdCallbacks();
           },
           onAdFailedToLoad: (LoadAdError error) {
-            AppLogger.logError(_component, 'Failed to load rewarded ad: ${error.message} (Code: ${error.code})');
+            _consecutiveFailures++;
+            _lastFailureTime = DateTime.now();
+            
+            // Only log first few failures to reduce spam
+            if (_consecutiveFailures <= _maxLoggedFailures) {
+              AppLogger.logError(_component, 'Failed to load rewarded ad: ${error.message} (Code: ${error.code})');
+              if (_consecutiveFailures == _maxLoggedFailures) {
+                AppLogger.logInfo(_component, 'Suppressing further ad load error logs...');
+              }
+            }
             _rewardedAd = null;
             _isLoading = false;
             
-            // Try to reload after a delay if it failed
-            Future.delayed(Duration(seconds: 5), () {
-              if (_rewardedAd == null && !_isLoading) {
-                _loadRewardedAd();
-              }
-            });
+            // Stop retrying after too many failures to prevent spam
+            if (_consecutiveFailures < _maxRetryAttempts) {
+              // Try to reload after a longer delay to reduce frequency
+              Future.delayed(Duration(seconds: 60), () {
+                if (_rewardedAd == null && !_isLoading && _consecutiveFailures < _maxRetryAttempts) {
+                  _loadRewardedAd();
+                }
+              });
+            } else {
+              AppLogger.logInfo(_component, 'Stopped retrying ad loads after $_maxRetryAttempts failures');
+            }
           },
         ),
       );

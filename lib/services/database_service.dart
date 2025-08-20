@@ -14,7 +14,7 @@ import '../utils/bio/insight_migration.dart';
 class DatabaseService {
   static const String _component = 'DatabaseService';
   static const String _databaseName = 'profet_ai.db';
-  static const int _databaseVersion = 5;
+  static const int _databaseVersion = 6;
   
   static Database? _database;
   static bool? _fts5Available;
@@ -240,6 +240,9 @@ class DatabaseService {
       // Create generated bio table
       await _createGeneratedBioTable(db);
 
+      // Create conversation tables
+      await _createConversationTables(db);
+
       // Create full-text search virtual table only if FTS5 is available
       await _createFtsTableIfSupported(db);
 
@@ -425,6 +428,73 @@ class DatabaseService {
     }
   }
 
+  /// Create conversation-related tables
+  Future<void> _createConversationTables(Database db) async {
+    AppLogger.logInfo(_component, 'Creating conversation tables...');
+    
+    try {
+      // Create conversations table
+      await db.execute('''
+        CREATE TABLE conversations (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          prophet_type TEXT NOT NULL,
+          started_at INTEGER NOT NULL,
+          last_updated_at INTEGER NOT NULL,
+          message_count INTEGER DEFAULT 0,
+          status TEXT DEFAULT 'active',
+          is_ai_enabled INTEGER DEFAULT 0
+        )
+      ''');
+
+      // Create conversation_messages table
+      await db.execute('''
+        CREATE TABLE conversation_messages (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          conversation_id INTEGER NOT NULL,
+          content TEXT NOT NULL,
+          sender TEXT NOT NULL,
+          timestamp INTEGER NOT NULL,
+          feedback_type TEXT,
+          is_ai_generated INTEGER DEFAULT 0,
+          metadata TEXT,
+          FOREIGN KEY (conversation_id) REFERENCES conversations (id) ON DELETE CASCADE
+        )
+      ''');
+
+      // Create indexes for efficient conversation querying
+      await db.execute('''
+        CREATE INDEX idx_conversations_timestamp ON conversations(last_updated_at DESC)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_conversations_prophet_type ON conversations(prophet_type)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_conversations_status ON conversations(status)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_conversation_messages_conversation_id ON conversation_messages(conversation_id)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_conversation_messages_timestamp ON conversation_messages(timestamp ASC)
+      ''');
+      
+      await db.execute('''
+        CREATE INDEX idx_conversation_messages_sender ON conversation_messages(sender)
+      ''');
+
+      AppLogger.logInfo(_component, 'Conversation tables created successfully');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to create conversation tables', e);
+      rethrow;
+    }
+  }
+
   /// Handle database upgrades
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     AppLogger.logInfo(_component, 'Upgrading database from v$oldVersion to v$newVersion');
@@ -492,6 +562,12 @@ class DatabaseService {
         }
         
         AppLogger.logInfo(_component, 'Source type migration completed successfully');
+      }
+      
+      // Migration from version 5 to 6: Add conversation tables
+      if (oldVersion < 6) {
+        AppLogger.logInfo(_component, 'Migrating to v6: Adding conversation tables');
+        await _createConversationTables(db);
       }
       
       // Future schema migrations will be handled here
