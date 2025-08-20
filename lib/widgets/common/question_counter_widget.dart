@@ -50,17 +50,28 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
     final questionsUntilNextAd = _questionAdService.questionsUntilNextAd;
     final willShowAdNext = _questionAdService.willShowAdOnNextQuestion;
     
+    final prophetResponseCount = _questionAdService.prophetResponseCount;
+    final prophetResponsesUntilNextAd = _questionAdService.prophetResponsesUntilNextAd;
+    final willShowAdOnNextProphetResponse = _questionAdService.willShowAdOnNextProphetResponse;
+    
+    // Determine which counter is closer to triggering an ad
+    final closestToAd = questionsUntilNextAd <= prophetResponsesUntilNextAd ? questionsUntilNextAd : prophetResponsesUntilNextAd;
+    final isQuestionCloser = questionsUntilNextAd <= prophetResponsesUntilNextAd;
+    
     return Container(
       padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: widget.showDetails ? _buildDetailedView(
         questionCount, 
         questionsUntilNextAd, 
-        willShowAdNext
-      ) : _buildSimpleView(questionCount, questionsUntilNextAd),
+        willShowAdNext,
+        prophetResponseCount,
+        prophetResponsesUntilNextAd,
+        willShowAdOnNextProphetResponse
+      ) : _buildSimpleView(questionCount, questionsUntilNextAd, prophetResponseCount, prophetResponsesUntilNextAd, closestToAd, isQuestionCloser),
     );
   }
   
-  Widget _buildSimpleView(int questionCount, int questionsUntilNextAd) {
+  Widget _buildSimpleView(int questionCount, int questionsUntilNextAd, int prophetResponseCount, int prophetResponsesUntilNextAd, int closestToAd, bool isQuestionCloser) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -71,14 +82,29 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
         ),
         const SizedBox(width: 4),
         Text(
-          '$questionCount questions',
+          '$questionCount Q',
           style: const TextStyle(
             color: Colors.white54,
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
         ),
-        if (questionsUntilNextAd <= 2) ...[
+        const SizedBox(width: 6),
+        Icon(
+          Icons.auto_awesome,
+          size: 16,
+          color: Colors.white54,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '$prophetResponseCount R',
+          style: const TextStyle(
+            color: Colors.white54,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        if (closestToAd <= 2) ...[
           const SizedBox(width: 8),
           Icon(
             Icons.play_circle_outline,
@@ -87,7 +113,7 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
           ),
           const SizedBox(width: 2),
           Text(
-            'Ad in $questionsUntilNextAd',
+            'Ad in $closestToAd ${isQuestionCloser ? 'Q' : 'R'}',
             style: const TextStyle(
               color: Colors.orange,
               fontSize: 11,
@@ -99,7 +125,7 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
     );
   }
   
-  Widget _buildDetailedView(int questionCount, int questionsUntilNextAd, bool willShowAdNext) {
+  Widget _buildDetailedView(int questionCount, int questionsUntilNextAd, bool willShowAdNext, int prophetResponseCount, int prophetResponsesUntilNextAd, bool willShowAdOnNextProphetResponse) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -122,9 +148,9 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Oracle Statistics',
-                style: TextStyle(
-                  color: ThemeUtils.primaryBlue,
+                'Oracle Activity',
+                style: const TextStyle(
+                  color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
@@ -132,8 +158,7 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
             ],
           ),
           const SizedBox(height: 8),
-          
-          // Question count
+          // Questions counter
           Row(
             children: [
               Icon(
@@ -141,9 +166,9 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
                 size: 16,
                 color: Colors.white70,
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(
-                'Questions asked: $questionCount',
+                '$questionCount questions asked',
                 style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 13,
@@ -151,50 +176,47 @@ class _QuestionCounterWidgetState extends State<QuestionCounterWidget> {
               ),
             ],
           ),
-          
           const SizedBox(height: 4),
-          
-          // Ad info
+          // Prophet responses counter  
           Row(
             children: [
               Icon(
-                willShowAdNext ? Icons.play_circle_filled : Icons.play_circle_outline,
+                Icons.auto_awesome,
                 size: 16,
-                color: willShowAdNext ? Colors.orange : Colors.white54,
+                color: Colors.white70,
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(
-                willShowAdNext 
-                  ? 'Next question shows ad'
-                  : 'Ad in $questionsUntilNextAd questions',
-                style: TextStyle(
-                  color: willShowAdNext ? Colors.orange : Colors.white54,
+                '$prophetResponseCount prophet responses',
+                style: const TextStyle(
+                  color: Colors.white70,
                   fontSize: 13,
-                  fontWeight: willShowAdNext ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
             ],
           ),
-          
-          if (willShowAdNext) ...[
+          if (willShowAdNext || willShowAdOnNextProphetResponse) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                color: Colors.orange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.info_outline,
-                    size: 14,
+                    Icons.play_circle_outline,
+                    size: 16,
                     color: Colors.orange,
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Watch a short ad to continue',
+                    willShowAdNext 
+                        ? 'Next question will show ad'
+                        : 'Next prophet response will show ad',
                     style: const TextStyle(
                       color: Colors.orange,
                       fontSize: 11,

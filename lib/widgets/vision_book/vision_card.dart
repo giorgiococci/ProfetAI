@@ -3,7 +3,7 @@ import 'package:profet_ai/models/vision.dart';
 import 'package:profet_ai/models/vision_feedback.dart';
 import 'package:profet_ai/models/profet_manager.dart';
 import 'package:profet_ai/utils/theme_utils.dart';
-import 'package:profet_ai/prophet_localizations.dart';
+import 'package:profet_ai/utils/prophet_utils.dart';
 import 'package:profet_ai/l10n/app_localizations.dart';
 
 class VisionCard extends StatelessWidget {
@@ -22,7 +22,7 @@ class VisionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prophetType = _getProphetTypeFromString(vision.prophetType);
+    final prophetType = ProfetManager.getProfetTypeFromString(vision.prophetType);
     
     return Card(
       elevation: 4,
@@ -283,21 +283,6 @@ class VisionCard extends StatelessWidget {
     );
   }
 
-  ProfetType _getProphetTypeFromString(String prophetType) {
-    switch (prophetType.toLowerCase()) {
-      case 'mystic_prophet':
-        return ProfetType.mistico;
-      case 'chaotic_prophet':
-        return ProfetType.caotico;
-      case 'cynical_prophet':
-        return ProfetType.cinico;
-      case 'roaster_prophet':
-        return ProfetType.roaster;
-      default:
-        return ProfetType.mistico;
-    }
-  }
-
   String _getDisplayName(String prophetType) {
     switch (prophetType.toLowerCase()) {
       case 'mystic_prophet':
@@ -314,26 +299,13 @@ class VisionCard extends StatelessWidget {
   }
 
   Future<String> _getProphetLocalizedName(BuildContext context, String prophetType) async {
-    final prophetKey = _getProphetLocalizationKey(prophetType);
+    // Convert the stored prophet type string to ProfetType enum
+    final prophetTypeEnum = ProfetManager.getProfetTypeFromString(prophetType);
     try {
-      return await ProphetLocalizations.getName(context, prophetKey);
+      // Use ProphetUtils to get the localized name
+      return await ProphetUtils.getProphetName(context, prophetTypeEnum);
     } catch (e) {
       return _getDisplayName(prophetType); // Fallback to hardcoded names
-    }
-  }
-
-  String _getProphetLocalizationKey(String prophetType) {
-    switch (prophetType.toLowerCase()) {
-      case 'mystic_prophet':
-        return 'mystic';
-      case 'chaotic_prophet':
-        return 'chaotic';
-      case 'cynical_prophet':
-        return 'cynical';
-      case 'roaster_prophet':
-        return 'roaster';
-      default:
-        return 'mystic';
     }
   }
 }

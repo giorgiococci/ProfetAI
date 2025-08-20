@@ -13,6 +13,7 @@ import 'services/locale_service.dart';
 import 'services/user_profile_service.dart';
 import 'services/admob_service.dart';
 import 'utils/app_logger.dart';
+import 'utils/prophet_utils.dart';
 import 'config/app_config.dart';
 
 void main() async {
@@ -150,6 +151,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   ProfetType _currentProfetType = ProfetType.mistico;
+  int? _conversationToLoad;
   final UserProfileService _profileService = UserProfileService();
   
   @override
@@ -165,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final favoriteProphet = _profileService.getFavoriteProphet();
       
       if (favoriteProphet != null) {
-        final prophetType = _stringToProfetType(favoriteProphet);
+        final prophetType = ProphetUtils.stringToProphetType(favoriteProphet);
         if (prophetType != null && mounted) {
           setState(() {
             _currentProfetType = prophetType;
@@ -177,30 +179,48 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   
-  /// Convert prophet string to ProfetType enum
-  ProfetType? _stringToProfetType(String prophetString) {
-    switch (prophetString) {
-      case 'mystic':
-        return ProfetType.mistico;
-      case 'chaotic':
-        return ProfetType.caotico;
-      case 'cynical':
-        return ProfetType.cinico;
-      case 'roaster':
-        return ProfetType.roaster;
-      default:
-        return null;
+  void _onItemTapped(int index) async {
+    // Handle vision book navigation - stay within the main navigation structure
+    if (index == 2) {
+      // Just switch to vision book screen without using Navigator.push
+      // This ensures the bottom menu stays visible
+      setState(() {
+        _selectedIndex = index;
+      });
+      return;
     }
-  }
-  
-  void _onItemTapped(int index) {
+    
     setState(() {
+      // Reset conversation loading when switching tabs normally
+      _conversationToLoad = null;
+      
       // If trying to access AI Status screen (index 4) without debug mode, redirect to Settings
       if (index == 4 && !(kDebugMode || AppConfig.isDebugMode)) {
         _selectedIndex = 3; // Redirect to Settings screen
       } else {
         _selectedIndex = index;
       }
+    });
+  }
+
+  /// Callback to clear conversation loading parameter after successful load
+  void _onConversationLoaded() {
+    print('DEBUG: Conversation loaded successfully, clearing parameter');
+    if (mounted) {
+      setState(() {
+        _conversationToLoad = null;
+      });
+    }
+  }
+
+  /// Callback when a conversation is selected from Vision Book
+  void _onConversationSelectedFromVisionBook(int conversationId, ProfetType prophetType) {
+    print('DEBUG: Conversation selected from Vision Book: $conversationId, prophet: ${prophetType.name}');
+    
+    setState(() {
+      _currentProfetType = prophetType;
+      _conversationToLoad = conversationId;
+      _selectedIndex = 0; // Switch to Home tab
     });
   }
 
@@ -228,6 +248,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return HomeScreen(
           selectedProfet: _currentProfetType,
+          conversationToLoad: _conversationToLoad,
+          onConversationLoaded: _onConversationLoaded,
         );
       case 1:
         return ProfetSelectionScreen(
@@ -235,7 +257,9 @@ class _MyHomePageState extends State<MyHomePage> {
           onProfetChange: _changeProfetType,
         );
       case 2:
-        return const VisionBookScreen();
+        return VisionBookScreen(
+          onConversationSelected: _onConversationSelectedFromVisionBook,
+        );
       case 3:
         return SettingsScreen(onLanguageChanged: _refreshApp);
       case 4:

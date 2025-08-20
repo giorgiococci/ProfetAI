@@ -5,8 +5,8 @@ import '../utils/theme_utils.dart';
 import '../services/onboarding_service.dart';
 import 'settings/user_profile_settings_screen.dart';
 import 'settings/localization_settings_screen.dart';
-import 'settings/delete_data_settings_screen.dart';
 import 'settings/bio_profile_screen.dart';
+import 'settings/conversation_management_screen.dart';
 import 'ad_debug_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -62,11 +62,11 @@ class SettingsScreen extends StatelessWidget {
           
           _buildSettingsCard(
             context: context,
-            title: localizations.deleteDataSettings,
-            subtitle: localizations.deleteDataSettingsDescription,
-            icon: Icons.delete_forever,
-            iconColor: Colors.redAccent,
-            onTap: () => _navigateToDeleteData(context),
+            title: 'Vision Management',
+            subtitle: 'Manage your conversation history and preferences',
+            icon: Icons.chat,
+            iconColor: Colors.green,
+            onTap: () => _navigateToConversationManagement(context),
           ),
           
           // Debug section - only show in debug mode
@@ -217,10 +217,10 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _navigateToDeleteData(BuildContext context) {
+  void _navigateToConversationManagement(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const DeleteDataSettingsScreen(),
+        builder: (context) => const ConversationManagementScreen(),
       ),
     );
   }

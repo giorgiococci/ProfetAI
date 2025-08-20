@@ -275,6 +275,18 @@ class ThemeUtils {
     );
   }
 
+  /// Creates a mystical gradient decoration for the Vision Book
+  static BoxDecoration getVisionBookDecoration() {
+    return getGradientDecoration(
+      colors: [
+        const Color(0xFF1A1A2E).withOpacity(0.9), // Deep mystical blue
+        const Color(0xFF16213E).withOpacity(0.8), // Darker mystical blue
+        const Color(0xFF0F3460).withOpacity(0.7), // Accent mystical blue
+      ],
+      borderRadius: 0,
+    );
+  }
+
   /// Spacing utilities
   static const double spacingXS = 4.0;
   static const double spacingSM = 8.0;
