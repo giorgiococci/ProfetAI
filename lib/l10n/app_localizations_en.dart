@@ -30,7 +30,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectYourOracle => 'SELECT YOUR ORACLE';
 
   @override
-  String get everyOracleUniquePersonality => 'Every oracle has its unique personality';
+  String get everyOracleUniquePersonality =>
+      'Every oracle has its unique personality';
 
   @override
   String get askTheOracle => 'ASK THE ORACLE';
@@ -95,10 +96,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiServiceStatus => 'AI Service Status';
 
   @override
-  String get aiServiceOperational => 'AI Service is operational and ready to provide responses';
+  String get aiServiceOperational =>
+      'AI Service is operational and ready to provide responses';
 
   @override
-  String get aiServiceNotAvailable => 'AI Service is not available. Check configuration.';
+  String get aiServiceNotAvailable =>
+      'AI Service is not available. Check configuration.';
 
   @override
   String get configurationStatus => 'Configuration Status';
@@ -166,7 +169,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiNotAvailable => '⚠️ AI Not Available';
 
   @override
-  String aiNotAvailableMessage(String isAIAvailable, String isBuildConfigValid, String debugInfo) {
+  String aiNotAvailableMessage(
+    String isAIAvailable,
+    String isBuildConfigValid,
+    String debugInfo,
+  ) {
     return 'AI configuration has problems:\\n\\n• AI Available: $isAIAvailable\\n• Build Config Valid: $isBuildConfigValid\\n\\n$debugInfo';
   }
 
@@ -174,7 +181,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get loadingProphetsFromUniverse => 'Loading prophets from the universe';
+  String get loadingProphetsFromUniverse =>
+      'Loading prophets from the universe';
 
   @override
   String get initializationError => 'Initialization Error';
@@ -292,7 +300,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAllVisions => 'Delete All Visions';
 
   @override
-  String get deleteAllVisionsWarning => '⚠️ This action will permanently delete all your stored visions and cannot be undone. Are you sure you want to continue?';
+  String get deleteAllVisionsWarning =>
+      '⚠️ This action will permanently delete all your stored visions and cannot be undone. Are you sure you want to continue?';
 
   @override
   String get deleteAllVisionsConfirmTitle => 'Delete All Visions?';
@@ -307,7 +316,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allVisionsDeleted => 'All visions have been deleted successfully';
 
   @override
-  String get failedToDeleteVisions => 'Failed to delete visions. Please try again.';
+  String get failedToDeleteVisions =>
+      'Failed to delete visions. Please try again.';
 
   @override
   String get visionBookTitle => 'Vision Book';
@@ -368,10 +378,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noVisionsStoredYet => 'No visions stored yet';
 
   @override
-  String get tryAdjustingFilters => 'Try adjusting your search criteria or clear filters to see all visions.';
+  String get tryAdjustingFilters =>
+      'Try adjusting your search criteria or clear filters to see all visions.';
 
   @override
-  String get startMysticalJourney => 'Start your mystical journey by asking the oracles for guidance.';
+  String get startMysticalJourney =>
+      'Start your mystical journey by asking the oracles for guidance.';
 
   @override
   String get clearFilters => 'Clear Filters';
@@ -437,13 +449,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get userProfileSettings => 'User Profile';
 
   @override
-  String get userProfileSettingsDescription => 'Manage your personal information';
+  String get userProfileSettingsDescription =>
+      'Manage your personal information';
 
   @override
   String get localizationSettings => 'Localization';
 
   @override
-  String get localizationSettingsDescription => 'Change app language and region';
+  String get localizationSettingsDescription =>
+      'Change app language and region';
 
   @override
   String get deleteDataSettings => 'Delete Data';
@@ -467,7 +481,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeToProfetAI => 'Welcome to Profet AI';
 
   @override
-  String get discoverMysticalInsights => 'Discover mystical insights through unique oracles';
+  String get discoverMysticalInsights =>
+      'Discover mystical insights through unique oracles';
 
   @override
   String get beginJourney => 'Begin Journey';
@@ -479,25 +494,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get personalizedPredictions => 'Personalized Predictions';
 
   @override
-  String get personalizedPredictionsDesc => 'Ask questions and receive tailored insights from your chosen oracle';
+  String get personalizedPredictionsDesc =>
+      'Ask questions and receive tailored insights from your chosen oracle';
 
   @override
   String get randomVisions => 'Random Visions';
 
   @override
-  String get randomVisionsDesc => 'Get spontaneous wisdom when you need guidance most';
+  String get randomVisionsDesc =>
+      'Get spontaneous wisdom when you need guidance most';
 
   @override
   String get visionBook => 'Vision Book';
 
   @override
-  String get visionBookDesc => 'Save and revisit your favorite predictions and insights';
+  String get visionBookDesc =>
+      'Save and revisit your favorite predictions and insights';
 
   @override
   String get uniqueThemes => 'Unique Themes';
 
   @override
-  String get uniqueThemesDesc => 'Each oracle has its own mystical visual identity';
+  String get uniqueThemesDesc =>
+      'Each oracle has its own mystical visual identity';
 
   @override
   String get continueButton => 'Continue';
@@ -506,7 +525,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get personalizeYourExperience => 'Personalize Your Experience';
 
   @override
-  String get personalizeOptional => 'Optional - You can always change this later';
+  String get personalizeOptional =>
+      'Optional - You can always change this later';
 
   @override
   String get whatShouldOraclesCallYou => 'What should the oracles call you?';
@@ -521,7 +541,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterTheMysticalRealm => 'Enter the Mystical Realm';
 
   @override
-  String get lifeFocusAreasLabel => 'What areas of life are you seeking guidance on?';
+  String get lifeFocusAreasLabel =>
+      'What areas of life are you seeking guidance on?';
 
   @override
   String get lifeFocusAreasHint => 'Select up to 3 areas (optional)';
@@ -578,7 +599,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get visionManagement => 'Vision Management';
 
   @override
-  String get visionManagementDescription => 'Manage your conversation history and preferences';
+  String get visionManagementDescription =>
+      'Manage your conversation history and preferences';
 
   @override
   String get debugTools => 'Debug Tools';
@@ -593,19 +615,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetOnboarding => 'Reset Onboarding';
 
   @override
-  String get resetOnboardingDescription => 'Force onboarding to show again on app restart';
+  String get resetOnboardingDescription =>
+      'Force onboarding to show again on app restart';
 
   @override
   String get resetOnboardingTitle => 'Reset Onboarding';
 
   @override
-  String get resetOnboardingContent => 'This will reset the onboarding status. The onboarding flow will be shown again when you restart the app.\n\nAre you sure?';
+  String get resetOnboardingContent =>
+      'This will reset the onboarding status. The onboarding flow will be shown again when you restart the app.\n\nAre you sure?';
 
   @override
   String get reset => 'Reset';
 
   @override
-  String get onboardingResetSuccess => 'Onboarding reset successfully. Restart the app to see the onboarding flow.';
+  String get onboardingResetSuccess =>
+      'Onboarding reset successfully. Restart the app to see the onboarding flow.';
 
   @override
   String onboardingResetFailed(String error) {
@@ -622,7 +647,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalMessages => 'Total Messages';
 
   @override
-  String get averageMessagesPerConversation => 'Average Messages per Conversation';
+  String get averageMessagesPerConversation =>
+      'Average Messages per Conversation';
 
   @override
   String get dataManagement => 'Data Management';
@@ -634,7 +660,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clearAllConversationsTitle => 'Clear All Conversations';
 
   @override
-  String get clearAllConversationsContent => '⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?';
+  String get clearAllConversationsContent =>
+      '⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?';
 
   @override
   String get deleteAll => 'Delete All';
@@ -643,7 +670,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deletingAllConversations => 'Deleting all conversations...';
 
   @override
-  String get conversationsDeletedSuccess => 'All conversations deleted successfully';
+  String get conversationsDeletedSuccess =>
+      'All conversations deleted successfully';
 
   @override
   String conversationsDeleteFailed(String error) {
@@ -654,7 +682,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noConversationsYet => 'No conversations yet';
 
   @override
-  String get noConversationsDescription => 'Start chatting with a prophet to see your conversation statistics here.';
+  String get noConversationsDescription =>
+      'Start chatting with a prophet to see your conversation statistics here.';
 
   @override
   String failedToLoadConversationData(String error) {
@@ -662,19 +691,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get personalInformationDescription => 'Manage your basic profile information';
+  String get personalInformationDescription =>
+      'Manage your basic profile information';
 
   @override
   String get interestsAndTopicsDescription => 'Select your areas of interest';
 
   @override
-  String get personalizeYourExperienceDescription => 'Customize your guidance preferences';
+  String get personalizeYourExperienceDescription =>
+      'Customize your guidance preferences';
 
   @override
   String get yourAiProfile => 'Your AI Profile';
 
   @override
-  String get yourAiProfileDescription => 'View your generated biographical profile and privacy settings';
+  String get yourAiProfileDescription =>
+      'View your generated biographical profile and privacy settings';
 
   @override
   String failedToLoadProfile(String error) {
@@ -690,7 +722,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourProfile => 'Your Profile';
 
   @override
-  String get biographicalDataDeletedSuccess => 'All biographical data deleted successfully';
+  String get biographicalDataDeletedSuccess =>
+      'All biographical data deleted successfully';
 
   @override
   String failedToDeleteData(String error) {
@@ -701,7 +734,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteBiographicalData => 'Delete Biographical Data';
 
   @override
-  String get deleteBiographicalDataContent => 'This will permanently delete all your biographical information. This action cannot be undone.\n\nAre you sure you want to continue?';
+  String get deleteBiographicalDataContent =>
+      'This will permanently delete all your biographical information. This action cannot be undone.\n\nAre you sure you want to continue?';
 
   @override
   String get deleteAllData => 'Delete All Data';
@@ -718,7 +752,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retry => 'Retry';
 
   @override
-  String get noBioAvailable => 'No bio still available. The prophets need more information.';
+  String get noBioAvailable =>
+      'No bio still available. The prophets need more information.';
 
   @override
   String get askTheProphets => 'Ask the Prophets';
@@ -727,10 +762,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourProfileHeader => 'Your Profile';
 
   @override
-  String get generatedFromProphetInteractions => 'Generated from your prophet interactions';
+  String get generatedFromProphetInteractions =>
+      'Generated from your prophet interactions';
 
   @override
-  String get noBiographicalContentAvailable => 'No biographical content available';
+  String get noBiographicalContentAvailable =>
+      'No biographical content available';
 
   @override
   String get deleteAllDataTooltip => 'Delete All Data';
