@@ -1224,16 +1224,16 @@ abstract class AppLocalizations {
   /// **'Failed to reset onboarding: {error}'**
   String onboardingResetFailed(String error);
 
-  /// Title for conversation statistics section
+  /// Title for vision statistics section
   ///
   /// In en, this message translates to:
-  /// **'Conversation Statistics'**
+  /// **'Visions Statistics'**
   String get conversationStatistics;
 
-  /// Label for total conversation count
+  /// Label for total vision count
   ///
   /// In en, this message translates to:
-  /// **'Total Conversations'**
+  /// **'Total Visions'**
   String get totalConversations;
 
   /// Label for total message count
@@ -1242,10 +1242,10 @@ abstract class AppLocalizations {
   /// **'Total Messages'**
   String get totalMessages;
 
-  /// Label for average messages per conversation
+  /// Label for average messages per vision
   ///
   /// In en, this message translates to:
-  /// **'Average Messages per Conversation'**
+  /// **'Average Messages per Vision'**
   String get averageMessagesPerConversation;
 
   /// Title for data management section
@@ -1254,22 +1254,22 @@ abstract class AppLocalizations {
   /// **'Data Management'**
   String get dataManagement;
 
-  /// Button text to clear all conversations
+  /// Button text to clear all visions
   ///
   /// In en, this message translates to:
-  /// **'Clear All Conversations'**
+  /// **'Clear All Visions'**
   String get clearAllConversations;
 
-  /// Dialog title for clear conversations confirmation
+  /// Dialog title for clear visions confirmation
   ///
   /// In en, this message translates to:
-  /// **'Clear All Conversations'**
+  /// **'Clear All Visions'**
   String get clearAllConversationsTitle;
 
-  /// Dialog content for clear conversations confirmation
+  /// Dialog content for clear visions confirmation
   ///
   /// In en, this message translates to:
-  /// **'⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?'**
+  /// **'⚠️ This action will permanently delete ALL your vision history and cannot be undone.\n\nAre you sure you want to continue?'**
   String get clearAllConversationsContent;
 
   /// Button text for delete all action
@@ -1278,40 +1278,40 @@ abstract class AppLocalizations {
   /// **'Delete All'**
   String get deleteAll;
 
-  /// Progress message while deleting conversations
+  /// Progress message while deleting visions
   ///
   /// In en, this message translates to:
-  /// **'Deleting all conversations...'**
+  /// **'Deleting all visions...'**
   String get deletingAllConversations;
 
-  /// Success message after deleting all conversations
+  /// Success message after deleting all visions
   ///
   /// In en, this message translates to:
-  /// **'All conversations deleted successfully'**
+  /// **'All visions deleted successfully'**
   String get conversationsDeletedSuccess;
 
-  /// Error message for conversation deletion failure
+  /// Error message for vision deletion failure
   ///
   /// In en, this message translates to:
-  /// **'Failed to delete conversations: {error}'**
+  /// **'Failed to delete visions: {error}'**
   String conversationsDeleteFailed(String error);
 
-  /// Message when no conversations exist
+  /// Message when no visions exist
   ///
   /// In en, this message translates to:
-  /// **'No conversations yet'**
+  /// **'No visions yet'**
   String get noConversationsYet;
 
-  /// Description message when no conversations exist
+  /// Description message when no visions exist
   ///
   /// In en, this message translates to:
-  /// **'Start chatting with a prophet to see your conversation statistics here.'**
+  /// **'Start chatting with a prophet to see your vision statistics here.'**
   String get noConversationsDescription;
 
-  /// Error message when loading conversation data fails
+  /// Error message when loading vision data fails
   ///
   /// In en, this message translates to:
-  /// **'Failed to load conversation data: {error}'**
+  /// **'Failed to load vision data: {error}'**
   String failedToLoadConversationData(String error);
 
   /// Description for personal information settings

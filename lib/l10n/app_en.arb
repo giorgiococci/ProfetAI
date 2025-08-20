@@ -990,14 +990,14 @@
     }
   },
 
-  "conversationStatistics": "Conversation Statistics",
+  "conversationStatistics": "Visions Statistics",
   "@conversationStatistics": {
-    "description": "Title for conversation statistics section"
+    "description": "Title for vision statistics section"
   },
 
-  "totalConversations": "Total Conversations",
+  "totalConversations": "Total Visions",
   "@totalConversations": {
-    "description": "Label for total conversation count"
+    "description": "Label for total vision count"
   },
 
   "totalMessages": "Total Messages",
@@ -1005,9 +1005,9 @@
     "description": "Label for total message count"
   },
 
-  "averageMessagesPerConversation": "Average Messages per Conversation",
+  "averageMessagesPerConversation": "Average Messages per Vision",
   "@averageMessagesPerConversation": {
-    "description": "Label for average messages per conversation"
+    "description": "Label for average messages per vision"
   },
 
   "dataManagement": "Data Management",
@@ -1015,19 +1015,19 @@
     "description": "Title for data management section"
   },
 
-  "clearAllConversations": "Clear All Conversations",
+  "clearAllConversations": "Clear All Visions",
   "@clearAllConversations": {
-    "description": "Button text to clear all conversations"
+    "description": "Button text to clear all visions"
   },
 
-  "clearAllConversationsTitle": "Clear All Conversations",
+  "clearAllConversationsTitle": "Clear All Visions",
   "@clearAllConversationsTitle": {
-    "description": "Dialog title for clear conversations confirmation"
+    "description": "Dialog title for clear visions confirmation"
   },
 
-  "clearAllConversationsContent": "⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?",
+  "clearAllConversationsContent": "⚠️ This action will permanently delete ALL your vision history and cannot be undone.\n\nAre you sure you want to continue?",
   "@clearAllConversationsContent": {
-    "description": "Dialog content for clear conversations confirmation"
+    "description": "Dialog content for clear visions confirmation"
   },
 
   "deleteAll": "Delete All",
@@ -1035,19 +1035,19 @@
     "description": "Button text for delete all action"
   },
 
-  "deletingAllConversations": "Deleting all conversations...",
+  "deletingAllConversations": "Deleting all visions...",
   "@deletingAllConversations": {
-    "description": "Progress message while deleting conversations"
+    "description": "Progress message while deleting visions"
   },
 
-  "conversationsDeletedSuccess": "All conversations deleted successfully",
+  "conversationsDeletedSuccess": "All visions deleted successfully",
   "@conversationsDeletedSuccess": {
-    "description": "Success message after deleting all conversations"
+    "description": "Success message after deleting all visions"
   },
 
-  "conversationsDeleteFailed": "Failed to delete conversations: {error}",
+  "conversationsDeleteFailed": "Failed to delete visions: {error}",
   "@conversationsDeleteFailed": {
-    "description": "Error message for conversation deletion failure",
+    "description": "Error message for vision deletion failure",
     "placeholders": {
       "error": {
         "type": "String",
@@ -1056,19 +1056,19 @@
     }
   },
 
-  "noConversationsYet": "No conversations yet",
+  "noConversationsYet": "No visions yet",
   "@noConversationsYet": {
-    "description": "Message when no conversations exist"
+    "description": "Message when no visions exist"
   },
 
-  "noConversationsDescription": "Start chatting with a prophet to see your conversation statistics here.",
+  "noConversationsDescription": "Start chatting with a prophet to see your vision statistics here.",
   "@noConversationsDescription": {
-    "description": "Description message when no conversations exist"
+    "description": "Description message when no visions exist"
   },
 
-  "failedToLoadConversationData": "Failed to load conversation data: {error}",
+  "failedToLoadConversationData": "Failed to load vision data: {error}",
   "@failedToLoadConversationData": {
-    "description": "Error message when loading conversation data fails",
+    "description": "Error message when loading vision data fails",
     "placeholders": {
       "error": {
         "type": "String",
