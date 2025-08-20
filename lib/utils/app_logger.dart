@@ -2,6 +2,11 @@
 /// 
 /// This handles all logging throughout the app with configurable debug levels
 /// Debug logging is controlled by build-time flags and can be disabled in production
+
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+
 class AppLogger {
   static const bool _isDebugMode = bool.fromEnvironment(
     'DEBUG_LOGGING',
@@ -11,6 +16,10 @@ class AppLogger {
   static const String _appName = 'ProfetAI';
   static final List<LogEntry> _logs = [];
   static const int _maxLogEntries = 500; // Increased from 100 to 500
+  
+  // Desktop-specific logging
+  static bool get _isDesktop => !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+  static String? _logFilePath;
 
   /// Log levels
   static const String info = 'INFO';
@@ -59,9 +68,64 @@ class AppLogger {
       _logs.removeAt(0);
     }
     
-    // Print to console (always for errors/warnings, only in debug mode for others)
-    if (level == error || level == warning || _isDebugMode) {
-      print('[$_appName] [$timestamp] [$level] [$component] $message');
+    // Enhanced console output logic:
+    // - Always print errors and warnings
+    // - In debug mode: print all logs to help with development (even on mobile)
+    // - In release mode: only print errors/warnings
+    final shouldPrintToConsole = level == error || level == warning || 
+        _isDebugMode || kDebugMode;
+        
+    if (shouldPrintToConsole) {
+      final logMessage = '[$_appName] [$timestamp] [$level] [$component] $message';
+      print(logMessage);
+      
+      // Also write to file on desktop platforms (only when actually running on desktop)
+      if (_isDesktop) {
+        _writeToFile(logMessage);
+      }
+    }
+  }
+  
+  /// Write log entry to file (desktop only)
+  static void _writeToFile(String logMessage) {
+    try {
+      if (_logFilePath == null) {
+        _initializeLogFile();
+      }
+      
+      if (_logFilePath != null) {
+        final file = File(_logFilePath!);
+        file.writeAsStringSync('$logMessage\n', mode: FileMode.append);
+      }
+    } catch (e) {
+      // Silently fail if file logging doesn't work
+      // Don't use AppLogger here to avoid infinite recursion
+      print('Failed to write to log file: $e');
+    }
+  }
+  
+  /// Initialize log file path (desktop only)
+  static void _initializeLogFile() async {
+    try {
+      if (_isDesktop) {
+        final directory = await getApplicationDocumentsDirectory();
+        final logsDir = Directory('${directory.path}/ProfetAI/logs');
+        
+        if (!await logsDir.exists()) {
+          await logsDir.create(recursive: true);
+        }
+        
+        final now = DateTime.now();
+        final dateStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+        _logFilePath = '${logsDir.path}/profetai_$dateStr.log';
+        
+        // Write session start marker
+        final file = File(_logFilePath!);
+        await file.writeAsString('\n=== ProfetAI Session Started: ${DateTime.now().toIso8601String()} ===\n', mode: FileMode.append);
+      }
+    } catch (e) {
+      // Silently fail if file initialization doesn't work
+      print('Failed to initialize log file: $e');
     }
   }
 

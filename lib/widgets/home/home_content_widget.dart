@@ -287,6 +287,7 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
         content: visionResult.content,
         isAIGenerated: visionResult.isAIGenerated,
         metadata: 'oracle_vision',
+        userId: 'default_user', // Add userId parameter for bio analysis
       );
       
       print('DEBUG: Prophet message saved successfully with ID: ${prophetMessage.id}');

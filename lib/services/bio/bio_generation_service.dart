@@ -98,6 +98,18 @@ class BioGenerationService {
         AppLogger.logInfo(_component, 'No insights available for bio generation for user: $userId - bio will show fallback message');
         return; // Let the UI show "No bio still available. The prophets need more information"
       }
+
+      // Check if existing bio has parsing issues and clear it if needed
+      final existingBio = await _bioStorageService!.getGeneratedBio(userId: userId);
+      if (existingBio != null) {
+        final hasParsingIssues = existingBio.sections.values.any((content) => 
+          content.trim() == 'No specific information available');
+        
+        if (hasParsingIssues) {
+          AppLogger.logInfo(_component, 'Detected parsing issues in existing bio, clearing it for regeneration');
+          await _bioStorageService!.clearGeneratedBio(userId: userId);
+        }
+      }
       
       AppLogger.logInfo(_component, 'Forcing bio generation with ${insights.length} insights for user: $userId');
       await _generateBio(userId: userId, insights: insights);
@@ -105,6 +117,42 @@ class BioGenerationService {
     } catch (e) {
       AppLogger.logError(_component, 'Error generating bio on demand for user: $userId', e);
       rethrow; // Rethrow for UI error handling
+    }
+  }
+
+  /// Regenerate bio with improved parsing (clears old bio first)
+  Future<void> regenerateBioWithImprovedParsing({String? userId}) async {
+    try {
+      userId = userId ?? 'default_user';
+      AppLogger.logInfo(_component, 'Regenerating bio with improved parsing for user: $userId');
+      
+      if (_bioStorageService == null) {
+        AppLogger.logWarning(_component, 'Bio storage service not initialized');
+        await initialize();
+      }
+      
+      final userBio = await _bioStorageService!.getUserBio(userId: userId);
+      if (userBio == null || !userBio.isEnabled) {
+        AppLogger.logInfo(_component, 'Bio disabled or not found for user: $userId');
+        return;
+      }
+      
+      final insights = await _bioStorageService!.getInsights(userId: userId);
+      if (insights.isEmpty) {
+        AppLogger.logInfo(_component, 'No insights available for bio regeneration for user: $userId');
+        return;
+      }
+
+      // Clear existing bio to force fresh generation with new parsing
+      AppLogger.logInfo(_component, 'Clearing existing bio to force regeneration');
+      await _bioStorageService!.clearGeneratedBio(userId: userId);
+
+      AppLogger.logInfo(_component, 'Regenerating bio with ${insights.length} insights for user: $userId');
+      await _generateBio(userId: userId, insights: insights);
+
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to regenerate bio for user: $userId', e);
+      rethrow;
     }
   }
   
@@ -278,8 +326,13 @@ PREFERENCES: [Detailed account of communication style, learning preferences, etc
   
   /// Parse AI response into structured bio sections
   Map<String, String> _parseAIResponseToBioSections(String aiResponse) {
+    AppLogger.logInfo(_component, 'Parsing AI response. First 200 characters: ${aiResponse.substring(0, aiResponse.length > 200 ? 200 : aiResponse.length)}...');
+    
     final sections = <String, String>{};
     final lines = aiResponse.split('\n');
+    
+    String? currentSection;
+    List<String> currentContent = [];
     
     for (int i = 0; i < lines.length; i++) {
       final line = lines[i];
@@ -287,17 +340,41 @@ PREFERENCES: [Detailed account of communication style, learning preferences, etc
       
       if (trimmedLine.isEmpty) continue;
       
-      // Check if this line starts with a section header
-      final sectionHeaderMatch = RegExp(r'^(INTERESTS|PERSONALITY|BACKGROUND|GOALS|PREFERENCES):\s*(.*)$', caseSensitive: false).firstMatch(trimmedLine);
+      // Check for markdown-style headers: **INTERESTS:**
+      final markdownHeaderMatch = RegExp(r'^\*\*(INTERESTS|PERSONALITY|BACKGROUND|GOALS|PREFERENCES):\*\*\s*(.*)$', caseSensitive: false).firstMatch(trimmedLine);
       
-      if (sectionHeaderMatch != null) {
-        final sectionName = sectionHeaderMatch.group(1)!.toLowerCase();
-        final sectionContent = sectionHeaderMatch.group(2)!.trim();
-        
-        if (sectionContent.isNotEmpty) {
-          sections[sectionName] = sectionContent;
+      // Check for simple headers: INTERESTS:
+      final simpleHeaderMatch = RegExp(r'^(INTERESTS|PERSONALITY|BACKGROUND|GOALS|PREFERENCES):\s*(.*)$', caseSensitive: false).firstMatch(trimmedLine);
+      
+      if (markdownHeaderMatch != null || simpleHeaderMatch != null) {
+        // Save previous section if it exists
+        if (currentSection != null && currentContent.isNotEmpty) {
+          sections[currentSection] = currentContent.join(' ').trim();
+          AppLogger.logInfo(_component, 'Parsed section "$currentSection": ${sections[currentSection]!.substring(0, sections[currentSection]!.length > 100 ? 100 : sections[currentSection]!.length)}...');
         }
+        
+        // Start new section
+        final match = markdownHeaderMatch ?? simpleHeaderMatch!;
+        currentSection = match.group(1)!.toLowerCase();
+        currentContent = [];
+        
+        // Add any content on the same line as header
+        final headerContent = match.group(2)!.trim();
+        if (headerContent.isNotEmpty) {
+          currentContent.add(headerContent);
+        }
+        
+        AppLogger.logInfo(_component, 'Found section header: $currentSection');
+      } else if (currentSection != null) {
+        // Add content to current section
+        currentContent.add(trimmedLine);
       }
+    }
+    
+    // Save the last section
+    if (currentSection != null && currentContent.isNotEmpty) {
+      sections[currentSection] = currentContent.join(' ').trim();
+      AppLogger.logInfo(_component, 'Parsed final section "$currentSection": ${sections[currentSection]!.substring(0, sections[currentSection]!.length > 100 ? 100 : sections[currentSection]!.length)}...');
     }
     
     // Ensure all expected sections exist
@@ -305,9 +382,11 @@ PREFERENCES: [Detailed account of communication style, learning preferences, etc
     for (final section in expectedSections) {
       if (!sections.containsKey(section) || sections[section]!.isEmpty) {
         sections[section] = 'No specific information available';
+        AppLogger.logInfo(_component, 'Section "$section" missing or empty, using fallback');
       }
     }
     
+    AppLogger.logInfo(_component, 'Final parsed sections: ${sections.keys.join(', ')}');
     return sections;
   }
   

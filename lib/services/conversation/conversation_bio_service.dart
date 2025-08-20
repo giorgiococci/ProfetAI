@@ -38,6 +38,7 @@ class ConversationBioService {
 
     try {
       AppLogger.logInfo(_component, 'Analyzing message exchange for bio insights');
+      AppLogger.logInfo(_component, 'User message length: ${userMessage.length}, Prophet response length: ${prophetResponse.length}');
       
       // Get Profet instance from enum
       final profet = ProfetManager.getProfet(prophetType);
@@ -55,6 +56,41 @@ class ConversationBioService {
       
     } catch (e) {
       AppLogger.logError(_component, 'Failed to analyze message exchange', e);
+      // Don't throw - bio analysis should not block conversation flow
+    }
+  }
+
+  /// Analyze a direct prophet message (like "Listen to Oracle") for bio insights
+  Future<void> analyzeDirectProphetMessage({
+    required String content,
+    required ProfetType prophetType,
+    String userId = 'default_user',
+  }) async {
+    if (!ConversationConfig.enableRealTimeBioUpdates) {
+      AppLogger.logInfo(_component, 'Real-time bio updates disabled, skipping direct prophet analysis');
+      return;
+    }
+
+    try {
+      AppLogger.logInfo(_component, 'Analyzing direct prophet message for bio insights');
+      AppLogger.logInfo(_component, 'Prophet message length: ${content.length}, Prophet type: ${prophetType.name}');
+      
+      // Get Profet instance from enum
+      final profet = ProfetManager.getProfet(prophetType);
+      
+      // Analyze the prophet response without a user question
+      // This can provide insights into user interests based on how they engage
+      // with oracle visions or direct prophet messages
+      await _bioAgent.analyzeDirectProphetResponse(
+        response: content,
+        profet: profet,
+        userId: userId,
+      );
+      
+      AppLogger.logInfo(_component, 'Bio analysis completed for direct prophet message');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to analyze direct prophet message', e);
       // Don't throw - bio analysis should not block conversation flow
     }
   }
