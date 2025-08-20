@@ -25,6 +25,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
             title: localizations.personalInformation,
             subtitle: 'Manage your basic profile information',
             icon: Icons.person,
+            iconColor: Colors.green,
             onTap: () => _navigateToPersonalInformation(context),
           ),
           
@@ -35,6 +36,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
             title: localizations.interestsAndTopics,
             subtitle: 'Select your areas of interest',
             icon: Icons.interests,
+            iconColor: Colors.orange,
             onTap: () => _navigateToInterests(context),
           ),
           
@@ -45,6 +47,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
             title: localizations.personalizeYourExperience,
             subtitle: 'Customize your guidance preferences',
             icon: Icons.tune,
+            iconColor: Colors.purple,
             onTap: () => _navigateToPersonalization(context),
           ),
           
