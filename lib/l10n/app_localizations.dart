@@ -62,8 +62,7 @@ import 'app_localizations_it.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('it'),
+    Locale('it')
   ];
 
   /// Application title
@@ -396,11 +393,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'AI configuration has problems:\\n\\n• AI Available: {isAIAvailable}\\n• Build Config Valid: {isBuildConfigValid}\\n\\n{debugInfo}'**
-  String aiNotAvailableMessage(
-    String isAIAvailable,
-    String isBuildConfigValid,
-    String debugInfo,
-  );
+  String aiNotAvailableMessage(String isAIAvailable, String isBuildConfigValid, String debugInfo);
 
   /// OK button text
   ///
@@ -1151,10 +1144,303 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Embracing change'**
   String get lifeStageEmbracingChange;
+
+  /// Title for vision/conversation management
+  ///
+  /// In en, this message translates to:
+  /// **'Vision Management'**
+  String get visionManagement;
+
+  /// Description for vision management settings
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your conversation history and preferences'**
+  String get visionManagementDescription;
+
+  /// Tooltip for debug tools button
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Tools'**
+  String get debugTools;
+
+  /// Debug tool for AdMob testing
+  ///
+  /// In en, this message translates to:
+  /// **'AdMob Debug & Test'**
+  String get admobDebugTest;
+
+  /// Description for AdMob debug tool
+  ///
+  /// In en, this message translates to:
+  /// **'Test ad functionality and callbacks'**
+  String get admobDebugTestDescription;
+
+  /// Option to reset onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Onboarding'**
+  String get resetOnboarding;
+
+  /// Description for reset onboarding option
+  ///
+  /// In en, this message translates to:
+  /// **'Force onboarding to show again on app restart'**
+  String get resetOnboardingDescription;
+
+  /// Dialog title for reset onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Onboarding'**
+  String get resetOnboardingTitle;
+
+  /// Dialog content for reset onboarding confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset the onboarding status. The onboarding flow will be shown again when you restart the app.\n\nAre you sure?'**
+  String get resetOnboardingContent;
+
+  /// Button text for reset action
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// Success message for onboarding reset
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding reset successfully. Restart the app to see the onboarding flow.'**
+  String get onboardingResetSuccess;
+
+  /// Error message for onboarding reset failure
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reset onboarding: {error}'**
+  String onboardingResetFailed(String error);
+
+  /// Title for conversation statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation Statistics'**
+  String get conversationStatistics;
+
+  /// Label for total conversation count
+  ///
+  /// In en, this message translates to:
+  /// **'Total Conversations'**
+  String get totalConversations;
+
+  /// Label for total message count
+  ///
+  /// In en, this message translates to:
+  /// **'Total Messages'**
+  String get totalMessages;
+
+  /// Label for average messages per conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Average Messages per Conversation'**
+  String get averageMessagesPerConversation;
+
+  /// Title for data management section
+  ///
+  /// In en, this message translates to:
+  /// **'Data Management'**
+  String get dataManagement;
+
+  /// Button text to clear all conversations
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Conversations'**
+  String get clearAllConversations;
+
+  /// Dialog title for clear conversations confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Conversations'**
+  String get clearAllConversationsTitle;
+
+  /// Dialog content for clear conversations confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?'**
+  String get clearAllConversationsContent;
+
+  /// Button text for delete all action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All'**
+  String get deleteAll;
+
+  /// Progress message while deleting conversations
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting all conversations...'**
+  String get deletingAllConversations;
+
+  /// Success message after deleting all conversations
+  ///
+  /// In en, this message translates to:
+  /// **'All conversations deleted successfully'**
+  String get conversationsDeletedSuccess;
+
+  /// Error message for conversation deletion failure
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete conversations: {error}'**
+  String conversationsDeleteFailed(String error);
+
+  /// Message when no conversations exist
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet'**
+  String get noConversationsYet;
+
+  /// Description message when no conversations exist
+  ///
+  /// In en, this message translates to:
+  /// **'Start chatting with a prophet to see your conversation statistics here.'**
+  String get noConversationsDescription;
+
+  /// Error message when loading conversation data fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load conversation data: {error}'**
+  String failedToLoadConversationData(String error);
+
+  /// Description for personal information settings
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your basic profile information'**
+  String get personalInformationDescription;
+
+  /// Description for interests and topics settings
+  ///
+  /// In en, this message translates to:
+  /// **'Select your areas of interest'**
+  String get interestsAndTopicsDescription;
+
+  /// Description for personalization preferences
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your guidance preferences'**
+  String get personalizeYourExperienceDescription;
+
+  /// Title for AI profile section
+  ///
+  /// In en, this message translates to:
+  /// **'Your AI Profile'**
+  String get yourAiProfile;
+
+  /// Description for AI profile section
+  ///
+  /// In en, this message translates to:
+  /// **'View your generated biographical profile and privacy settings'**
+  String get yourAiProfileDescription;
+
+  /// Error message when profile loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile: {error}'**
+  String failedToLoadProfile(String error);
+
+  /// Error message when profile saving fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save profile: {error}'**
+  String failedToSaveProfile(String error);
+
+  /// Title for user profile page
+  ///
+  /// In en, this message translates to:
+  /// **'Your Profile'**
+  String get yourProfile;
+
+  /// Success message after deleting biographical data
+  ///
+  /// In en, this message translates to:
+  /// **'All biographical data deleted successfully'**
+  String get biographicalDataDeletedSuccess;
+
+  /// Error message when data deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete data: {error}'**
+  String failedToDeleteData(String error);
+
+  /// Title for delete biographical data dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Biographical Data'**
+  String get deleteBiographicalData;
+
+  /// Content for delete biographical data confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all your biographical information. This action cannot be undone.\n\nAre you sure you want to continue?'**
+  String get deleteBiographicalDataContent;
+
+  /// Button text for deleting all data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllData;
+
+  /// Error message when loading biographical profile fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load biographical profile: {error}'**
+  String failedToLoadBiographicalProfile(String error);
+
+  /// Loading message for profile
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your profile...'**
+  String get loadingYourProfile;
+
+  /// Button text for retry action
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// Message when no biographical information is available
+  ///
+  /// In en, this message translates to:
+  /// **'No bio still available. The prophets need more information.'**
+  String get noBioAvailable;
+
+  /// Button text to navigate to prophets
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the Prophets'**
+  String get askTheProphets;
+
+  /// Header title in profile section
+  ///
+  /// In en, this message translates to:
+  /// **'Your Profile'**
+  String get yourProfileHeader;
+
+  /// Subtitle explaining how profile is generated
+  ///
+  /// In en, this message translates to:
+  /// **'Generated from your prophet interactions'**
+  String get generatedFromProphetInteractions;
+
+  /// Message when no biographical content is available
+  ///
+  /// In en, this message translates to:
+  /// **'No biographical content available'**
+  String get noBiographicalContentAvailable;
+
+  /// Tooltip for delete all data button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllDataTooltip;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1163,26 +1449,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'it'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'it'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'it':
-      return AppLocalizationsIt();
+    case 'en': return AppLocalizationsEn();
+    case 'it': return AppLocalizationsIt();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

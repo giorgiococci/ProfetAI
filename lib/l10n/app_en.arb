@@ -922,5 +922,318 @@
   "lifeStageFacingChallenges": "Facing challenges",
   "lifeStagePeriodOfGrowth": "In a period of growth",
   "lifeStageLookingForStability": "Looking for stability",
-  "lifeStageEmbracingChange": "Embracing change"
+  "lifeStageEmbracingChange": "Embracing change",
+
+  "visionManagement": "Vision Management",
+  "@visionManagement": {
+    "description": "Title for vision/conversation management"
+  },
+
+  "visionManagementDescription": "Manage your conversation history and preferences",
+  "@visionManagementDescription": {
+    "description": "Description for vision management settings"
+  },
+
+  "debugTools": "Debug Tools",
+  "@debugTools": {
+    "description": "Section title for debug tools"
+  },
+
+  "admobDebugTest": "AdMob Debug & Test",
+  "@admobDebugTest": {
+    "description": "Debug tool for AdMob testing"
+  },
+
+  "admobDebugTestDescription": "Test ad functionality and callbacks",
+  "@admobDebugTestDescription": {
+    "description": "Description for AdMob debug tool"
+  },
+
+  "resetOnboarding": "Reset Onboarding",
+  "@resetOnboarding": {
+    "description": "Option to reset onboarding"
+  },
+
+  "resetOnboardingDescription": "Force onboarding to show again on app restart",
+  "@resetOnboardingDescription": {
+    "description": "Description for reset onboarding option"
+  },
+
+  "resetOnboardingTitle": "Reset Onboarding",
+  "@resetOnboardingTitle": {
+    "description": "Dialog title for reset onboarding"
+  },
+
+  "resetOnboardingContent": "This will reset the onboarding status. The onboarding flow will be shown again when you restart the app.\n\nAre you sure?",
+  "@resetOnboardingContent": {
+    "description": "Dialog content for reset onboarding confirmation"
+  },
+
+  "reset": "Reset",
+  "@reset": {
+    "description": "Button text for reset action"
+  },
+
+  "onboardingResetSuccess": "Onboarding reset successfully. Restart the app to see the onboarding flow.",
+  "@onboardingResetSuccess": {
+    "description": "Success message for onboarding reset"
+  },
+
+  "onboardingResetFailed": "Failed to reset onboarding: {error}",
+  "@onboardingResetFailed": {
+    "description": "Error message for onboarding reset failure",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "conversationStatistics": "Conversation Statistics",
+  "@conversationStatistics": {
+    "description": "Title for conversation statistics section"
+  },
+
+  "totalConversations": "Total Conversations",
+  "@totalConversations": {
+    "description": "Label for total conversation count"
+  },
+
+  "totalMessages": "Total Messages",
+  "@totalMessages": {
+    "description": "Label for total message count"
+  },
+
+  "averageMessagesPerConversation": "Average Messages per Conversation",
+  "@averageMessagesPerConversation": {
+    "description": "Label for average messages per conversation"
+  },
+
+  "dataManagement": "Data Management",
+  "@dataManagement": {
+    "description": "Title for data management section"
+  },
+
+  "clearAllConversations": "Clear All Conversations",
+  "@clearAllConversations": {
+    "description": "Button text to clear all conversations"
+  },
+
+  "clearAllConversationsTitle": "Clear All Conversations",
+  "@clearAllConversationsTitle": {
+    "description": "Dialog title for clear conversations confirmation"
+  },
+
+  "clearAllConversationsContent": "⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?",
+  "@clearAllConversationsContent": {
+    "description": "Dialog content for clear conversations confirmation"
+  },
+
+  "deleteAll": "Delete All",
+  "@deleteAll": {
+    "description": "Button text for delete all action"
+  },
+
+  "deletingAllConversations": "Deleting all conversations...",
+  "@deletingAllConversations": {
+    "description": "Progress message while deleting conversations"
+  },
+
+  "conversationsDeletedSuccess": "All conversations deleted successfully",
+  "@conversationsDeletedSuccess": {
+    "description": "Success message after deleting all conversations"
+  },
+
+  "conversationsDeleteFailed": "Failed to delete conversations: {error}",
+  "@conversationsDeleteFailed": {
+    "description": "Error message for conversation deletion failure",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "noConversationsYet": "No conversations yet",
+  "@noConversationsYet": {
+    "description": "Message when no conversations exist"
+  },
+
+  "noConversationsDescription": "Start chatting with a prophet to see your conversation statistics here.",
+  "@noConversationsDescription": {
+    "description": "Description message when no conversations exist"
+  },
+
+  "failedToLoadConversationData": "Failed to load conversation data: {error}",
+  "@failedToLoadConversationData": {
+    "description": "Error message when loading conversation data fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "personalInformationDescription": "Manage your basic profile information",
+  "@personalInformationDescription": {
+    "description": "Description for personal information settings"
+  },
+
+  "interestsAndTopicsDescription": "Select your areas of interest",
+  "@interestsAndTopicsDescription": {
+    "description": "Description for interests and topics settings"
+  },
+
+  "personalizeYourExperienceDescription": "Customize your guidance preferences",
+  "@personalizeYourExperienceDescription": {
+    "description": "Description for personalization preferences"
+  },
+
+  "yourAiProfile": "Your AI Profile",
+  "@yourAiProfile": {
+    "description": "Title for AI profile section"
+  },
+
+  "yourAiProfileDescription": "View your generated biographical profile and privacy settings",
+  "@yourAiProfileDescription": {
+    "description": "Description for AI profile section"
+  },
+
+  "failedToLoadProfile": "Failed to load profile: {error}",
+  "@failedToLoadProfile": {
+    "description": "Error message when profile loading fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "failedToSaveProfile": "Failed to save profile: {error}",
+  "@failedToSaveProfile": {
+    "description": "Error message when profile saving fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "yourProfile": "Your Profile",
+  "@yourProfile": {
+    "description": "Title for user profile screen"
+  },
+
+  "debugTools": "Debug Tools",
+  "@debugTools": {
+    "description": "Tooltip for debug tools button"
+  },
+
+  "biographicalDataDeletedSuccess": "All biographical data deleted successfully",
+  "@biographicalDataDeletedSuccess": {
+    "description": "Success message after deleting biographical data"
+  },
+
+  "failedToDeleteData": "Failed to delete data: {error}",
+  "@failedToDeleteData": {
+    "description": "Error message when data deletion fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "deleteBiographicalData": "Delete Biographical Data",
+  "@deleteBiographicalData": {
+    "description": "Title for delete biographical data dialog"
+  },
+
+  "deleteBiographicalDataContent": "This will permanently delete all your biographical information. This action cannot be undone.\n\nAre you sure you want to continue?",
+  "@deleteBiographicalDataContent": {
+    "description": "Content for delete biographical data confirmation dialog"
+  },
+
+  "deleteAllData": "Delete All Data",
+  "@deleteAllData": {
+    "description": "Button text for deleting all data"
+  },
+
+  "failedToLoadBiographicalProfile": "Failed to load biographical profile: {error}",
+  "@failedToLoadBiographicalProfile": {
+    "description": "Error message when loading biographical profile fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "yourProfile": "Your Profile",
+  "@yourProfile": {
+    "description": "Title for user profile page"
+  },
+
+  "biographicalDataDeletedSuccess": "All biographical data deleted successfully",
+  "@biographicalDataDeletedSuccess": {
+    "description": "Success message after deleting biographical data"
+  },
+
+  "failedToDeleteData": "Failed to delete data: {error}",
+  "@failedToDeleteData": {
+    "description": "Error message when data deletion fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "loadingYourProfile": "Loading your profile...",
+  "@loadingYourProfile": {
+    "description": "Loading message for profile"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button text for retry action"
+  },
+
+  "noBioAvailable": "No bio still available. The prophets need more information.",
+  "@noBioAvailable": {
+    "description": "Message when no biographical information is available"
+  },
+
+  "askTheProphets": "Ask the Prophets",
+  "@askTheProphets": {
+    "description": "Button text to navigate to prophets"
+  },
+
+  "yourProfileHeader": "Your Profile",
+  "@yourProfileHeader": {
+    "description": "Header title in profile section"
+  },
+
+  "generatedFromProphetInteractions": "Generated from your prophet interactions",
+  "@generatedFromProphetInteractions": {
+    "description": "Subtitle explaining how profile is generated"
+  },
+
+  "noBiographicalContentAvailable": "No biographical content available",
+  "@noBiographicalContentAvailable": {
+    "description": "Message when no biographical content is available"
+  },
+
+  "deleteAllDataTooltip": "Delete All Data",
+  "@deleteAllDataTooltip": {
+    "description": "Tooltip for delete all data button"
+  }
 }

@@ -30,8 +30,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectYourOracle => 'SELEZIONA IL TUO ORACOLO';
 
   @override
-  String get everyOracleUniquePersonality =>
-      'Ogni oracolo ha la sua personalità unica';
+  String get everyOracleUniquePersonality => 'Ogni oracolo ha la sua personalità unica';
 
   @override
   String get askTheOracle => 'DOMANDA ALL\'ORACOLO';
@@ -45,8 +44,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get enterQuestionFirst =>
-      '📝 Inserisci una domanda prima di chiedere!';
+  String get enterQuestionFirst => '📝 Inserisci una domanda prima di chiedere!';
 
   @override
   String get markAsFavoriteOracle => 'Segna come oracolo preferito';
@@ -97,12 +95,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get aiServiceStatus => 'Stato Servizio AI';
 
   @override
-  String get aiServiceOperational =>
-      'Il servizio AI è operativo e pronto a fornire risposte';
+  String get aiServiceOperational => 'Il servizio AI è operativo e pronto a fornire risposte';
 
   @override
-  String get aiServiceNotAvailable =>
-      'Il servizio AI non è disponibile. Controllare la configurazione.';
+  String get aiServiceNotAvailable => 'Il servizio AI non è disponibile. Controllare la configurazione.';
 
   @override
   String get configurationStatus => 'Stato Configurazione';
@@ -170,11 +166,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get aiNotAvailable => '⚠️ AI Non Disponibile';
 
   @override
-  String aiNotAvailableMessage(
-    String isAIAvailable,
-    String isBuildConfigValid,
-    String debugInfo,
-  ) {
+  String aiNotAvailableMessage(String isAIAvailable, String isBuildConfigValid, String debugInfo) {
     return 'Configurazione AI ha problemi:\\n\\n• AI Available: $isAIAvailable\\n• Build Config Valid: $isBuildConfigValid\\n\\n$debugInfo';
   }
 
@@ -182,8 +174,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get loadingProphetsFromUniverse =>
-      'Caricamento profeti dall\'universo';
+  String get loadingProphetsFromUniverse => 'Caricamento profeti dall\'universo';
 
   @override
   String get initializationError => 'Errore di Inizializzazione';
@@ -301,8 +292,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get deleteAllVisions => 'Elimina Tutte le Visioni';
 
   @override
-  String get deleteAllVisionsWarning =>
-      '⚠️ Questa azione eliminerà permanentemente tutte le tue visioni memorizzate e non può essere annullata. Sei sicuro di voler continuare?';
+  String get deleteAllVisionsWarning => '⚠️ Questa azione eliminerà permanentemente tutte le tue visioni memorizzate e non può essere annullata. Sei sicuro di voler continuare?';
 
   @override
   String get deleteAllVisionsConfirmTitle => 'Eliminare Tutte le Visioni?';
@@ -314,12 +304,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete => 'Elimina';
 
   @override
-  String get allVisionsDeleted =>
-      'Tutte le visioni sono state eliminate con successo';
+  String get allVisionsDeleted => 'Tutte le visioni sono state eliminate con successo';
 
   @override
-  String get failedToDeleteVisions =>
-      'Impossibile eliminare le visioni. Riprova.';
+  String get failedToDeleteVisions => 'Impossibile eliminare le visioni. Riprova.';
 
   @override
   String get visionBookTitle => 'Libro delle Visioni';
@@ -380,12 +368,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noVisionsStoredYet => 'Nessuna visione memorizzata';
 
   @override
-  String get tryAdjustingFilters =>
-      'Prova a modificare i criteri di ricerca o cancella i filtri per vedere tutte le visioni.';
+  String get tryAdjustingFilters => 'Prova a modificare i criteri di ricerca o cancella i filtri per vedere tutte le visioni.';
 
   @override
-  String get startMysticalJourney =>
-      'Inizia il tuo viaggio mistico chiedendo agli oracoli una guida.';
+  String get startMysticalJourney => 'Inizia il tuo viaggio mistico chiedendo agli oracoli una guida.';
 
   @override
   String get clearFilters => 'Rimuovi Filtri';
@@ -451,22 +437,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get userProfileSettings => 'Profilo Utente';
 
   @override
-  String get userProfileSettingsDescription =>
-      'Gestisci le tue informazioni personali';
+  String get userProfileSettingsDescription => 'Gestisci le tue informazioni personali';
 
   @override
   String get localizationSettings => 'Localizzazione';
 
   @override
-  String get localizationSettingsDescription =>
-      'Cambia lingua e regione dell\'app';
+  String get localizationSettingsDescription => 'Cambia lingua e regione dell\'app';
 
   @override
   String get deleteDataSettings => 'Elimina Dati';
 
   @override
-  String get deleteDataSettingsDescription =>
-      'Gestisci dati memorizzati e visioni';
+  String get deleteDataSettingsDescription => 'Gestisci dati memorizzati e visioni';
 
   @override
   String get userProfilePageTitle => 'Profilo Utente';
@@ -484,8 +467,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get welcomeToProfetAI => 'Benvenuto in Profet AI';
 
   @override
-  String get discoverMysticalInsights =>
-      'Scopri intuizioni mistiche attraverso oracoli unici';
+  String get discoverMysticalInsights => 'Scopri intuizioni mistiche attraverso oracoli unici';
 
   @override
   String get beginJourney => 'Inizia il Viaggio';
@@ -497,29 +479,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String get personalizedPredictions => 'Predizioni Personalizzate';
 
   @override
-  String get personalizedPredictionsDesc =>
-      'Fai domande e ricevi intuizioni su misura dal tuo oracolo scelto';
+  String get personalizedPredictionsDesc => 'Fai domande e ricevi intuizioni su misura dal tuo oracolo scelto';
 
   @override
   String get randomVisions => 'Visioni Casuali';
 
   @override
-  String get randomVisionsDesc =>
-      'Ottieni saggezza spontanea quando hai più bisogno di guida';
+  String get randomVisionsDesc => 'Ottieni saggezza spontanea quando hai più bisogno di guida';
 
   @override
   String get visionBook => 'Libro delle Visioni';
 
   @override
-  String get visionBookDesc =>
-      'Salva e rivedi le tue predizioni e intuizioni preferite';
+  String get visionBookDesc => 'Salva e rivedi le tue predizioni e intuizioni preferite';
 
   @override
   String get uniqueThemes => 'Temi Unici';
 
   @override
-  String get uniqueThemesDesc =>
-      'Ogni oracolo ha la propria identità visiva mistica';
+  String get uniqueThemesDesc => 'Ogni oracolo ha la propria identità visiva mistica';
 
   @override
   String get continueButton => 'Continua';
@@ -531,8 +509,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get personalizeOptional => 'Opzionale - Puoi sempre cambiarlo dopo';
 
   @override
-  String get whatShouldOraclesCallYou =>
-      'Come dovrebbero chiamarti gli oracoli?';
+  String get whatShouldOraclesCallYou => 'Come dovrebbero chiamarti gli oracoli?';
 
   @override
   String get enterYourNameOptional => 'Inserisci il tuo nome (opzionale)';
@@ -550,8 +527,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get lifeFocusAreasHint => 'Seleziona fino a 3 aree (opzionale)';
 
   @override
-  String get lifeStageLabel =>
-      'Cosa descrive meglio la tua fase di vita attuale?';
+  String get lifeStageLabel => 'Cosa descrive meglio la tua fase di vita attuale?';
 
   @override
   String get lifeStageHint => 'Seleziona la tua fase attuale (opzionale)';
@@ -597,4 +573,165 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get lifeStageEmbracingChange => 'Sto abbracciando il cambiamento';
+
+  @override
+  String get visionManagement => 'Gestione Visioni';
+
+  @override
+  String get visionManagementDescription => 'Gestisci la cronologia delle conversazioni e le preferenze';
+
+  @override
+  String get debugTools => 'Strumenti Debug';
+
+  @override
+  String get admobDebugTest => 'Debug AdMob & Test';
+
+  @override
+  String get admobDebugTestDescription => 'Testa la funzionalità e i callback degli annunci';
+
+  @override
+  String get resetOnboarding => 'Reimposta Onboarding';
+
+  @override
+  String get resetOnboardingDescription => 'Forza la visualizzazione dell\'onboarding al riavvio dell\'app';
+
+  @override
+  String get resetOnboardingTitle => 'Reimposta Onboarding';
+
+  @override
+  String get resetOnboardingContent => 'Questo reimposterà lo stato dell\'onboarding. Il flusso di onboarding verrà mostrato di nuovo quando riavvii l\'app.\n\nSei sicuro?';
+
+  @override
+  String get reset => 'Reimposta';
+
+  @override
+  String get onboardingResetSuccess => 'Onboarding reimpostato con successo. Riavvia l\'app per vedere il flusso di onboarding.';
+
+  @override
+  String onboardingResetFailed(String error) {
+    return 'Impossibile reimpostare l\'onboarding: $error';
+  }
+
+  @override
+  String get conversationStatistics => 'Statistiche Conversazioni';
+
+  @override
+  String get totalConversations => 'Conversazioni Totali';
+
+  @override
+  String get totalMessages => 'Messaggi Totali';
+
+  @override
+  String get averageMessagesPerConversation => 'Media Messaggi per Conversazione';
+
+  @override
+  String get dataManagement => 'Gestione Dati';
+
+  @override
+  String get clearAllConversations => 'Cancella Tutte le Conversazioni';
+
+  @override
+  String get clearAllConversationsTitle => 'Cancella Tutte le Conversazioni';
+
+  @override
+  String get clearAllConversationsContent => '⚠️ Questa azione eliminerà permanentemente TUTTA la cronologia delle conversazioni e non può essere annullata.\n\nSei sicuro di voler continuare?';
+
+  @override
+  String get deleteAll => 'Elimina Tutto';
+
+  @override
+  String get deletingAllConversations => 'Eliminazione di tutte le conversazioni...';
+
+  @override
+  String get conversationsDeletedSuccess => 'Tutte le conversazioni eliminate con successo';
+
+  @override
+  String conversationsDeleteFailed(String error) {
+    return 'Impossibile eliminare le conversazioni: $error';
+  }
+
+  @override
+  String get noConversationsYet => 'Nessuna conversazione ancora';
+
+  @override
+  String get noConversationsDescription => 'Inizia a chattare con un profeta per vedere le statistiche delle tue conversazioni qui.';
+
+  @override
+  String failedToLoadConversationData(String error) {
+    return 'Impossibile caricare i dati delle conversazioni: $error';
+  }
+
+  @override
+  String get personalInformationDescription => 'Gestisci le tue informazioni personali di base';
+
+  @override
+  String get interestsAndTopicsDescription => 'Seleziona le tue aree di interesse';
+
+  @override
+  String get personalizeYourExperienceDescription => 'Personalizza le tue preferenze di guida';
+
+  @override
+  String get yourAiProfile => 'Il Tuo Profilo AI';
+
+  @override
+  String get yourAiProfileDescription => 'Visualizza il tuo profilo biografico generato e le impostazioni sulla privacy';
+
+  @override
+  String failedToLoadProfile(String error) {
+    return 'Impossibile caricare il profilo: $error';
+  }
+
+  @override
+  String failedToSaveProfile(String error) {
+    return 'Impossibile salvare il profilo: $error';
+  }
+
+  @override
+  String get yourProfile => 'Il Tuo Profilo';
+
+  @override
+  String get biographicalDataDeletedSuccess => 'Tutti i dati biografici eliminati con successo';
+
+  @override
+  String failedToDeleteData(String error) {
+    return 'Impossibile eliminare i dati: $error';
+  }
+
+  @override
+  String get deleteBiographicalData => 'Elimina Dati Biografici';
+
+  @override
+  String get deleteBiographicalDataContent => 'Questo eliminerà permanentemente tutte le tue informazioni biografiche. Questa azione non può essere annullata.\n\nSei sicuro di voler continuare?';
+
+  @override
+  String get deleteAllData => 'Elimina Tutti i Dati';
+
+  @override
+  String failedToLoadBiographicalProfile(String error) {
+    return 'Impossibile caricare il profilo biografico: $error';
+  }
+
+  @override
+  String get loadingYourProfile => 'Caricamento del tuo profilo...';
+
+  @override
+  String get retry => 'Riprova';
+
+  @override
+  String get noBioAvailable => 'Nessuna biografia ancora disponibile. I profeti hanno bisogno di più informazioni.';
+
+  @override
+  String get askTheProphets => 'Chiedi ai Profeti';
+
+  @override
+  String get yourProfileHeader => 'Il Tuo Profilo';
+
+  @override
+  String get generatedFromProphetInteractions => 'Generato dalle tue interazioni con i profeti';
+
+  @override
+  String get noBiographicalContentAvailable => 'Nessun contenuto biografico disponibile';
+
+  @override
+  String get deleteAllDataTooltip => 'Elimina Tutti i Dati';
 }

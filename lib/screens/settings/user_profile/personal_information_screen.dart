@@ -53,8 +53,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen>
       }
     } catch (e) {
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load profile: $e')),
+          SnackBar(content: Text(localizations.failedToLoadProfile(e.toString()))),
         );
       }
     }
@@ -84,9 +85,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen>
       }
     } catch (e) {
       if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save profile: $e'),
+            content: Text(localizations.failedToSaveProfile(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
