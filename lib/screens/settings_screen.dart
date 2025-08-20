@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/theme_utils.dart';
 import '../services/onboarding_service.dart';
+import '../services/privacy_consent_service.dart';
 import 'settings/user_profile_settings_screen.dart';
 import 'settings/localization_settings_screen.dart';
+import 'settings/privacy_settings_screen.dart';
 import 'settings/conversation_management_screen.dart';
 import 'ad_debug_screen.dart';
 
@@ -50,6 +52,17 @@ class SettingsScreen extends StatelessWidget {
           
           _buildSettingsCard(
             context: context,
+            title: localizations.privacySettings,
+            subtitle: localizations.privacySettingsDescription,
+            icon: Icons.privacy_tip,
+            iconColor: Colors.deepPurple,
+            onTap: () => _navigateToPrivacySettings(context),
+          ),
+          
+          const SizedBox(height: 12),
+          
+          _buildSettingsCard(
+            context: context,
             title: localizations.visionManagement,
             subtitle: localizations.visionManagementDescription,
             icon: Icons.chat,
@@ -88,6 +101,17 @@ class SettingsScreen extends StatelessWidget {
               icon: Icons.restart_alt,
               iconColor: Colors.amber,
               onTap: () => _resetOnboarding(context),
+            ),
+            
+            const SizedBox(height: 8),
+            
+            _buildSettingsCard(
+              context: context,
+              title: "Reset Privacy Consent",
+              subtitle: "Reset privacy consent to show the dialog again (Debug)",
+              icon: Icons.privacy_tip,
+              iconColor: Colors.purple,
+              onTap: () => _resetPrivacyConsent(context),
             ),
           ],
         ],
@@ -212,6 +236,14 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _navigateToPrivacySettings(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const PrivacySettingsScreen(),
+      ),
+    );
+  }
   
   Future<void> _resetOnboarding(BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
@@ -253,6 +285,54 @@ class SettingsScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(localizations.onboardingResetFailed(e.toString())),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+  
+  Future<void> _resetPrivacyConsent(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+    
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Reset Privacy Consent"),
+          content: const Text("This will reset your privacy consent settings and show the privacy dialog again when you restart the app. Are you sure?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(localizations.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(localizations.reset),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      try {
+        await PrivacyConsentService().resetConsent();
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Privacy consent reset successfully. Restart the app to see the privacy dialog again."),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Failed to reset privacy consent: $e"),
               backgroundColor: Colors.red,
             ),
           );

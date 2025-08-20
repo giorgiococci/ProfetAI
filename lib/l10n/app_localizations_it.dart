@@ -777,4 +777,107 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get deleteAllDataTooltip => 'Elimina Tutti i Dati';
+
+  @override
+  String get privacyConsentTitle => 'Privacy dei Dati e Personalizzazione';
+
+  @override
+  String get privacyConsentMessage =>
+      'Per fornirti risposte personalizzate, Orakl può memorizzare e analizzare le tue interazioni con i profeti.\n\nQuesti dati sono utilizzati esclusivamente per migliorare la tua esperienza e non saranno mai condivisi con partner esterni.\n\nVuoi abilitare le risposte personalizzate?';
+
+  @override
+  String get enablePersonalization => 'Abilita Personalizzazione';
+
+  @override
+  String get disablePersonalization => 'Disabilita Personalizzazione';
+
+  @override
+  String get reviewPrivacyPolicy => 'Consulta Privacy Policy';
+
+  @override
+  String get privacySettings => 'Impostazioni Privacy';
+
+  @override
+  String get privacySettingsDescription =>
+      'Gestisci le tue preferenze di personalizzazione dati';
+
+  @override
+  String get personalizationStatus => 'Stato Personalizzazione';
+
+  @override
+  String get enabled => 'Abilitata';
+
+  @override
+  String get disabled => 'Disabilitata';
+
+  @override
+  String get howItWorks => 'Come Funziona';
+
+  @override
+  String get personalizationEnabledDescription =>
+      'Le tue interazioni con i profeti vengono analizzate per fornire risposte personalizzate.';
+
+  @override
+  String get personalizationDisabledDescription =>
+      'La personalizzazione è disabilitata. Nessun dato viene raccolto dalle tue interazioni.';
+
+  @override
+  String get personalizationEnabledFeature1 =>
+      'Vengono raccolte informazioni dalle tue domande e conversazioni';
+
+  @override
+  String get personalizationEnabledFeature2 =>
+      'Questi dati aiutano i profeti a dare risposte più pertinenti';
+
+  @override
+  String get personalizationEnabledFeature3 =>
+      'I tuoi dati non vengono mai condivisi con partner esterni';
+
+  @override
+  String get personalizationDisabledFeature1 =>
+      'Nessuna informazione personale viene raccolta o memorizzata';
+
+  @override
+  String get personalizationDisabledFeature2 =>
+      'I profeti forniscono risposte generiche';
+
+  @override
+  String get personalizationDisabledFeature3 =>
+      'Puoi abilitare la personalizzazione in qualsiasi momento';
+
+  @override
+  String get settings => 'Impostazioni';
+
+  @override
+  String get updating => 'Aggiornamento...';
+
+  @override
+  String get disablePersonalizationWarning =>
+      'Attenzione: Disabilitare la personalizzazione eliminerà permanentemente tutti i dati raccolti.';
+
+  @override
+  String get enablePersonalizationNote =>
+      'Nota: Abilitare la personalizzazione inizierà a raccogliere dati dalle future interazioni.';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get confirmDisablePersonalization =>
+      'Conferma Disabilitazione Personalizzazione';
+
+  @override
+  String get disablePersonalizationConfirmMessage =>
+      'Sei sicuro di voler disabilitare la personalizzazione? Questa azione eliminerà permanentemente tutti i tuoi dati raccolti e non può essere annullata.';
+
+  @override
+  String get disable => 'Disabilita';
+
+  @override
+  String get personalizationEnabledSuccess =>
+      'Personalizzazione abilitata con successo';
+
+  @override
+  String get personalizationDisabledSuccess =>
+      'Personalizzazione disabilitata e dati eliminati con successo';
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../services/onboarding_service.dart';
 import '../../services/user_profile_service.dart';
+import '../../services/privacy_consent_service.dart';
 import '../../models/user_profile.dart';
+import '../../widgets/dialogs/privacy_consent_dialog.dart';
 import 'onboarding_welcome_screen.dart';
 import 'onboarding_features_screen.dart';
 import 'onboarding_personalization_screen.dart';
@@ -22,6 +24,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   final PageController _pageController = PageController();
   final OnboardingService _onboardingService = OnboardingService();
   final UserProfileService _userProfileService = UserProfileService();
+  final PrivacyConsentService _privacyConsentService = PrivacyConsentService();
   
   int _currentPage = 0;
   static const int _totalPages = 3;
@@ -44,21 +47,63 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   void _skipOnboarding() {
-    _completeOnboarding();
+    _showPrivacyConsentDialog();
   }
 
   Future<void> _completeOnboarding() async {
+    _showPrivacyConsentDialog();
+  }
+
+  /// Shows the privacy consent dialog and handles the result
+  Future<void> _showPrivacyConsentDialog() async {
     try {
-      print('OnboardingFlow: Starting onboarding completion process...');
+      print('OnboardingFlow: Showing privacy consent dialog...');
+      
+      // Show the privacy consent dialog
+      final bool consentGiven = await PrivacyConsentDialog.show(context);
+      
+      print('OnboardingFlow: Privacy consent result: $consentGiven');
+      
+      // Save the consent decision
+      await _privacyConsentService.setConsent(consentGiven);
+      
+      // Complete the onboarding process
+      await _finalizeOnboarding();
+      
+    } catch (e) {
+      print('OnboardingFlow: Error handling privacy consent: $e');
+      // Show error to user and allow retry
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to save privacy settings: $e\nPlease try again.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  /// Finalizes the onboarding process after privacy consent is handled
+  Future<void> _finalizeOnboarding() async {
+    try {
+      print('OnboardingFlow: Starting onboarding finalization process...');
       await _onboardingService.completeOnboarding();
       
       // Small delay to ensure storage operations are fully completed
       await Future.delayed(const Duration(milliseconds: 500));
       
-      print('OnboardingFlow: Onboarding completion successful, calling onComplete callback');
+      print('OnboardingFlow: Onboarding finalization successful, calling onComplete callback');
       widget.onComplete();
     } catch (e) {
-      print('OnboardingFlow: Error completing onboarding: $e');
+      print('OnboardingFlow: Error finalizing onboarding: $e');
       // Show error to user and allow retry
       if (context.mounted) {
         showDialog(
@@ -144,8 +189,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               ),
               OnboardingPersonalizationScreen(
                 onNext: () async {
-                  print('OnboardingFlow: Personalization screen called onNext, completing onboarding...');
-                  await _completeOnboarding();
+                  print('OnboardingFlow: Personalization screen called onNext, showing privacy consent...');
+                  await _showPrivacyConsentDialog();
                 },
                 onSkip: _skipOnboarding,
                 onSave: _savePersonalization,

@@ -6,6 +6,7 @@ import '../../models/vision_feedback.dart';
 import '../../models/profet_manager.dart';
 import '../../config/conversation_config.dart';
 import '../../utils/app_logger.dart';
+import '../privacy_consent_service.dart';
 import 'conversation_service.dart';
 import 'conversation_storage_service.dart';
 import 'conversation_bio_service.dart';
@@ -20,6 +21,7 @@ class ConversationIntegrationService {
   final ConversationService _conversationService = ConversationService();
   final ConversationStorageService _storageService = ConversationStorageService();
   final ConversationBioService _bioService = ConversationBioService();
+  final PrivacyConsentService _privacyService = PrivacyConsentService();
   
   // Singleton pattern
   static final ConversationIntegrationService _instance = ConversationIntegrationService._internal();
@@ -50,6 +52,30 @@ class ConversationIntegrationService {
     } catch (e) {
       AppLogger.logError(_component, 'Failed to initialize conversation integration service', e);
       rethrow;
+    }
+  }
+
+  /// Check if user has given consent for bio data collection
+  Future<bool> _isBioConsentGiven() async {
+    try {
+      await _privacyService.loadConsentStatus();
+      final consent = _privacyService.consentGiven;
+      
+      if (consent == null) {
+        AppLogger.logInfo(_component, 'Privacy consent not yet asked - bio analysis disabled');
+        return false;
+      }
+      
+      if (!consent) {
+        AppLogger.logInfo(_component, 'User declined privacy consent - bio analysis disabled');
+        return false;
+      }
+      
+      AppLogger.logInfo(_component, 'User gave privacy consent - bio analysis enabled');
+      return true;
+    } catch (e) {
+      AppLogger.logError(_component, 'Error checking privacy consent, disabling bio analysis', e);
+      return false;
     }
   }
 
@@ -100,16 +126,24 @@ class ConversationIntegrationService {
       
       // Perform bio analysis on the message exchange (async, non-blocking)
       if (ConversationConfig.enableRealTimeBioUpdates) {
-        AppLogger.logInfo(_component, 'Bio updates enabled - starting bio analysis for message exchange');
-        _bioService.analyzeMessageExchange(
-          context: context,
-          userMessage: content,
-          prophetResponse: prophetMessage.content,
-          prophetType: currentConversation!.prophetTypeEnum, // Use enum getter
-          userId: userId,
-        ).catchError((error) {
-          AppLogger.logWarning(_component, 'Bio analysis failed but continuing: $error');
-        });
+        AppLogger.logInfo(_component, 'Bio updates enabled - checking privacy consent');
+        
+        // Check privacy consent before starting bio analysis
+        final hasConsent = await _isBioConsentGiven();
+        if (hasConsent) {
+          AppLogger.logInfo(_component, 'Privacy consent given - starting bio analysis for message exchange');
+          _bioService.analyzeMessageExchange(
+            context: context,
+            userMessage: content,
+            prophetResponse: prophetMessage.content,
+            prophetType: currentConversation!.prophetTypeEnum, // Use enum getter
+            userId: userId,
+          ).catchError((error) {
+            AppLogger.logWarning(_component, 'Bio analysis failed but continuing: $error');
+          });
+        } else {
+          AppLogger.logInfo(_component, 'Privacy consent not given - skipping bio analysis');
+        }
       }
       
       AppLogger.logInfo(_component, 'Message processing completed successfully');
@@ -150,14 +184,22 @@ class ConversationIntegrationService {
       // Perform bio analysis on the prophet message (async, non-blocking)
       // This is needed for "Listen to Oracle" and other direct prophet messages
       if (ConversationConfig.enableRealTimeBioUpdates) {
-        AppLogger.logInfo(_component, 'Bio updates enabled - starting bio analysis for direct prophet message');
-        _bioService.analyzeDirectProphetMessage(
-          content: content,
-          prophetType: currentConversation!.prophetTypeEnum,
-          userId: userId,
-        ).catchError((error) {
-          AppLogger.logWarning(_component, 'Bio analysis failed for direct prophet message: $error');
-        });
+        AppLogger.logInfo(_component, 'Bio updates enabled - checking privacy consent for direct prophet message');
+        
+        // Check privacy consent before starting bio analysis
+        final hasConsent = await _isBioConsentGiven();
+        if (hasConsent) {
+          AppLogger.logInfo(_component, 'Privacy consent given - starting bio analysis for direct prophet message');
+          _bioService.analyzeDirectProphetMessage(
+            content: content,
+            prophetType: currentConversation!.prophetTypeEnum,
+            userId: userId,
+          ).catchError((error) {
+            AppLogger.logWarning(_component, 'Bio analysis failed for direct prophet message: $error');
+          });
+        } else {
+          AppLogger.logInfo(_component, 'Privacy consent not given - skipping bio analysis for direct prophet message');
+        }
       }
       
       AppLogger.logInfo(_component, 'Direct prophet message added successfully');

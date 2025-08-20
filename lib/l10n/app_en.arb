@@ -1235,5 +1235,155 @@
   "deleteAllDataTooltip": "Delete All Data",
   "@deleteAllDataTooltip": {
     "description": "Tooltip for delete all data button"
+  },
+
+  "privacyConsentTitle": "Data Privacy & Personalization",
+  "@privacyConsentTitle": {
+    "description": "Title for privacy consent dialog"
+  },
+
+  "privacyConsentMessage": "To provide you with personalized responses, Orakl can store and analyze your interactions with the prophets.\n\nThis data is used exclusively to improve your experience and will never be shared with external partners.\n\nWould you like to enable personalized responses?",
+  "@privacyConsentMessage": {
+    "description": "Privacy consent dialog message"
+  },
+
+  "enablePersonalization": "Enable Personalization",
+  "@enablePersonalization": {
+    "description": "Button to accept personalization"
+  },
+
+  "disablePersonalization": "Disable Personalization",
+  "@disablePersonalization": {
+    "description": "Button to decline personalization"
+  },
+
+  "reviewPrivacyPolicy": "Review Privacy Policy",
+  "@reviewPrivacyPolicy": {
+    "description": "Button to review privacy policy"
+  },
+
+  "privacySettings": "Privacy Settings",
+  "@privacySettings": {
+    "description": "Title for privacy settings option"
+  },
+
+  "privacySettingsDescription": "Manage your data personalization preferences",
+  "@privacySettingsDescription": {
+    "description": "Description for privacy settings option"
+  },
+
+  "personalizationStatus": "Personalization Status",
+  "@personalizationStatus": {
+    "description": "Title for personalization status card"
+  },
+
+  "enabled": "Enabled",
+  "@enabled": {
+    "description": "Status text when feature is enabled"
+  },
+
+  "disabled": "Disabled",
+  "@disabled": {
+    "description": "Status text when feature is disabled"
+  },
+
+  "howItWorks": "How It Works",
+  "@howItWorks": {
+    "description": "Section title explaining how personalization works"
+  },
+
+  "personalizationEnabledDescription": "Your interactions with prophets are being analyzed to provide personalized responses.",
+  "@personalizationEnabledDescription": {
+    "description": "Description when personalization is enabled"
+  },
+
+  "personalizationDisabledDescription": "Personalization is disabled. No data is being collected from your interactions.",
+  "@personalizationDisabledDescription": {
+    "description": "Description when personalization is disabled"
+  },
+
+  "personalizationEnabledFeature1": "Insights from your questions and conversations are collected",
+  "@personalizationEnabledFeature1": {
+    "description": "Feature description when personalization is enabled"
+  },
+
+  "personalizationEnabledFeature2": "This data helps prophets give more relevant responses",
+  "@personalizationEnabledFeature2": {
+    "description": "Feature description when personalization is enabled"
+  },
+
+  "personalizationEnabledFeature3": "Your data is never shared with external partners",
+  "@personalizationEnabledFeature3": {
+    "description": "Feature description when personalization is enabled"
+  },
+
+  "personalizationDisabledFeature1": "No personal insights are collected or stored",
+  "@personalizationDisabledFeature1": {
+    "description": "Feature description when personalization is disabled"
+  },
+
+  "personalizationDisabledFeature2": "Prophets provide generic responses",
+  "@personalizationDisabledFeature2": {
+    "description": "Feature description when personalization is disabled"
+  },
+
+  "personalizationDisabledFeature3": "You can enable personalization at any time",
+  "@personalizationDisabledFeature3": {
+    "description": "Feature description when personalization is disabled"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings section title"
+  },
+
+  "updating": "Updating...",
+  "@updating": {
+    "description": "Text shown when updating settings"
+  },
+
+  "disablePersonalizationWarning": "Warning: Disabling personalization will permanently delete all collected data.",
+  "@disablePersonalizationWarning": {
+    "description": "Warning message when disabling personalization"
+  },
+
+  "enablePersonalizationNote": "Note: Enabling personalization will start collecting data from future interactions.",
+  "@enablePersonalizationNote": {
+    "description": "Note when enabling personalization"
+  },
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy section title"
+  },
+
+  "confirmDisablePersonalization": "Confirm Disable Personalization",
+  "@confirmDisablePersonalization": {
+    "description": "Title for disable personalization confirmation dialog"
+  },
+
+  "disablePersonalizationConfirmMessage": "Are you sure you want to disable personalization? This action will permanently delete all your collected data and cannot be undone.",
+  "@disablePersonalizationConfirmMessage": {
+    "description": "Confirmation message for disabling personalization"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "disable": "Disable",
+  "@disable": {
+    "description": "Disable button text"
+  },
+
+  "personalizationEnabledSuccess": "Personalization enabled successfully",
+  "@personalizationEnabledSuccess": {
+    "description": "Success message when personalization is enabled"
+  },
+
+  "personalizationDisabledSuccess": "Personalization disabled and data deleted successfully",
+  "@personalizationDisabledSuccess": {
+    "description": "Success message when personalization is disabled"
   }
 }
