@@ -5,7 +5,6 @@ import '../utils/theme_utils.dart';
 import '../services/onboarding_service.dart';
 import 'settings/user_profile_settings_screen.dart';
 import 'settings/localization_settings_screen.dart';
-import 'settings/bio_profile_screen.dart';
 import 'settings/conversation_management_screen.dart';
 import 'ad_debug_screen.dart';
 
@@ -45,17 +44,6 @@ class SettingsScreen extends StatelessWidget {
             subtitle: localizations.localizationSettingsDescription,
             icon: Icons.language,
             onTap: () => _navigateToLocalization(context),
-          ),
-          
-          const SizedBox(height: 12),
-          
-          _buildSettingsCard(
-            context: context,
-            title: 'Your AI Profile',
-            subtitle: 'View your generated biographical profile and privacy settings',
-            icon: Icons.psychology,
-            iconColor: Colors.blueAccent,
-            onTap: () => _navigateToBioManagement(context),
           ),
           
           const SizedBox(height: 12),
@@ -205,14 +193,6 @@ class SettingsScreen extends StatelessWidget {
         builder: (context) => LocalizationSettingsScreen(
           onLanguageChanged: onLanguageChanged,
         ),
-      ),
-    );
-  }
-
-  void _navigateToBioManagement(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const BioProfileScreen(),
       ),
     );
   }
