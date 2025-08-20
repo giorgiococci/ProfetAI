@@ -9,6 +9,7 @@ import '../../config/conversation_config.dart';
 import '../../services/question_ad_service.dart';
 import '../../utils/app_logger.dart';
 import 'conversation_storage_service.dart';
+import 'conversation_bio_service.dart';
 
 /// Core service for managing conversation lifecycle and state
 /// 
@@ -19,6 +20,7 @@ class ConversationService {
   
   final ConversationStorageService _storageService = ConversationStorageService();
   final QuestionAdService _adService = QuestionAdService();
+  final ConversationBioService _bioService = ConversationBioService();
   
   // Current conversation state
   Conversation? _currentConversation;
@@ -333,19 +335,35 @@ class ConversationService {
     try {
       final profet = ProfetManager.getProfet(_currentConversation!.prophetTypeEnum);
       
-      // Generate response using existing prophet logic
+      // Generate response using enhanced bio integration
       String responseContent;
       bool isAIGenerated = false;
       
       if (_currentConversation!.isAIEnabled && Profet.isAIEnabled) {
         try {
-          // Use AI to generate response
-          responseContent = await profet.getAIPersonalizedResponse(userContent, context);
+          AppLogger.logInfo(_component, 'Using enhanced bio integration for AI response');
+          
+          // Use ConversationBioService for enhanced response with bio context
+          responseContent = await _bioService.generateEnhancedProphetResponse(
+            userMessage: userContent,
+            context: context,
+            prophetType: _currentConversation!.prophetTypeEnum,
+            conversationHistory: _currentMessages,
+            isAIEnabled: true,
+            userId: 'default_user', // TODO: Get actual user ID
+          );
           isAIGenerated = true;
         } catch (e) {
-          AppLogger.logWarning(_component, 'AI response failed, using fallback: $e');
-          responseContent = await profet.getLocalizedPersonalizedResponse(context, userContent);
-          isAIGenerated = false;
+          AppLogger.logWarning(_component, 'Enhanced AI response failed, using standard fallback: $e');
+          try {
+            // Fallback to standard AI response without bio context
+            responseContent = await profet.getAIPersonalizedResponse(userContent, context);
+            isAIGenerated = true;
+          } catch (e2) {
+            AppLogger.logWarning(_component, 'Standard AI response also failed, using localized fallback: $e2');
+            responseContent = await profet.getLocalizedPersonalizedResponse(context, userContent);
+            isAIGenerated = false;
+          }
         }
       } else {
         responseContent = await profet.getLocalizedPersonalizedResponse(context, userContent);

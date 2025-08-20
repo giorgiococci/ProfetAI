@@ -382,6 +382,29 @@ class BioStorageService {
     }
   }
 
+  /// Clear generated bio for a user (keeps insights and user bio settings)
+  Future<bool> clearGeneratedBio({String? userId}) async {
+    try {
+      userId = userId ?? _defaultUserId;
+      AppLogger.logInfo(_component, 'Clearing generated bio for user: $userId');
+      
+      final db = await _databaseService.database;
+      
+      final rowsDeleted = await db.delete(
+        'generated_bio',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
+      
+      AppLogger.logInfo(_component, 'Deleted $rowsDeleted generated bio records for user: $userId');
+      return rowsDeleted > 0;
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to clear generated bio for user: $userId', e);
+      return false;
+    }
+  }
+
   /// Enable or disable bio collection for a user
   Future<bool> setBioEnabled({String? userId, required bool enabled}) async {
     try {
@@ -512,8 +535,18 @@ class BioStorageService {
       final bioMap = results.first;
       AppLogger.logInfo(_component, 'Bio map keys: ${bioMap.keys.join(', ')}');
       
+      // Log the raw sections_json to see what's actually stored
+      final sectionsJson = bioMap['sections_json'] as String?;
+      AppLogger.logInfo(_component, 'Raw sections_json: ${sectionsJson?.substring(0, sectionsJson.length > 200 ? 200 : sectionsJson.length)}...');
+      
       final generatedBio = GeneratedBio.fromMap(bioMap);
       AppLogger.logInfo(_component, 'Generated bio loaded with ${generatedBio.sections.length} sections');
+      
+      // Log each section content for debugging
+      generatedBio.sections.forEach((key, value) {
+        final preview = value.length > 50 ? '${value.substring(0, 50)}...' : value;
+        AppLogger.logInfo(_component, 'Section "$key": $preview');
+      });
       
       return generatedBio;
       

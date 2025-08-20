@@ -5,19 +5,32 @@
 ## ✨ Features
 
 ### 🧙‍♂️ Three Unique Oracles
+
 - **Mystic Oracle** - Ancient wisdom and spiritual guidance
 - **Chaotic Oracle** - Unpredictable and wild predictions
 - **Cynical Oracle** - Sharp, realistic, and brutally honest insights
 
 ### 🎯 Core Functionality
+
 - **Onboarding Experience** - Welcome flow introducing app features and optional personalization
 - **Personalized Predictions** - Ask questions and receive tailored responses
 - **Random Visions** - Get spontaneous insights from your chosen oracle
 - **Vision Book** - Save and revisit your favorite predictions
+- **Conversation System** - Persistent conversations with oracles across sessions
+- **AI-Powered Bio System** - Invisible personalization that learns from your interactions
 - **Dynamic Theming** - Each oracle has unique colors and visual identity
 - **Immersive UI** - Beautiful gradients and atmospheric backgrounds
 
+### 🧠 AI-Powered Personalization
+
+- **Invisible Bio Collection** - System learns your interests and preferences through natural interactions
+- **Smart Context Integration** - Oracles reference your personal details (hobbies, interests) naturally
+- **Privacy-First Design** - 4-tier privacy filtering ensures sensitive information stays protected
+- **Cross-Session Memory** - Oracles remember your previous conversations and insights
+- **Adaptive Responses** - Predictions become more relevant and personalized over time
+
 ### 📱 Cross-Platform Support
+
 - iOS
 - Android
 - Windows
@@ -28,28 +41,33 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - [Flutter](https://flutter.dev/docs/get-started/install) (latest stable version)
 - [Dart SDK](https://dart.dev/get-dart)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/giorgiococci/ProfetAI.git
    cd ProfetAI
    ```
 
 2. **Install dependencies**
+
    ```bash
    flutter pub get
    ```
 
 3. **Run the app**
+
    ```bash
    flutter run
    ```
 
    For specific platforms:
+
    ```bash
    # iOS
    flutter run -d ios
@@ -66,7 +84,7 @@
 
 ## 🏗️ Project Structure
 
-```
+```text
 lib/
 ├── main.dart                 # App entry point and navigation
 ├── models/                   # Data models and business logic
@@ -93,6 +111,7 @@ lib/
 ## 🎨 Design Philosophy
 
 Profet AI embraces a **dark, mystical aesthetic** with:
+
 - Deep purple and gradient color schemes
 - Atmospheric backgrounds and overlays
 - Smooth animations and transitions

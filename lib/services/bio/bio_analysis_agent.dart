@@ -249,10 +249,14 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
     String sourceQuestion,
     String sourceAnswer,
   ) async {
+    AppLogger.logInfo(_component, 'Processing ${insights.length} extracted insights for storage');
+    
     for (final insight in insights) {
       try {
         final category = insight['category']!;
         final content = insight['content']!;
+        
+        AppLogger.logInfo(_component, 'Processing insight - Category: $category, Content preview: ${content.length > 50 ? '${content.substring(0, 50)}...' : content}');
         
         // First, analyze privacy level
         final privacyLevel = await _privacyFilter.analyzePrivacyLevel(content: content);
@@ -275,7 +279,7 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
           userId: userId,
         );
         
-        AppLogger.logDebug(_component, 'Stored insight - $category: $content');
+        AppLogger.logInfo(_component, 'Successfully stored insight - Category: $category, Privacy: ${privacyLevel.displayName}');
         
       } catch (e) {
         // Individual insight failures shouldn't stop the process
@@ -484,6 +488,35 @@ Respond naturally incorporating this understanding without mentioning you have b
       
     } catch (e) {
       AppLogger.logWarning(_component, 'Message exchange analysis failed: $e');
+    }
+  }
+
+  /// Analyze a direct prophet response without user input for bio insights
+  /// This is useful for "Listen to Oracle" features where the prophet speaks without a user question
+  Future<void> analyzeDirectProphetResponse({
+    required String response,
+    required Profet profet,
+    String? userId,
+  }) async {
+    try {
+      AppLogger.logInfo(_component, 'Analyzing direct prophet response for bio insights');
+      
+      // Analyze the response for insights about user interests/engagement
+      // Even without a user question, we can infer engagement patterns
+      await _analyzeResponse(
+        response: response,
+        question: null, // No user question for direct prophet messages
+        prophetType: profet.type,
+        userId: userId,
+      );
+      
+      AppLogger.logInfo(_component, 'Direct prophet response analysis completed');
+      
+      // Trigger bio generation if needed
+      await _triggerBioGenerationIfNeeded(userId: userId);
+      
+    } catch (e) {
+      AppLogger.logWarning(_component, 'Direct prophet response analysis failed: $e');
     }
   }
 }

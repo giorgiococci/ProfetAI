@@ -100,6 +100,7 @@ class ConversationIntegrationService {
       
       // Perform bio analysis on the message exchange (async, non-blocking)
       if (ConversationConfig.enableRealTimeBioUpdates) {
+        AppLogger.logInfo(_component, 'Bio updates enabled - starting bio analysis for message exchange');
         _bioService.analyzeMessageExchange(
           context: context,
           userMessage: content,
@@ -125,6 +126,7 @@ class ConversationIntegrationService {
     required String content,
     bool isAIGenerated = true,
     String? metadata,
+    String userId = 'default_user',
   }) async {
     if (!hasActiveConversation) {
       throw StateError('No active conversation - start a conversation first');
@@ -144,6 +146,19 @@ class ConversationIntegrationService {
       
       // Update conversation service state to keep everything in sync
       await _conversationService.loadConversation(currentConversation!.id!);
+      
+      // Perform bio analysis on the prophet message (async, non-blocking)
+      // This is needed for "Listen to Oracle" and other direct prophet messages
+      if (ConversationConfig.enableRealTimeBioUpdates) {
+        AppLogger.logInfo(_component, 'Bio updates enabled - starting bio analysis for direct prophet message');
+        _bioService.analyzeDirectProphetMessage(
+          content: content,
+          prophetType: currentConversation!.prophetTypeEnum,
+          userId: userId,
+        ).catchError((error) {
+          AppLogger.logWarning(_component, 'Bio analysis failed for direct prophet message: $error');
+        });
+      }
       
       AppLogger.logInfo(_component, 'Direct prophet message added successfully');
       return prophetMessage;
