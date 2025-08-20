@@ -1445,6 +1445,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete All Data'**
   String get deleteAllDataTooltip;
+
+  /// Title for privacy consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Data Privacy & Personalization'**
+  String get privacyConsentTitle;
+
+  /// Privacy consent dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'To provide you with personalized responses, Orakl can store and analyze your interactions with the prophets.\n\nThis data is used exclusively to improve your experience and will never be shared with external partners.\n\nWould you like to enable personalized responses?'**
+  String get privacyConsentMessage;
+
+  /// Button to accept personalization
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Personalization'**
+  String get enablePersonalization;
+
+  /// Button to decline personalization
+  ///
+  /// In en, this message translates to:
+  /// **'Disable Personalization'**
+  String get disablePersonalization;
+
+  /// Button to review privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Review Privacy Policy'**
+  String get reviewPrivacyPolicy;
+
+  /// Title for privacy settings option
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Settings'**
+  String get privacySettings;
+
+  /// Description for privacy settings option
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your data personalization preferences'**
+  String get privacySettingsDescription;
+
+  /// Title for personalization status card
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization Status'**
+  String get personalizationStatus;
+
+  /// Status text when feature is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// Status text when feature is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// Section title explaining how personalization works
+  ///
+  /// In en, this message translates to:
+  /// **'How It Works'**
+  String get howItWorks;
+
+  /// Description when personalization is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Your interactions with prophets are being analyzed to provide personalized responses.'**
+  String get personalizationEnabledDescription;
+
+  /// Description when personalization is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization is disabled. No data is being collected from your interactions.'**
+  String get personalizationDisabledDescription;
+
+  /// Feature description when personalization is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Insights from your questions and conversations are collected'**
+  String get personalizationEnabledFeature1;
+
+  /// Feature description when personalization is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'This data helps prophets give more relevant responses'**
+  String get personalizationEnabledFeature2;
+
+  /// Feature description when personalization is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is never shared with external partners'**
+  String get personalizationEnabledFeature3;
+
+  /// Feature description when personalization is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'No personal insights are collected or stored'**
+  String get personalizationDisabledFeature1;
+
+  /// Feature description when personalization is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Prophets provide generic responses'**
+  String get personalizationDisabledFeature2;
+
+  /// Feature description when personalization is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'You can enable personalization at any time'**
+  String get personalizationDisabledFeature3;
+
+  /// Settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// Text shown when updating settings
+  ///
+  /// In en, this message translates to:
+  /// **'Updating...'**
+  String get updating;
+
+  /// Warning message when disabling personalization
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: Disabling personalization will permanently delete all collected data.'**
+  String get disablePersonalizationWarning;
+
+  /// Note when enabling personalization
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Enabling personalization will start collecting data from future interactions.'**
+  String get enablePersonalizationNote;
+
+  /// Privacy policy section title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Title for disable personalization confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Disable Personalization'**
+  String get confirmDisablePersonalization;
+
+  /// Confirmation message for disabling personalization
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to disable personalization? This action will permanently delete all your collected data and cannot be undone.'**
+  String get disablePersonalizationConfirmMessage;
+
+  /// Disable button text
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get disable;
+
+  /// Success message when personalization is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization enabled successfully'**
+  String get personalizationEnabledSuccess;
+
+  /// Success message when personalization is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization disabled and data deleted successfully'**
+  String get personalizationDisabledSuccess;
 }
 
 class _AppLocalizationsDelegate

@@ -63,6 +63,9 @@ dependencies:
   
   # For storing user preferences and counters
   shared_preferences: ^2.2.2
+  
+  # For opening URLs
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import '../services/ai_service_manager.dart';
 import '../services/database_service.dart';
 import '../services/onboarding_service.dart';
+import '../services/privacy_consent_service.dart';
 import '../services/bio/bio_generation_service.dart';
 import '../config/app_config.dart';
 import '../utils/app_logger.dart';
@@ -95,6 +96,18 @@ class _SplashScreenState extends State<SplashScreen>
         AppLogger.logError('SplashScreen', '❌ Failed to initialize bio services', e);
         AppLogger.logWarning('SplashScreen', '⚠️  App will continue with limited bio functionality');
         // Continue anyway - app should still work without bio features
+      }
+      
+      // Initialize privacy consent service
+      try {
+        AppLogger.logInfo('SplashScreen', 'Loading privacy consent status...');
+        final privacyConsentService = PrivacyConsentService();
+        await privacyConsentService.loadConsentStatus();
+        AppLogger.logInfo('SplashScreen', '✅ Privacy consent service initialized successfully');
+      } catch (e) {
+        AppLogger.logError('SplashScreen', '❌ Failed to initialize privacy consent service', e);
+        AppLogger.logWarning('SplashScreen', '⚠️  App will continue with default privacy settings');
+        // Continue anyway - app should still work with defaults
       }
       
       setState(() {
