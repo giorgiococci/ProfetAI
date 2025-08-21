@@ -300,6 +300,34 @@ class ConversationStorageService {
     }
   }
 
+  /// Update conversation title
+  Future<void> updateConversationTitle({
+    required int conversationId,
+    required String title,
+  }) async {
+    try {
+      AppLogger.logInfo(_component, 'Updating conversation title to: $title');
+      
+      final db = await _databaseService.database;
+      
+      await db.update(
+        'conversations',
+        {
+          'title': title,
+          'last_updated_at': DateTime.now().millisecondsSinceEpoch,
+        },
+        where: 'id = ?',
+        whereArgs: [conversationId],
+      );
+      
+      AppLogger.logInfo(_component, 'Conversation title updated successfully');
+      
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to update conversation title', e);
+      rethrow;
+    }
+  }
+
   /// Get conversation count
   Future<int> getConversationCount({ConversationStatus? statusFilter}) async {
     try {

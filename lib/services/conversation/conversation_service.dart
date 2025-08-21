@@ -379,6 +379,9 @@ class ConversationService {
         metadata: isAIGenerated ? 'ai_generated' : 'localized_response',
       );
       
+      // Generate a proper title based on the first prophet response
+      await _updateConversationTitleIfNeeded(responseContent, context);
+      
       return prophetMessage;
       
     } catch (e) {
@@ -395,6 +398,45 @@ class ConversationService {
     // Create a descriptive title
     final time = '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
     return 'Chat with ${prophet.name} - $time';
+  }
+
+  /// Update conversation title if this is the first prophet response
+  Future<void> _updateConversationTitleIfNeeded(String prophetResponseContent, BuildContext context) async {
+    if (_currentConversation == null) return;
+    
+    try {
+      // Check if this is the first prophet message (title still contains "Chat with")
+      if (_currentConversation!.title.contains('Chat with')) {
+        AppLogger.logInfo(_component, 'Generating proper title for conversation based on first prophet response');
+        
+        // Get the prophet and generate a meaningful title
+        final prophetType = ProfetManager.getProfetTypeFromString(_currentConversation!.prophetType);
+        final prophet = ProfetManager.getProfet(prophetType);
+        
+        // Use the prophet's title generation method to create a meaningful title
+        final generatedTitle = await prophet.generateVisionTitle(
+          context,
+          answer: prophetResponseContent,
+        );
+        
+        // Update the conversation title in the database
+        await _storageService.updateConversationTitle(
+          conversationId: _currentConversation!.id!,
+          title: generatedTitle,
+        );
+        
+        // Update the local conversation object
+        _currentConversation = _currentConversation!.copyWith(title: generatedTitle);
+        
+        // Notify listeners about the updated conversation
+        _conversationController.add(_currentConversation);
+        
+        AppLogger.logInfo(_component, 'Conversation title updated to: $generatedTitle');
+      }
+    } catch (e) {
+      AppLogger.logError(_component, 'Failed to update conversation title', e);
+      // Don't rethrow - title generation failure shouldn't break the conversation
+    }
   }
   /// Dispose of streams and resources
   void dispose() {

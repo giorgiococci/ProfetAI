@@ -266,7 +266,9 @@ class BioGenerationService {
   /// Build the prompt for AI bio generation
   String _buildBioGenerationPrompt(Map<String, List<String>> insightsByCategory) {
     final buffer = StringBuffer();
-    buffer.writeln('Generate a cohesive biographical profile from these insights:');
+    final totalInsights = insightsByCategory.values.expand((list) => list).length;
+    
+    buffer.writeln('Generate a biographical profile from these insights:');
     buffer.writeln();
     
     for (final entry in insightsByCategory.entries) {
@@ -284,27 +286,54 @@ class BioGenerationService {
     buffer.writeln('- GOALS: Aspirations, objectives, and motivations');
     buffer.writeln('- PREFERENCES: Communication style, learning preferences, etc.');
     buffer.writeln();
-    buffer.writeln('IMPORTANT: Analyze ALL the insights above and extract information for each section, regardless of how they are categorized.');
-    buffer.writeln('For example, if an insight says "User has programming experience" (even if categorized as interests), it should go in BACKGROUND.');
-    buffer.writeln('Each section should be comprehensive but stay under 1000 words. Write detailed, flowing narratives.');
-    buffer.writeln('Be natural and engaging, creating a complete picture of the person in each section.');
-    buffer.writeln('If you cannot find relevant information for a section, write "No specific information available".');
+    
+    // Adjust instructions based on number of insights
+    if (totalInsights <= 3) {
+      buffer.writeln('IMPORTANT: You have very few insights ($totalInsights). Be extremely conservative:');
+      buffer.writeln('- Only mention what is explicitly evident from the insights');
+      buffer.writeln('- Keep each section brief (1-2 sentences maximum)');
+      buffer.writeln('- Do not make assumptions or elaborate beyond the evidence');
+      buffer.writeln('- If you cannot find relevant information for a section, write "No specific information available"');
+      buffer.writeln('- Focus on facts, not speculation');
+    } else if (totalInsights <= 10) {
+      buffer.writeln('IMPORTANT: You have limited insights ($totalInsights). Be moderately conservative:');
+      buffer.writeln('- Base content primarily on the provided insights');
+      buffer.writeln('- Keep each section concise (2-4 sentences)');
+      buffer.writeln('- Make minimal reasonable inferences');
+      buffer.writeln('- If you cannot find relevant information for a section, write "No specific information available"');
+    } else {
+      buffer.writeln('IMPORTANT: Analyze ALL the insights above and extract information for each section, regardless of how they are categorized.');
+      buffer.writeln('For example, if an insight says "User has programming experience" (even if categorized as interests), it should go in BACKGROUND.');
+      buffer.writeln('Each section should be comprehensive but stay under 800 words. Write detailed, flowing narratives.');
+      buffer.writeln('Be natural and engaging, creating a complete picture of the person in each section.');
+      buffer.writeln('If you cannot find relevant information for a section, write "No specific information available".');
+    }
     
     return buffer.toString();
   }
   
   /// System prompt for bio generation
   String _getSystemPromptForBioGeneration() {
-    return '''You are a biographical profile generator. Your task is to create cohesive, natural biographical narratives from user insights.
+    return '''You are a biographical profile generator. Your task is to create accurate, evidence-based biographical narratives from user insights.
+
+Core Principles:
+1. BE CONSERVATIVE: Only write what is directly supported by the evidence
+2. AVOID ASSUMPTIONS: Don't elaborate beyond what the insights actually show
+3. SCALE CONTENT TO EVIDENCE: Write brief content when you have few insights
+4. BE ACCURATE: Focus on facts, not speculation
+
+Content Guidelines:
+- Few insights (1-3): Keep each section to 1-2 sentences maximum
+- Limited insights (4-10): Keep each section to 2-4 sentences
+- Abundant insights (10+): Write detailed narratives up to 800 words per section
 
 Rules:
-1. Create comprehensive, detailed narratives for each section (up to 1000 words per section)
-2. Use natural, engaging language that tells a complete story
-3. Be respectful and positive in tone
-4. Focus on patterns and themes across insights
-5. Write detailed paragraphs that fully explore each aspect of the person
-6. Analyze ALL insights and categorize information appropriately, regardless of original category labels
-7. If a section has no relevant insights, write "No specific information available"
+1. Use respectful and positive tone
+2. Focus on patterns that emerge from multiple insights
+3. Write in natural, engaging language appropriate to the amount of evidence
+4. Analyze ALL insights and categorize information appropriately, regardless of original category labels
+5. If a section has no relevant insights, write "No specific information available"
+6. Never invent details or make broad generalizations from minimal evidence
 
 CRITICAL: Look at the CONTENT of each insight, not just its category. For example:
 - "User has programming experience" should go in BACKGROUND even if categorized as "interests"
@@ -313,15 +342,15 @@ CRITICAL: Look at the CONTENT of each insight, not just its category. For exampl
 
 Format your response exactly like this:
 
-INTERESTS: [Comprehensive narrative about interests, hobbies, and preferences - up to 1000 words]
+INTERESTS: [Evidence-based content about interests, hobbies, and preferences]
 
-PERSONALITY: [Detailed description of personality traits and characteristics - up to 1000 words]
+PERSONALITY: [Evidence-based description of personality traits and characteristics]
 
-BACKGROUND: [Complete background story including education, work, culture - up to 1000 words]
+BACKGROUND: [Evidence-based background including education, work, culture]
 
-GOALS: [Full exploration of aspirations, objectives, and motivations - up to 1000 words]
+GOALS: [Evidence-based exploration of aspirations, objectives, and motivations]
 
-PREFERENCES: [Detailed account of communication style, learning preferences, etc. - up to 1000 words]''';
+PREFERENCES: [Evidence-based account of communication style, learning preferences, etc.]''';
   }
   
   /// Parse AI response into structured bio sections
