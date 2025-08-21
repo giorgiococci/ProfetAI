@@ -1,6 +1,6 @@
 {
-    "name": "profet_ai",
-    "short_name": "profet_ai",
+    "name": "orakl",
+    "short_name": "orakl",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

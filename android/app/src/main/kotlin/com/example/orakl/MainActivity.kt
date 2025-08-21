@@ -1,4 +1,4 @@
-package com.example.profet_ai
+package com.example.orakl
 
 import io.flutter.embedding.android.FlutterActivity
 

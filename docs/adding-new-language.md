@@ -30,7 +30,7 @@ Create `lib/l10n/app_es.arb`:
 ```json
 {
   "@@locale": "es",
-  "appTitle": "Profet AI",
+  "appTitle": "Orakl",
   "@appTitle": {
     "description": "Application title"
   },
@@ -96,7 +96,7 @@ Edit `lib/main.dart` to add the new locale to `supportedLocales`:
 
 ```dart
 return MaterialApp(
-  title: 'Profet AI',
+  title: 'Orakl',
   localizationsDelegates: const [
     AppLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,

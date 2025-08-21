@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Profet AI';
+  String get appTitle => 'Orakl';
 
   @override
   String get navigationHome => 'Home';
@@ -478,7 +478,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skip => 'Skip';
 
   @override
-  String get welcomeToProfetAI => 'Welcome to Profet AI';
+  String get welcomeToOrakl => 'Welcome to Orakl';
 
   @override
   String get discoverMysticalInsights =>
@@ -638,56 +638,54 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get conversationStatistics => 'Conversation Statistics';
+  String get conversationStatistics => 'Visions Statistics';
 
   @override
-  String get totalConversations => 'Total Conversations';
+  String get totalConversations => 'Total Visions';
 
   @override
   String get totalMessages => 'Total Messages';
 
   @override
-  String get averageMessagesPerConversation =>
-      'Average Messages per Conversation';
+  String get averageMessagesPerConversation => 'Average Messages per Vision';
 
   @override
   String get dataManagement => 'Data Management';
 
   @override
-  String get clearAllConversations => 'Clear All Conversations';
+  String get clearAllConversations => 'Clear All Visions';
 
   @override
-  String get clearAllConversationsTitle => 'Clear All Conversations';
+  String get clearAllConversationsTitle => 'Clear All Visions';
 
   @override
   String get clearAllConversationsContent =>
-      '⚠️ This action will permanently delete ALL your conversation history and cannot be undone.\n\nAre you sure you want to continue?';
+      '⚠️ This action will permanently delete ALL your vision history and cannot be undone.\n\nAre you sure you want to continue?';
 
   @override
   String get deleteAll => 'Delete All';
 
   @override
-  String get deletingAllConversations => 'Deleting all conversations...';
+  String get deletingAllConversations => 'Deleting all visions...';
 
   @override
-  String get conversationsDeletedSuccess =>
-      'All conversations deleted successfully';
+  String get conversationsDeletedSuccess => 'All visions deleted successfully';
 
   @override
   String conversationsDeleteFailed(String error) {
-    return 'Failed to delete conversations: $error';
+    return 'Failed to delete visions: $error';
   }
 
   @override
-  String get noConversationsYet => 'No conversations yet';
+  String get noConversationsYet => 'No visions yet';
 
   @override
   String get noConversationsDescription =>
-      'Start chatting with a prophet to see your conversation statistics here.';
+      'Start chatting with a prophet to see your vision statistics here.';
 
   @override
   String failedToLoadConversationData(String error) {
-    return 'Failed to load conversation data: $error';
+    return 'Failed to load vision data: $error';
   }
 
   @override

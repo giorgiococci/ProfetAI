@@ -9,7 +9,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get appTitle => 'Profet AI';
+  String get appTitle => 'Orakl';
 
   @override
   String get navigationHome => 'Home';
@@ -481,7 +481,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get skip => 'Salta';
 
   @override
-  String get welcomeToProfetAI => 'Benvenuto in Profet AI';
+  String get welcomeToOrakl => 'Benvenuto in Orakl';
 
   @override
   String get discoverMysticalInsights =>
@@ -642,45 +642,43 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get conversationStatistics => 'Statistiche Conversazioni';
+  String get conversationStatistics => 'Statistiche Visioni';
 
   @override
-  String get totalConversations => 'Conversazioni Totali';
+  String get totalConversations => 'Visioni Totali';
 
   @override
   String get totalMessages => 'Messaggi Totali';
 
   @override
-  String get averageMessagesPerConversation =>
-      'Media Messaggi per Conversazione';
+  String get averageMessagesPerConversation => 'Media Messaggi per Visione';
 
   @override
   String get dataManagement => 'Gestione Dati';
 
   @override
-  String get clearAllConversations => 'Cancella Tutte le Conversazioni';
+  String get clearAllConversations => 'Cancella Tutte le Visioni';
 
   @override
-  String get clearAllConversationsTitle => 'Cancella Tutte le Conversazioni';
+  String get clearAllConversationsTitle => 'Cancella Tutte le Visioni';
 
   @override
   String get clearAllConversationsContent =>
-      '⚠️ Questa azione eliminerà permanentemente TUTTA la cronologia delle conversazioni e non può essere annullata.\n\nSei sicuro di voler continuare?';
+      '⚠️ Questa azione eliminerà permanentemente TUTTA la cronologia delle visioni e non può essere annullata.\n\nSei sicuro di voler continuare?';
 
   @override
   String get deleteAll => 'Elimina Tutto';
 
   @override
-  String get deletingAllConversations =>
-      'Eliminazione di tutte le conversazioni...';
+  String get deletingAllConversations => 'Eliminazione di tutte le visioni...';
 
   @override
   String get conversationsDeletedSuccess =>
-      'Tutte le conversazioni eliminate con successo';
+      'Tutte le visioni eliminate con successo';
 
   @override
   String conversationsDeleteFailed(String error) {
-    return 'Impossibile eliminare le conversazioni: $error';
+    return 'Impossibile eliminare le visioni: $error';
   }
 
   @override
@@ -688,11 +686,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noConversationsDescription =>
-      'Inizia a chattare con un profeta per vedere le statistiche delle tue conversazioni qui.';
+      'Inizia a chattare con un profeta per vedere le statistiche delle tue visioni qui.';
 
   @override
   String failedToLoadConversationData(String error) {
-    return 'Impossibile caricare i dati delle conversazioni: $error';
+    return 'Impossibile caricare i dati delle visioni: $error';
   }
 
   @override

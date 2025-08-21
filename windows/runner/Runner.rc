@@ -1,7 +1,12 @@
 // Microsoft Visual C++ generated resource script.
 //
 #pragma code_page(65001)
-#include "resource.h"
+#include "            VALUE "FileDescription", "orakl" "\0"
+            VALUE "FileVersion", VER_AS_STRING "\0"
+            VALUE "InternalName", "orakl" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2021 giorgiococci. All rights reserved." "\0"
+            VALUE "OriginalFilename", "orakl.exe" "\0"
+            VALUE "ProductName", "orakl" "\0"ce.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -90,12 +95,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "profet_ai" "\0"
+            VALUE "FileDescription", "orakl" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "profet_ai" "\0"
+            VALUE "InternalName", "orakl" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "profet_ai.exe" "\0"
-            VALUE "ProductName", "profet_ai" "\0"
+            VALUE "OriginalFilename", "orakl.exe" "\0"
+            VALUE "ProductName", "orakl" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

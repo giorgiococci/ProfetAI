@@ -83,7 +83,7 @@ class OnboardingWelcomeScreen extends StatelessWidget {
           
           // Welcome title
           Text(
-            l10n.welcomeToProfetAI,
+            l10n.welcomeToOrakl,
             style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,

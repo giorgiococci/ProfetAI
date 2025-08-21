@@ -1,4 +1,4 @@
-import 'package:profet_ai/models/conversation/conversation.dart';
+import 'package:orakl/models/conversation/conversation.dart';
 
 /// Filter criteria for conversations
 class ConversationFilter {

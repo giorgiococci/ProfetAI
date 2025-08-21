@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utils/app_logger.dart';
 
-/// Simplified configuration manager for ProfetAI
+/// Simplified configuration manager for Orakl
 /// 
 /// This replaces the complex BuildConfig and environment variable management
 /// with a single, clear source of truth.
@@ -79,7 +79,7 @@ class AppConfig {
     }
     
     final buffer = StringBuffer();
-    buffer.writeln('=== ProfetAI Configuration ===');
+    buffer.writeln('=== Orakl Configuration ===');
     safeConfigMap.forEach((key, value) {
       buffer.writeln('$key: $value');
     });

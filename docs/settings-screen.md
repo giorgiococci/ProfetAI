@@ -12,7 +12,7 @@ The Settings screen can be accessed via the bottom navigation bar (⚙️ Settin
 
 ### User Profile
 
-Manage your personal information and preferences to customize your ProfetAI experience.
+Manage your personal information and preferences to customize your Orakl experience.
 
 **Available Options:**
 

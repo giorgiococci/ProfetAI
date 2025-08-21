@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/models/profet_manager.dart';
-import 'package:profet_ai/models/vision_feedback.dart';
-import 'package:profet_ai/services/database_service.dart';
-import 'package:profet_ai/services/vision_integration_service.dart';
+import 'package:orakl/models/profet_manager.dart';
+import 'package:orakl/models/vision_feedback.dart';
+import 'package:orakl/services/database_service.dart';
+import 'package:orakl/services/vision_integration_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {

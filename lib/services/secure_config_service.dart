@@ -120,7 +120,7 @@ class SecureConfigService {
       _log('Enable AI: $enableAI');
 
       if (enableAI && endpoint != null && apiKey != null && deploymentName != null) {
-        _log('All credentials present, initializing Profet AI...');
+        _log('All credentials present, initializing Orakl...');
         await Profet.initializeAI(
           endpoint: endpoint,
           apiKey: apiKey,
@@ -300,7 +300,7 @@ class SecureConfigService {
 
       // Reinitialize AI with new configuration if enabled
       if (enableAI && endpoint.isNotEmpty && apiKey.isNotEmpty && deploymentName.isNotEmpty) {
-        _log('Reinitializing Profet AI with stored configuration...');
+        _log('Reinitializing Orakl with stored configuration...');
         await Profet.initializeAI(
           endpoint: endpoint,
           apiKey: apiKey,
@@ -398,7 +398,7 @@ class SecureConfigService {
     buffer.writeln('=== AI Configuration Status ===');
     buffer.writeln('Initialized: $_isInitialized');
     buffer.writeln('AI Enabled: $_isAIEnabled');
-    buffer.writeln('Profet AI Status: ${Profet.isAIEnabled}');
+    buffer.writeln('Orakl Status: ${Profet.isAIEnabled}');
     buffer.writeln('Build Config: ${BuildConfig.isConfigured}');
     
     if (_lastError.isNotEmpty) {

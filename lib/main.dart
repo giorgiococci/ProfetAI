@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Profet AI',
+      title: 'Orakl',
       locale: _currentLocale,
       localizationsDelegates: const [
         AppLocalizations.delegate,

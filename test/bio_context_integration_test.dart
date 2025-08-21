@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/services/bio/bio_context_service.dart';
-import 'package:profet_ai/models/oracolo_mistico.dart';
+import 'package:orakl/services/bio/bio_context_service.dart';
+import 'package:orakl/models/oracolo_mistico.dart';
 
 void main() {
   group('Phase 3 - Bio Context Integration Tests', () {

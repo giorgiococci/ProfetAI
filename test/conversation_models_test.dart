@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/models/conversation/conversation.dart';
-import 'package:profet_ai/models/conversation/conversation_message.dart';
-import 'package:profet_ai/models/vision_feedback.dart';
+import 'package:orakl/models/conversation/conversation.dart';
+import 'package:orakl/models/conversation/conversation_message.dart';
+import 'package:orakl/models/vision_feedback.dart';
 
 void main() {
   group('Conversation Model Tests', () {

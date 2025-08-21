@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/services/privacy_consent_service.dart';
+import 'package:orakl/services/privacy_consent_service.dart';
 
 void main() {
   group('Privacy Consent Service Tests', () {

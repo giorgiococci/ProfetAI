@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:profet_ai/models/conversation/conversation.dart';
-import 'package:profet_ai/models/conversation/conversation_message.dart';
-import 'package:profet_ai/widgets/vision_book/conversation_card.dart';
+import 'package:orakl/models/conversation/conversation.dart';
+import 'package:orakl/models/conversation/conversation_message.dart';
+import 'package:orakl/widgets/vision_book/conversation_card.dart';
 
 /// Search delegate for conversations in the conversation book
 class ConversationSearchDelegate extends SearchDelegate<Conversation?> {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profet_ai/services/secure_config_service.dart';
+import 'package:orakl/services/secure_config_service.dart';
 
 void main() {
   group('SecureConfigService Tests', () {
