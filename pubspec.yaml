@@ -148,11 +148,17 @@ flutter_launcher_icons:
 flutter_native_splash:
   color: "#ffffff"
   image: assets/images/start_screen.png
-  # branding: assets/branding-production.png
   branding_bottom_padding: 24
   color_dark: "#121212"
   image_dark: assets/images/start_screen.png
-  # branding_dark: assets/branding-production.png
+  
+  # Control image scaling and positioning to prevent cutting
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+  web_image_mode: center
+  
+  # Don't use fullscreen to avoid cutting
+  fullscreen: false
 
   android_12:
     image: assets/images/start_screen.png
