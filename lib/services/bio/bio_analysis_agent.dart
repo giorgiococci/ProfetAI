@@ -98,11 +98,17 @@ class BioAnalysisAgent {
     try {
       AppLogger.logDebug(_component, 'Analyzing question for insights');
       
+      // Check if question is very brief and adjust analysis accordingly
+      final wordCount = question.trim().split(RegExp(r'\s+')).length;
+      final isBrief = wordCount <= 5; // Consider questions with 5 words or less as brief
+      
+      AppLogger.logInfo(_component, 'Question word count: $wordCount, considered brief: $isBrief');
+      
       // Create context for AI analysis
       final analysisPrompt = '''
 Analyze this user question to a spiritual oracle and identify biographical insights.
 
-Question: "$question"
+Question: "$question" (Word count: $wordCount)
 Oracle Response: "$response"
 
 Extract ONLY clear, factual insights about the user. Respond with insights in this format:
@@ -119,9 +125,11 @@ personality: User tends to overthink decisions
 Rules:
 - Only extract insights that are clearly evident from the question
 - Keep insights factual and neutral
-- Maximum 3 insights per analysis
+${isBrief ? '- BRIEF QUESTION DETECTED: Extract maximum 1 insight and be extra conservative' : '- Maximum 2 insights per analysis (reduced to avoid over-interpretation)'}
 - Skip vague or uncertain insights
 - Use simple, clear language
+${isBrief ? '- For brief questions like "I like tennis", only extract the obvious interest, do not infer personality traits' : '- Be conservative: if the question is very brief (under 10 words), extract maximum 1 insight'}
+- Do not infer complex personality traits from simple statements
 
 If no clear insights can be extracted, respond with: NO_INSIGHTS
 ''';
@@ -198,9 +206,9 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
       // Use the AI service directly for analysis
       final aiResponse = await AIServiceManager.generateResponse(
         prompt: analysisPrompt,
-        systemMessage: 'You are a biographical insight extraction assistant. Extract only clear, factual insights about users based on their spiritual oracle interactions.',
+        systemMessage: 'You are a biographical insight extraction assistant. Extract only clear, factual insights about users based on their spiritual oracle interactions. Be conservative and avoid over-interpretation of brief or simple statements.',
         maxTokens: 200,
-        temperature: 0.3,
+        temperature: 0.1, // Reduced temperature for more conservative analysis
       );
       
       if (aiResponse == null || aiResponse.trim() == 'NO_INSIGHTS') {
@@ -227,8 +235,8 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
               'content': content,
             });
             
-            // Limit to prevent overwhelming the system
-            if (insights.length >= 3) break;
+            // Limit to prevent overwhelming the system with speculative insights
+            if (insights.length >= 2) break; // Reduced from 3 to 2
           }
         }
       }
