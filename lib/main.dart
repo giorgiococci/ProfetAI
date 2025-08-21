@@ -190,6 +190,24 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
     
+    // Handle home navigation - reset conversation state when going to home
+    if (index == 0) {
+      setState(() {
+        // Set a flag to indicate we want to reset to home, not just clear conversation to load
+        _conversationToLoad = -1; // Use -1 as a special flag to indicate reset to home
+        _selectedIndex = index;
+      });
+      // Clear the flag after a brief delay to prevent interference
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          setState(() {
+            _conversationToLoad = null;
+          });
+        }
+      });
+      return;
+    }
+    
     setState(() {
       // Reset conversation loading when switching tabs normally
       _conversationToLoad = null;

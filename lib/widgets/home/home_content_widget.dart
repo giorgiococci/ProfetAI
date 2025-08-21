@@ -119,8 +119,8 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
       // Note: We might want to add a method to clear state without ending conversation
     }
     
-    if (widget.autoLoadConversationId != null) {
-      // Path 1: Load specific conversation by ID
+    if (widget.autoLoadConversationId != null && widget.autoLoadConversationId! > 0) {
+      // Path 1: Load specific conversation by ID (only positive IDs are valid conversations)
       print('DEBUG: Loading specific conversation ID: ${widget.autoLoadConversationId}');
       await _loadExistingConversation(widget.autoLoadConversationId!);
     } else if (widget.isConversationStarted) {
@@ -141,7 +141,14 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
     if (widget.autoLoadConversationId != oldWidget.autoLoadConversationId) {
       print('DEBUG: autoLoadConversationId changed from ${oldWidget.autoLoadConversationId} to ${widget.autoLoadConversationId}');
       if (widget.autoLoadConversationId != null) {
-        _initializeConversation();
+        if (widget.autoLoadConversationId == -1) {
+          // Special flag to reset to home
+          print('DEBUG: Resetting conversation state to home (explicit home button click)');
+          _resetToHomeState();
+        } else {
+          // Normal conversation loading
+          _initializeConversation();
+        }
       }
     }
     
@@ -158,6 +165,29 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
     _fadeAnimationController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  /// Reset conversation state back to home
+  void _resetToHomeState() {
+    print('DEBUG: Resetting conversation state to home');
+    
+    // Schedule the reset after the current build is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _currentConversation = null;
+        _messages = [];
+        _isConversationLoading = false;
+        _isSendingMessage = false;
+      });
+      
+      // Reset animation
+      _fadeAnimationController.reset();
+      
+      // Call parent reset if available
+      widget.onResetToHome?.call();
+      
+      print('DEBUG: Conversation state reset to home');
+    });
   }
 
   void _onTextChanged() {
@@ -468,28 +498,16 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
       opacity: _fadeAnimation,
       child: Column(
         children: [
-          // Header with back button
+          // Header without back button
           Container(
             padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: widget.onResetToHome,
-                  icon: const Icon(Icons.arrow_back),
-                  tooltip: 'Back to Home',
-                ),
-                Expanded(
-                  child: Text(
-                    'Conversation with ${profet.name}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(width: 48), // Balance the back button
-              ],
+            child: Text(
+              'Conversation with ${profet.name}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
           // Messages list
