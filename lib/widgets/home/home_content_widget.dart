@@ -502,7 +502,7 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
           Container(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Conversation with ${profet.name}',
+              _currentConversation?.title ?? 'Conversation with ${profet.name}',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
