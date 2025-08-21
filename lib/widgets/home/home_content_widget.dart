@@ -272,6 +272,17 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
         // Start fade in animation
         _fadeAnimationController.forward();
         
+        // Scroll to bottom to show latest messages
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+        
         print('DEBUG: Conversation loaded successfully - ${loadedConversation.title}, ${_messages.length} messages');
         
         // Notify parent that conversation was loaded successfully
