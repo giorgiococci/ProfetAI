@@ -17,7 +17,7 @@ class QuestionAdService {
   static const String _questionCountKey = 'total_question_count';
   static const String _prophetResponseCountKey = 'total_prophet_response_count';
   static const String _cooldownEndTimeKey = 'cooldown_end_time';
-  static const int _adFrequency = 5; // Show ad every 5 questions OR 5 prophet responses
+  static const int _adFrequency = 10; // Show ad every 10 questions OR 10 prophet responses
   static const int _cooldownHours = 4; // 4 hours cooldown for skipped ads
   
   // Singleton pattern

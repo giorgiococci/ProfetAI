@@ -25,7 +25,6 @@ class ConversationService {
   // Current conversation state
   Conversation? _currentConversation;
   List<ConversationMessage> _currentMessages = [];
-  int _messagesSinceLastAd = 0;
   
   // Stream controllers for real-time updates
   final StreamController<Conversation?> _conversationController = StreamController<Conversation?>.broadcast();
@@ -86,7 +85,6 @@ class ConversationService {
       );
       
       _currentMessages = [];
-      _messagesSinceLastAd = 0;
       
       // Notify listeners
       _conversationController.add(_currentConversation);
@@ -113,12 +111,6 @@ class ConversationService {
     try {
       AppLogger.logInfo(_component, 'Processing user message in conversation ${_currentConversation!.id}');
       
-      // Check ad interval before processing
-      final canProceed = await _checkAdInterval(context);
-      if (!canProceed) {
-        throw Exception('Message blocked by ad interval');
-      }
-      
       // Add user message
       final userMessage = await _storageService.addMessage(
         conversationId: _currentConversation!.id!,
@@ -133,7 +125,7 @@ class ConversationService {
       if (ConversationConfig.showTypingIndicators) {
         _isTypingController.add(true);
       }
-      
+
       // Generate prophet response
       final prophetMessage = await _generateProphetResponse(content, context);
       
@@ -141,7 +133,7 @@ class ConversationService {
       if (ConversationConfig.showTypingIndicators) {
         _isTypingController.add(false);
       }
-      
+
       _currentMessages.add(prophetMessage);
       _messagesController.add(_currentMessages);
       
@@ -150,9 +142,6 @@ class ConversationService {
       if (!prophetResponseAllowed) {
         AppLogger.logInfo(_component, 'Prophet response completed but user is in cooldown');
       }
-      
-      // Update message count for ad tracking (legacy per-conversation tracking)
-      _messagesSinceLastAd += 2; // User message + prophet response
       
       AppLogger.logInfo(_component, 'Message exchange completed');
       return prophetMessage;
@@ -167,9 +156,7 @@ class ConversationService {
       
       rethrow;
     }
-  }
-
-  /// Update feedback for a specific message
+  }  /// Update feedback for a specific message
   Future<void> updateMessageFeedback({
     required int messageId,
     required FeedbackType feedbackType,
@@ -220,9 +207,6 @@ class ConversationService {
       _currentConversation = conversation;
       _currentMessages = messages;
       
-      // Reset ad counter (conversation already in progress)
-      _messagesSinceLastAd = messages.length % ConversationConfig.adIntervalMessages;
-      
       // Notify listeners
       _conversationController.add(_currentConversation);
       _messagesController.add(_currentMessages);
@@ -251,7 +235,6 @@ class ConversationService {
       // Clear current state
       _currentConversation = null;
       _currentMessages = [];
-      _messagesSinceLastAd = 0;
       
       // Notify listeners
       _conversationController.add(null);
@@ -307,28 +290,6 @@ class ConversationService {
   }
 
   /// Private helper methods
-
-  /// Check if ad should be shown based on message interval
-  Future<bool> _checkAdInterval(BuildContext context) async {
-    if (_messagesSinceLastAd >= ConversationConfig.adIntervalMessages) {
-      try {
-        AppLogger.logInfo(_component, 'Ad interval reached, checking with ad service');
-        final canProceed = await _adService.handleUserQuestion(context);
-        
-        if (canProceed) {
-          _messagesSinceLastAd = 0; // Reset counter after successful ad
-        }
-        
-        return canProceed;
-      } catch (e) {
-        AppLogger.logError(_component, 'Error in ad service', e);
-        // Continue with message processing even if ad logic fails
-        return true;
-      }
-    }
-    
-    return true; // No ad needed
-  }
 
   /// Generate prophet response for user message
   Future<ConversationMessage> _generateProphetResponse(String userContent, BuildContext context) async {

@@ -88,9 +88,24 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   /// Handle asking the oracle and start conversation mode
-  void _handleAskOracle() {
+  void _handleAskOracle() async {
     // Check if question is not empty
     if (_questionController.text.trim().isNotEmpty) {
+      // Check ad logic before starting conversation
+      try {
+        AppLogger.logInfo('HomeScreen', '🎯 About to call handleUserQuestion for ask mode');
+        final canProceed = await _questionAdService.handleUserQuestion(context);
+        AppLogger.logInfo('HomeScreen', '✅ handleUserQuestion result: $canProceed');
+        if (!canProceed) {
+          AppLogger.logInfo('HomeScreen', '❌ Ask action blocked - user chose to wait');
+          return;
+        }
+        AppLogger.logInfo('HomeScreen', '✅ Ask action approved - starting conversation');
+      } catch (e) {
+        AppLogger.logError('HomeScreen', 'Error in ask mode handling', e);
+        // Continue with conversation even if ad/cooldown logic fails
+      }
+      
       setState(() {
         _isConversationStarted = true;
       });

@@ -5,6 +5,7 @@ import '../../models/conversation/conversation_message.dart';
 import '../../models/vision_feedback.dart';
 import '../../services/conversation/conversation_integration_service.dart';
 import '../../services/vision_integration_service.dart';
+import '../../services/question_ad_service.dart';
 import '../../models/profet.dart';
 import '../../utils/utils.dart';
 import '../../utils/app_logger.dart';
@@ -60,6 +61,7 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
   // Conversation state
   final ConversationIntegrationService _conversationService = ConversationIntegrationService();
   final VisionIntegrationService _visionService = VisionIntegrationService();
+  final QuestionAdService _questionAdService = QuestionAdService();
   final ScrollController _scrollController = ScrollController();
   Conversation? _currentConversation;
   List<ConversationMessage> _messages = [];
@@ -74,6 +76,9 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
     super.initState();
     _isQuestionEmpty = widget.questionController.text.trim().isEmpty;
     widget.questionController.addListener(_onTextChanged);
+    
+    // Initialize services
+    _initializeServices();
     
     // Initialize animations
     _fadeAnimationController = AnimationController(
@@ -109,6 +114,17 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeConversation();
     });
+  }
+
+  /// Initialize services required for the widget
+  Future<void> _initializeServices() async {
+    try {
+      if (!_questionAdService.isInitialized) {
+        await _questionAdService.initialize();
+      }
+    } catch (e) {
+      AppLogger.logError('HomeContentWidget', 'Failed to initialize services', e);
+    }
   }
 
   /// Single, clear initialization method based on widget parameters
@@ -370,6 +386,17 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
     });
 
     try {
+      // FIRST: Check if ad should be shown before sending the message
+      AppLogger.logInfo('HomeContentWidget', 'Checking ad logic before sending message');
+      final canProceed = await _questionAdService.handleUserQuestion(context);
+      if (!canProceed) {
+        AppLogger.logInfo('HomeContentWidget', 'Message blocked by ad logic - user must watch ad or wait');
+        // User chose to wait or ad failed - don't send the message
+        return;
+      }
+      
+      AppLogger.logInfo('HomeContentWidget', 'Ad check passed, proceeding to send message');
+
       await _conversationService.sendMessage(
         context: context,
         content: message,
