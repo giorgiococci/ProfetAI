@@ -218,25 +218,21 @@ class _SplashScreenState extends State<SplashScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
                   
                   // App title
-                  const Text(
-                    'ORAKL',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurpleAccent,
-                      letterSpacing: 2.0,
-                    ),
+                  Image.asset(
+                    'assets/images/orakl_title.png',
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    fit: BoxFit.contain,
                   ),
                   
-                  const SizedBox(height: 80),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   
                   // Rotating prophet images
                   SizedBox(
-                    width: 240, // Increased from 200
-                    height: 240, // Increased from 200
+                    width: MediaQuery.of(context).size.width * 0.55,
+                    height: MediaQuery.of(context).size.width * 0.55,
                     child: AnimatedBuilder(
                       animation: _rotationController,
                       builder: (context, child) {
@@ -248,7 +244,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                   
-                  SizedBox(height: ThemeUtils.spacingXL),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   
                   // Loading text
                   Text(
@@ -259,7 +255,7 @@ class _SplashScreenState extends State<SplashScreen>
                     textAlign: TextAlign.center,
                   ),
                   
-                  SizedBox(height: ThemeUtils.spacingLG),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   
                   // Progress indicator
                   SizedBox(
@@ -273,7 +269,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                   
-                  const Spacer(flex: 3),
+                  const Spacer(flex: 1),
                 ],
               ),
             ),
