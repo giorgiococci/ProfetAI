@@ -3,6 +3,7 @@ import '../../services/bio/bio_storage_service.dart';
 import '../../models/bio/biographical_insight.dart';
 import '../../utils/privacy/privacy_levels.dart';
 import '../../widgets/home/error_display_widget.dart';
+import '../../l10n/app_localizations.dart';
 
 class BioManagementScreen extends StatefulWidget {
   const BioManagementScreen({super.key});
@@ -300,7 +301,7 @@ class _BioManagementScreenState extends State<BioManagementScreen>
                 ),
                 const Spacer(),
                 Text(
-                  _formatTimestamp(insight.extractedAt),
+                  _formatTimestamp(context, insight.extractedAt),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -681,18 +682,19 @@ class _BioManagementScreenState extends State<BioManagementScreen>
     }
   }
 
-  String _formatTimestamp(DateTime timestamp) {
+  String _formatTimestamp(BuildContext context, DateTime timestamp) {
     final now = DateTime.now();
     final difference = now.difference(timestamp);
+    final localizations = AppLocalizations.of(context)!;
     
     if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
+      return localizations.daysAgo(difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
+      return localizations.hoursAgo(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
+      return localizations.minutesAgo(difference.inMinutes);
     } else {
-      return 'Just now';
+      return localizations.justNow;
     }
   }
 }

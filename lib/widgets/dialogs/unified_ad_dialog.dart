@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../utils/theme_utils.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Unified dialog for handling ad display with cooldown information
 /// 
@@ -64,7 +65,9 @@ class UnifiedAdDialog extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                isInCooldown ? 'Wait Time Active' : 'Watch Ad?',
+                isInCooldown 
+                    ? AppLocalizations.of(context)!.waitTimeActive 
+                    : AppLocalizations.of(context)!.watchAdTitle,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -95,7 +98,7 @@ class UnifiedAdDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _getMainMessage(),
+                    _getMainMessage(context),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -105,7 +108,7 @@ class UnifiedAdDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _getSubMessage(),
+                    _getSubMessage(context),
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 14,
@@ -126,7 +129,7 @@ class UnifiedAdDialog extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '~30 seconds',
+                    AppLocalizations.of(context)!.aboutThirtySeconds,
                     style: TextStyle(
                       color: Colors.orange,
                       fontSize: 12,
@@ -141,7 +144,7 @@ class UnifiedAdDialog extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Free to use',
+                    AppLocalizations.of(context)!.freeToUse,
                     style: TextStyle(
                       color: Colors.green,
                       fontSize: 12,
@@ -164,7 +167,9 @@ class UnifiedAdDialog extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
             child: Text(
-              isInCooldown ? 'Wait' : 'Skip',
+              isInCooldown 
+                  ? AppLocalizations.of(context)!.waitButton 
+                  : AppLocalizations.of(context)!.skipButton,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -192,7 +197,7 @@ class UnifiedAdDialog extends StatelessWidget {
                 Icon(Icons.play_arrow, size: 18),
                 const SizedBox(width: 4),
                 Text(
-                  'Watch Ad',
+                  AppLocalizations.of(context)!.watchAdButton,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -206,22 +211,22 @@ class UnifiedAdDialog extends StatelessWidget {
     );
   }
   
-  String _getMainMessage() {
+  String _getMainMessage(BuildContext context) {
     if (isInCooldown) {
-      return 'You skipped an ad earlier';
+      return AppLocalizations.of(context)!.youSkippedAdEarlier;
     } else {
       return questionsAsked == 1 
-          ? 'You\'ve asked $questionsAsked question!'
-          : 'You\'ve asked $questionsAsked questions!';
+          ? AppLocalizations.of(context)!.youAskedOneQuestion
+          : AppLocalizations.of(context)!.youAskedMultipleQuestions(questionsAsked);
     }
   }
   
-  String _getSubMessage() {
+  String _getSubMessage(BuildContext context) {
     if (isInCooldown) {
       final timeString = _formatDuration(remainingCooldownTime!);
-      return 'Please wait $timeString or watch an ad to continue asking the oracle.';
+      return AppLocalizations.of(context)!.waitOrWatchAdMessage(timeString);
     } else {
-      return 'To continue receiving unlimited oracle wisdom, watch a quick ad or skip and wait 4 hours.';
+      return AppLocalizations.of(context)!.unlimitedOracleWisdomMessage;
     }
   }
   
@@ -302,7 +307,7 @@ class _AdLoadingDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Preparing ad...',
+              AppLocalizations.of(context)!.preparingAd,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,

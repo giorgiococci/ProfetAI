@@ -5,6 +5,7 @@ import '../../models/profet_manager.dart';
 import '../../models/vision_feedback.dart';
 import '../../services/conversation/conversation_integration_service.dart';
 import '../../utils/app_logger.dart';
+import '../../l10n/app_localizations.dart';
 import 'message_bubble.dart';
 
 /// Main conversation view widget that displays the chat interface
@@ -219,7 +220,7 @@ class _ConversationViewState extends State<ConversationView>
               children: [
                 Text(_getFeedbackEmoji(feedbackType)),
                 const SizedBox(width: 8),
-                Text('Feedback updated!'),
+                Text(AppLocalizations.of(context)!.feedbackUpdated),
               ],
             ),
             backgroundColor: _getFeedbackColor(feedbackType).withValues(alpha: 0.8),
@@ -340,7 +341,7 @@ class _ConversationViewState extends State<ConversationView>
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: _startConversation,
-            child: const Text('Retry'),
+            child: Text(AppLocalizations.of(context)!.retryButton),
           ),
         ],
       ),
@@ -501,7 +502,7 @@ class _ConversationViewState extends State<ConversationView>
               controller: _inputController,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                hintText: 'Type your message...',
+                hintText: AppLocalizations.of(context)!.typeYourMessage,
                 hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),

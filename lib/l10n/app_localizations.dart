@@ -1619,6 +1619,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Personalization disabled and data deleted successfully'**
   String get personalizationDisabledSuccess;
+
+  /// Success message when feedback is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback updated!'**
+  String get feedbackUpdated;
+
+  /// Error message when feedback update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update feedback: {error}'**
+  String failedToUpdateFeedback(String error);
+
+  /// Title for wait time dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Wait Time Active'**
+  String get waitTimeActive;
+
+  /// Title for watch ad dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad?'**
+  String get watchAdTitle;
+
+  /// Message when user is in cooldown period
+  ///
+  /// In en, this message translates to:
+  /// **'You skipped an ad earlier'**
+  String get youSkippedAdEarlier;
+
+  /// Message when user has asked one question
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve asked 1 question!'**
+  String get youAskedOneQuestion;
+
+  /// Message when user has asked multiple questions
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve asked {count} questions!'**
+  String youAskedMultipleQuestions(int count);
+
+  /// Message asking user to wait or watch ad
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait {timeString} or watch an ad to continue asking the oracle.'**
+  String waitOrWatchAdMessage(String timeString);
+
+  /// Message explaining unlimited access with ad
+  ///
+  /// In en, this message translates to:
+  /// **'To continue receiving unlimited oracle wisdom, watch a quick ad or skip and wait 4 hours.'**
+  String get unlimitedOracleWisdomMessage;
+
+  /// Approximate ad duration
+  ///
+  /// In en, this message translates to:
+  /// **'~30 seconds'**
+  String get aboutThirtySeconds;
+
+  /// Indicates the app is free
+  ///
+  /// In en, this message translates to:
+  /// **'Free to use'**
+  String get freeToUse;
+
+  /// Button to wait instead of watching ad
+  ///
+  /// In en, this message translates to:
+  /// **'Wait'**
+  String get waitButton;
+
+  /// Button to skip ad
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipButton;
+
+  /// Button to watch advertisement
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad'**
+  String get watchAdButton;
+
+  /// Loading message while preparing ad
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing ad...'**
+  String get preparingAd;
+
+  /// Button to retry an action
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryButton;
+
+  /// Label for positive feedback button
+  ///
+  /// In en, this message translates to:
+  /// **'Great'**
+  String get feedbackGreat;
+
+  /// Label for negative feedback button
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get feedbackPoor;
+
+  /// Label for funny feedback button
+  ///
+  /// In en, this message translates to:
+  /// **'Funny'**
+  String get feedbackFunny;
+
+  /// Button to save vision
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveVision;
+
+  /// Button to share vision
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareVision;
+
+  /// Button to close vision dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeVision;
+
+  /// Hint text for message input field
+  ///
+  /// In en, this message translates to:
+  /// **'Type your message...'**
+  String get typeYourMessage;
+
+  /// Label indicating content is AI generated
+  ///
+  /// In en, this message translates to:
+  /// **'AI Generated'**
+  String get aiGenerated;
+
+  /// Time format for minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String minutesAgo(int count);
+
+  /// Time format for hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String hoursAgo(int count);
+
+  /// Time format for days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String daysAgo(int count);
 }
 
 class _AppLocalizationsDelegate

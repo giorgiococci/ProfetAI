@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/conversation/conversation_message.dart';
 import '../../models/vision_feedback.dart';
 import '../../models/profet_manager.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Widget for displaying individual message bubbles in conversations
 /// Supports user and prophet messages with different styling and feedback options
@@ -84,7 +85,7 @@ class MessageBubble extends StatelessWidget {
               _buildProphetHeader(prophet),
             _buildMessageContent(),
             if (message.isAIGenerated && !isUser && !isCompact)
-              _buildAIIndicator(),
+              _buildAIIndicator(context),
           ],
         ),
       ),
@@ -134,7 +135,7 @@ class MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildAIIndicator() {
+  Widget _buildAIIndicator(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 8),
       child: Row(
@@ -147,7 +148,7 @@ class MessageBubble extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            'AI Generated',
+            AppLocalizations.of(context)!.aiGenerated,
             style: TextStyle(
               fontSize: 10,
               color: Colors.white.withValues(alpha: 0.5),
@@ -235,16 +236,17 @@ class MessageBubble extends StatelessWidget {
   Widget _buildTimestamp(BuildContext context) {
     final now = DateTime.now();
     final difference = now.difference(message.timestamp);
+    final localizations = AppLocalizations.of(context)!;
     
     String timeText;
     if (difference.inDays > 0) {
-      timeText = '${difference.inDays}d ago';
+      timeText = localizations.daysAgo(difference.inDays);
     } else if (difference.inHours > 0) {
-      timeText = '${difference.inHours}h ago';
+      timeText = localizations.hoursAgo(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      timeText = '${difference.inMinutes}m ago';
+      timeText = localizations.minutesAgo(difference.inMinutes);
     } else {
-      timeText = 'Just now';
+      timeText = localizations.justNow;
     }
 
     return Padding(

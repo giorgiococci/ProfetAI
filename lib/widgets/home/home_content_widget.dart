@@ -580,7 +580,7 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
                   ),
                   decoration: InputDecoration(
                     hintText: widget.isConversationStarted 
-                        ? 'Type your message...'
+                        ? localizations.typeYourMessage
                         : localizations.enterQuestionPlaceholder(
                             widget.prophetName.isNotEmpty ? widget.prophetName : 'Oracle'
                           ),
@@ -652,7 +652,7 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
               children: [
                 Text(_getFeedbackEmoji(feedbackType)),
                 const SizedBox(width: 8),
-                Text('Feedback updated!'),
+                Text(AppLocalizations.of(context)!.feedbackUpdated),
               ],
             ),
             backgroundColor: _getFeedbackColor(feedbackType).withValues(alpha: 0.8),
@@ -667,7 +667,7 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update feedback: $e'),
+            content: Text(AppLocalizations.of(context)!.failedToUpdateFeedback(e.toString())),
             backgroundColor: Colors.red,
           ),
         );

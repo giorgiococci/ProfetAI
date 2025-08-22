@@ -871,4 +871,98 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get personalizationDisabledSuccess =>
       'Personalization disabled and data deleted successfully';
+
+  @override
+  String get feedbackUpdated => 'Feedback updated!';
+
+  @override
+  String failedToUpdateFeedback(String error) {
+    return 'Failed to update feedback: $error';
+  }
+
+  @override
+  String get waitTimeActive => 'Wait Time Active';
+
+  @override
+  String get watchAdTitle => 'Watch Ad?';
+
+  @override
+  String get youSkippedAdEarlier => 'You skipped an ad earlier';
+
+  @override
+  String get youAskedOneQuestion => 'You\'ve asked 1 question!';
+
+  @override
+  String youAskedMultipleQuestions(int count) {
+    return 'You\'ve asked $count questions!';
+  }
+
+  @override
+  String waitOrWatchAdMessage(String timeString) {
+    return 'Please wait $timeString or watch an ad to continue asking the oracle.';
+  }
+
+  @override
+  String get unlimitedOracleWisdomMessage =>
+      'To continue receiving unlimited oracle wisdom, watch a quick ad or skip and wait 4 hours.';
+
+  @override
+  String get aboutThirtySeconds => '~30 seconds';
+
+  @override
+  String get freeToUse => 'Free to use';
+
+  @override
+  String get waitButton => 'Wait';
+
+  @override
+  String get skipButton => 'Skip';
+
+  @override
+  String get watchAdButton => 'Watch Ad';
+
+  @override
+  String get preparingAd => 'Preparing ad...';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get feedbackGreat => 'Great';
+
+  @override
+  String get feedbackPoor => 'Poor';
+
+  @override
+  String get feedbackFunny => 'Funny';
+
+  @override
+  String get saveVision => 'Save';
+
+  @override
+  String get shareVision => 'Share';
+
+  @override
+  String get closeVision => 'Close';
+
+  @override
+  String get typeYourMessage => 'Type your message...';
+
+  @override
+  String get aiGenerated => 'AI Generated';
+
+  @override
+  String minutesAgo(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return '${count}d ago';
+  }
 }

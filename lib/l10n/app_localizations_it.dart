@@ -878,4 +878,98 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get personalizationDisabledSuccess =>
       'Personalizzazione disabilitata e dati eliminati con successo';
+
+  @override
+  String get feedbackUpdated => 'Feedback aggiornato!';
+
+  @override
+  String failedToUpdateFeedback(String error) {
+    return 'Impossibile aggiornare il feedback: $error';
+  }
+
+  @override
+  String get waitTimeActive => 'Tempo di Attesa Attivo';
+
+  @override
+  String get watchAdTitle => 'Guardare Pubblicità?';
+
+  @override
+  String get youSkippedAdEarlier => 'Hai saltato una pubblicità in precedenza';
+
+  @override
+  String get youAskedOneQuestion => 'Hai fatto 1 domanda!';
+
+  @override
+  String youAskedMultipleQuestions(int count) {
+    return 'Hai fatto $count domande!';
+  }
+
+  @override
+  String waitOrWatchAdMessage(String timeString) {
+    return 'Attendi $timeString o guarda una pubblicità per continuare a interrogare l\'oracolo.';
+  }
+
+  @override
+  String get unlimitedOracleWisdomMessage =>
+      'Per continuare a ricevere saggezza illimitata dall\'oracolo, guarda una breve pubblicità o salta e aspetta 4 ore.';
+
+  @override
+  String get aboutThirtySeconds => '~30 secondi';
+
+  @override
+  String get freeToUse => 'Gratuito';
+
+  @override
+  String get waitButton => 'Aspetta';
+
+  @override
+  String get skipButton => 'Salta';
+
+  @override
+  String get watchAdButton => 'Guarda Pubblicità';
+
+  @override
+  String get preparingAd => 'Preparando pubblicità...';
+
+  @override
+  String get retryButton => 'Riprova';
+
+  @override
+  String get feedbackGreat => 'Ottimo';
+
+  @override
+  String get feedbackPoor => 'Scarso';
+
+  @override
+  String get feedbackFunny => 'Divertente';
+
+  @override
+  String get saveVision => 'Salva';
+
+  @override
+  String get shareVision => 'Condividi';
+
+  @override
+  String get closeVision => 'Chiudi';
+
+  @override
+  String get typeYourMessage => 'Scrivi il tuo messaggio...';
+
+  @override
+  String get aiGenerated => 'Generato dall\'IA';
+
+  @override
+  String minutesAgo(int count) {
+    return '${count}m fa';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '${count}h fa';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return '${count}g fa';
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/vision_feedback.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Widget for displaying and collecting message feedback
 /// Allows users to provide feedback on individual conversation messages
@@ -132,21 +133,21 @@ class _MessageFeedbackState extends State<MessageFeedback>
             children: [
               _buildFeedbackButtonWithLabel(
                 emoji: '🌟',
-                label: 'Great',
+                label: AppLocalizations.of(context)!.feedbackGreat,
                 type: FeedbackType.positive,
                 color: Colors.green,
               ),
               const SizedBox(width: 12),
               _buildFeedbackButtonWithLabel(
                 emoji: '🪨',
-                label: 'Poor',
+                label: AppLocalizations.of(context)!.feedbackPoor,
                 type: FeedbackType.negative,
                 color: Colors.red,
               ),
               const SizedBox(width: 12),
               _buildFeedbackButtonWithLabel(
                 emoji: '🐸',
-                label: 'Funny',
+                label: AppLocalizations.of(context)!.feedbackFunny,
                 type: FeedbackType.funny,
                 color: Colors.orange,
               ),

@@ -1385,5 +1385,173 @@
   "personalizationDisabledSuccess": "Personalization disabled and data deleted successfully",
   "@personalizationDisabledSuccess": {
     "description": "Success message when personalization is disabled"
+  },
+
+  "feedbackUpdated": "Feedback updated!",
+  "@feedbackUpdated": {
+    "description": "Success message when feedback is updated"
+  },
+
+  "failedToUpdateFeedback": "Failed to update feedback: {error}",
+  "@failedToUpdateFeedback": {
+    "description": "Error message when feedback update fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+
+  "waitTimeActive": "Wait Time Active",
+  "@waitTimeActive": {
+    "description": "Title for wait time dialog"
+  },
+
+  "watchAdTitle": "Watch Ad?",
+  "@watchAdTitle": {
+    "description": "Title for watch ad dialog"
+  },
+
+  "youSkippedAdEarlier": "You skipped an ad earlier",
+  "@youSkippedAdEarlier": {
+    "description": "Message when user is in cooldown period"
+  },
+
+  "youAskedOneQuestion": "You've asked 1 question!",
+  "@youAskedOneQuestion": {
+    "description": "Message when user has asked one question"
+  },
+
+  "youAskedMultipleQuestions": "You've asked {count} questions!",
+  "@youAskedMultipleQuestions": {
+    "description": "Message when user has asked multiple questions",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of questions asked"
+      }
+    }
+  },
+
+  "waitOrWatchAdMessage": "Please wait {timeString} or watch an ad to continue asking the oracle.",
+  "@waitOrWatchAdMessage": {
+    "description": "Message asking user to wait or watch ad",
+    "placeholders": {
+      "timeString": {
+        "type": "String",
+        "description": "Formatted time string"
+      }
+    }
+  },
+
+  "unlimitedOracleWisdomMessage": "To continue receiving unlimited oracle wisdom, watch a quick ad or skip and wait 4 hours.",
+  "@unlimitedOracleWisdomMessage": {
+    "description": "Message explaining unlimited access with ad"
+  },
+
+  "aboutThirtySeconds": "~30 seconds",
+  "@aboutThirtySeconds": {
+    "description": "Approximate ad duration"
+  },
+
+  "freeToUse": "Free to use",
+  "@freeToUse": {
+    "description": "Indicates the app is free"
+  },
+
+  "waitButton": "Wait",
+  "@waitButton": {
+    "description": "Button to wait instead of watching ad"
+  },
+
+  "skipButton": "Skip",
+  "@skipButton": {
+    "description": "Button to skip ad"
+  },
+
+  "watchAdButton": "Watch Ad",
+  "@watchAdButton": {
+    "description": "Button to watch advertisement"
+  },
+
+  "preparingAd": "Preparing ad...",
+  "@preparingAd": {
+    "description": "Loading message while preparing ad"
+  },
+
+  "retryButton": "Retry",
+  "@retryButton": {
+    "description": "Button to retry an action"
+  },
+
+  "feedbackGreat": "Great",
+  "@feedbackGreat": {
+    "description": "Label for positive feedback button"
+  },
+
+  "feedbackPoor": "Poor",
+  "@feedbackPoor": {
+    "description": "Label for negative feedback button"
+  },
+
+  "feedbackFunny": "Funny",
+  "@feedbackFunny": {
+    "description": "Label for funny feedback button"
+  },
+
+  "saveVision": "Save",
+  "@saveVision": {
+    "description": "Button to save vision"
+  },
+
+  "shareVision": "Share",
+  "@shareVision": {
+    "description": "Button to share vision"
+  },
+
+  "closeVision": "Close",
+  "@closeVision": {
+    "description": "Button to close vision dialog"
+  },
+
+  "typeYourMessage": "Type your message...",
+  "@typeYourMessage": {
+    "description": "Hint text for message input field"
+  },
+
+  "aiGenerated": "AI Generated",
+  "@aiGenerated": {
+    "description": "Label indicating content is AI generated"
+  },
+
+  "minutesAgo": "{count}m ago",
+  "@minutesAgo": {
+    "description": "Time format for minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "hoursAgo": "{count}h ago",
+  "@hoursAgo": {
+    "description": "Time format for hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "daysAgo": "{count}d ago",
+  "@daysAgo": {
+    "description": "Time format for days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

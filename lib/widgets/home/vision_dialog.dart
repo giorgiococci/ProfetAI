@@ -3,6 +3,7 @@ import '../../models/profet.dart';
 import '../../models/vision_feedback.dart';
 import '../../widgets/common/common_widgets.dart';
 import '../../utils/theme_utils.dart';
+import '../../l10n/app_localizations.dart';
 import 'feedback_section.dart';
 
 /// A comprehensive dialog widget for displaying oracle visions and responses.
@@ -262,7 +263,7 @@ class _VisionDialogState extends State<VisionDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: ActionButton(
               icon: Icons.bookmark_add,
-              label: 'Salva',
+              label: AppLocalizations.of(context)!.saveVision,
               color: widget.profet.primaryColor,
               onPressed: widget.onSave,
             ),
@@ -273,7 +274,7 @@ class _VisionDialogState extends State<VisionDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: ActionButton(
               icon: Icons.share,
-              label: 'Condividi',
+              label: AppLocalizations.of(context)!.shareVision,
               color: widget.profet.secondaryColor,
               onPressed: widget.onShare,
             ),
@@ -284,7 +285,7 @@ class _VisionDialogState extends State<VisionDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: ActionButton(
               icon: Icons.close,
-              label: 'Chiudi',
+              label: AppLocalizations.of(context)!.closeVision,
               color: Colors.grey,
               onPressed: widget.onClose,
             ),
