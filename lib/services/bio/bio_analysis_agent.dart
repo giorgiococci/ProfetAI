@@ -9,10 +9,11 @@ import 'bio_generation_service.dart';
 import 'privacy_filter_service.dart';
 import '../../utils/app_logger.dart';
 
-/// AI-powered biographical analysis agent that processes prophet interactions
+/// AI-powered biographical analysis agent that processes user interactions
 /// 
-/// This service analyzes user questions and prophet responses to extract
-/// and store biographical insights while respecting privacy controls
+/// This service analyzes ONLY user questions to extract and store biographical
+/// insights while respecting privacy controls. Prophet responses are NOT analyzed
+/// to ensure bio insights are based solely on what users ask, not what oracles say.
 class BioAnalysisAgent {
   static const String _component = 'BioAnalysisAgent';
   
@@ -51,17 +52,10 @@ class BioAnalysisAgent {
           prophetType: profet.type,
           userId: userId,
         );
+        AppLogger.logInfo(_component, 'Bio analysis completed - analyzed user question only');
+      } else {
+        AppLogger.logInfo(_component, 'No user question to analyze - skipping bio analysis');
       }
-      
-      // Analyze the response for insights about user interests
-      await _analyzeResponse(
-        response: response,
-        question: question,
-        prophetType: profet.type,
-        userId: userId,
-      );
-      
-      AppLogger.logInfo(_component, 'Bio analysis completed successfully');
       
       // Trigger bio generation if needed
       await _triggerBioGenerationIfNeeded(userId: userId);
@@ -143,60 +137,6 @@ If no clear insights can be extracted, respond with: NO_INSIGHTS
       
     } catch (e) {
       AppLogger.logWarning(_component, 'Question analysis failed: $e');
-    }
-  }
-
-  /// Analyze prophet response to infer user interests and patterns
-  Future<void> _analyzeResponse({
-    required String response,
-    String? question,
-    required String prophetType,
-    String? userId,
-  }) async {
-    try {
-      AppLogger.logDebug(_component, 'Analyzing response for user patterns');
-      
-      // Create context for AI analysis focusing on what the oracle response reveals about user interests
-      final analysisPrompt = '''
-Analyze what this spiritual oracle response reveals about the user who received it.
-
-${question != null ? 'Original Question: "$question"' : 'Random Vision Request'}
-Oracle Response: "$response"
-Oracle Type: $prophetType
-
-Infer what this exchange reveals about the user's interests, spiritual orientation, or seeking patterns.
-
-Extract insights in this format:
-CATEGORY: INSIGHT
-
-Available categories: interests, spiritual_orientation, seeking_patterns, life_focus, oracle_preference
-
-Example responses:
-interests: User seeks guidance on personal relationships
-spiritual_orientation: User is drawn to mystical and cosmic themes
-seeking_patterns: User frequently asks about future outcomes
-life_focus: User is focused on career and professional growth
-oracle_preference: User prefers the $prophetType oracle's approach
-
-Rules:
-- Focus on what the oracle choice and response topic reveal about the user
-- Keep insights observational and neutral
-- Maximum 2 insights per analysis
-- Skip obvious or generic insights
-- Use simple, clear language
-
-If no meaningful insights can be inferred, respond with: NO_INSIGHTS
-''';
-
-      final insights = await _extractInsightsFromText(analysisPrompt);
-      
-      if (insights.isNotEmpty) {
-        AppLogger.logInfo(_component, 'Extracted ${insights.length} insights from response analysis');
-        await _storeInsights(insights, userId, question ?? 'Random vision', response);
-      }
-      
-    } catch (e) {
-      AppLogger.logWarning(_component, 'Response analysis failed: $e');
     }
   }
 
@@ -283,7 +223,7 @@ If no meaningful insights can be inferred, respond with: NO_INSIGHTS
           sourceAnswer: sourceAnswer,
           extractedFrom: 'bio_analysis_agent',
           privacyLevel: privacyLevel,
-          sourceType: InsightSourceType.prophet, // This analyzes prophet responses
+          sourceType: InsightSourceType.user, // Bio insights are always from user questions
           userId: userId,
         );
         
@@ -507,20 +447,13 @@ Respond naturally incorporating this understanding without mentioning you have b
     String? userId,
   }) async {
     try {
-      AppLogger.logInfo(_component, 'Analyzing direct prophet response for bio insights');
+      AppLogger.logInfo(_component, 'Direct prophet response - no user question to analyze');
+      AppLogger.logInfo(_component, 'Skipping bio analysis as we only analyze user questions, not prophet responses');
       
-      // Analyze the response for insights about user interests/engagement
-      // Even without a user question, we can infer engagement patterns
-      await _analyzeResponse(
-        response: response,
-        question: null, // No user question for direct prophet messages
-        prophetType: profet.type,
-        userId: userId,
-      );
+      // Since there's no user question, there's nothing to analyze for bio insights
+      // Bio analysis should ONLY be based on what the user asks/says, never on prophet responses
       
-      AppLogger.logInfo(_component, 'Direct prophet response analysis completed');
-      
-      // Trigger bio generation if needed
+      // We still trigger bio generation in case there are pending insights from previous questions
       await _triggerBioGenerationIfNeeded(userId: userId);
       
     } catch (e) {
