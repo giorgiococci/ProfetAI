@@ -1,4 +1,4 @@
-package com.example.orakl
+package com.orakl.orakl
 
 import io.flutter.embedding.android.FlutterActivity
 
