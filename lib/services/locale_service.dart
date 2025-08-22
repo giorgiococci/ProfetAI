@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:ui' as ui;
 
 class LocaleService extends ChangeNotifier {
   static const _storage = FlutterSecureStorage();
@@ -10,7 +11,7 @@ class LocaleService extends ChangeNotifier {
   factory LocaleService() => _instance;
   LocaleService._internal();
   
-  Locale _currentLocale = const Locale('it'); // Default to Italian
+  Locale _currentLocale = _getSystemLocaleOrDefault(); // Default to system locale or English
   
   Locale get currentLocale => _currentLocale;
   
@@ -19,15 +20,36 @@ class LocaleService extends ChangeNotifier {
     Locale('it'), // Italian
   ];
   
+  /// Gets the system locale if supported, otherwise returns English as default
+  static Locale _getSystemLocaleOrDefault() {
+    // Get the system locale
+    final systemLocale = ui.PlatformDispatcher.instance.locale;
+    
+    // Check if the system locale is supported
+    for (final supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == systemLocale.languageCode) {
+        return supportedLocale;
+      }
+    }
+    
+    // If system locale is not supported, default to English
+    return const Locale('en');
+  }
+  
   Future<void> loadSavedLocale() async {
     try {
       final savedLocale = await _storage.read(key: _localeKey);
       if (savedLocale != null) {
         _currentLocale = Locale(savedLocale);
-        notifyListeners();
+      } else {
+        // If no saved locale, use system locale or default to English
+        _currentLocale = _getSystemLocaleOrDefault();
       }
+      notifyListeners();
     } catch (e) {
-      // If there's an error reading, keep the default locale
+      // If there's an error reading, use system locale or default to English
+      _currentLocale = _getSystemLocaleOrDefault();
+      notifyListeners();
     }
   }
   
@@ -43,6 +65,12 @@ class LocaleService extends ChangeNotifier {
       
       notifyListeners();
     }
+  }
+  
+  /// Resets the locale to system default (or English if system locale is not supported)
+  Future<void> resetToSystemLocale() async {
+    final systemLocale = _getSystemLocaleOrDefault();
+    await setLocale(systemLocale);
   }
   
   String getLanguageName(String languageCode) {

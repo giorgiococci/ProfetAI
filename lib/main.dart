@@ -48,7 +48,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final LocaleService _localeService = LocaleService();
-  Locale _currentLocale = const Locale('it'); // Default locale
+  Locale _currentLocale = const Locale('en'); // Will be updated in initState
 
   @override
   void initState() {
@@ -111,6 +111,30 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: LocaleService.supportedLocales,
+      localeResolutionCallback: (locale, supportedLocales) {
+        // If the system locale is null, default to English
+        if (locale == null) {
+          return const Locale('en');
+        }
+        
+        // Try to match the exact locale first
+        for (final supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+        
+        // Try to match just the language code
+        for (final supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode) {
+            return supportedLocale;
+          }
+        }
+        
+        // If no match found, default to English
+        return const Locale('en');
+      },
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
