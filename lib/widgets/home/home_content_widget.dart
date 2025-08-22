@@ -334,30 +334,30 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
         context: context,
         profet: profet,
         isAIEnabled: Profet.isAIEnabled,
+        isBrief: true, // Request brief responses for "Listen to Oracle"
       );
       
       print('DEBUG: Saving prophet message to conversation ${_currentConversation!.id}');
       
-      // Save the prophet message directly to the conversation using the integration service
-      // This ensures the message is properly persisted to the database
-      final prophetMessage = await _conversationService.addDirectProphetMessage(
+      // OPTIMIZATION: Show the response to the user immediately
+      // Create a temporary message for immediate UI display
+      final tempMessage = ConversationMessage(
+        conversationId: _currentConversation!.id!,
         content: visionResult.content,
+        sender: MessageSender.prophet,
+        timestamp: DateTime.now(),
         isAIGenerated: visionResult.isAIGenerated,
-        metadata: 'oracle_vision',
-        userId: 'default_user', // Add userId parameter for bio analysis
       );
       
-      print('DEBUG: Prophet message saved successfully with ID: ${prophetMessage.id}');
-      
-      // Update local state from the conversation service (which is now in sync)
+      // Add to local state immediately for responsive UI
       setState(() {
-        _messages = _conversationService.currentMessages;
+        _messages = [..._conversationService.currentMessages, tempMessage];
       });
       
-      // Clear the input controller
+      // Clear the input controller immediately
       widget.questionController.clear();
       
-      // Scroll to bottom
+      // Scroll to bottom immediately
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
@@ -368,6 +368,15 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
         }
       });
       
+      // Now perform the heavy operations in the background (non-blocking)
+      _performBackgroundOperations(visionResult).then((_) {
+        print('DEBUG: Background operations completed successfully');
+      }).catchError((error) {
+        AppLogger.logError('HomeContentWidget', 'Background operations failed', error);
+        // Show error to user if background operations fail
+        _showErrorSnackBar('Failed to save oracle vision. It may not appear in history.');
+      });
+      
     } catch (e) {
       AppLogger.logError('HomeContentWidget', 'Failed to generate oracle vision', e);
       _showErrorSnackBar('Failed to receive oracle vision. Please try again.');
@@ -375,6 +384,38 @@ class _HomeContentWidgetState extends State<HomeContentWidget>
       setState(() {
         _isSendingMessage = false;
       });
+    }
+  }
+
+  /// Performs heavy background operations after showing the response to the user
+  /// This includes database storage and bio analysis to keep the UI responsive
+  Future<void> _performBackgroundOperations(VisionResult visionResult) async {
+    try {
+      AppLogger.logInfo('HomeContentWidget', 'Starting background operations for oracle vision');
+      
+      // Save the prophet message to database and perform bio analysis
+      final prophetMessage = await _conversationService.addDirectProphetMessage(
+        content: visionResult.content,
+        isAIGenerated: visionResult.isAIGenerated,
+        metadata: 'oracle_vision',
+        userId: 'default_user', // Add userId parameter for bio analysis
+      );
+      
+      AppLogger.logInfo('HomeContentWidget', 'Prophet message saved with ID: ${prophetMessage.id}');
+      
+      // Update local state from the conversation service (which is now in sync)
+      // This ensures the UI shows the message with the correct database ID
+      if (mounted) {
+        setState(() {
+          _messages = _conversationService.currentMessages;
+        });
+      }
+      
+      AppLogger.logInfo('HomeContentWidget', 'Background operations completed successfully');
+      
+    } catch (e) {
+      AppLogger.logError('HomeContentWidget', 'Background operations failed', e);
+      rethrow; // Re-throw to be caught by the caller
     }
   }
 

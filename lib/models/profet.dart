@@ -348,4 +348,71 @@ abstract class Profet {
       throw e; // Re-throw so UI can handle with localized methods
     }
   }
+
+  /// Generates a brief random oracle response (1-2 sentences max)
+  /// This method is specifically designed for the "Listen to Oracle" feature
+  Future<String> getAIBriefRandomVision(BuildContext context, {String? personalizedContext}) async {
+    AppLogger.logInfo(_component, '=== getAIBriefRandomVision called ===');
+    AppLogger.logInfo(_component, 'Prophet: $name');
+    AppLogger.logInfo(_component, 'Has personalized context: ${personalizedContext != null}');
+    
+    // Check AI availability
+    final isAIAvailable = AIServiceManager.isAIAvailable;
+    AppLogger.logInfo(_component, 'AIServiceManager.isAIAvailable: $isAIAvailable');
+    
+    if (!isAIAvailable) {
+      AppLogger.logWarning(_component, 'AI not available for brief random vision, throwing for UI fallback');
+      AppLogger.logInfo(_component, 'AI Status Details: ${AIServiceManager.getDetailedStatus()}');
+      throw Exception('AI not available - UI should handle with localized fallback');
+    }
+
+    try {
+      AppLogger.logInfo(_component, 'Attempting to generate AI brief random vision...');
+      
+      // Get the base system prompt
+      final baseSystemPrompt = await getLocalizedAISystemPrompt(context);
+      
+      // Enhanced system prompt with personalized context and brevity instruction
+      String enhancedSystemPrompt = baseSystemPrompt;
+      enhancedSystemPrompt += '\n\nIMPORTANT: Your response must be VERY BRIEF - maximum 1-2 sentences. Be concise and direct while maintaining your unique personality.';
+      
+      if (personalizedContext != null && personalizedContext.isNotEmpty) {
+        enhancedSystemPrompt += '\n\n$personalizedContext';
+        enhancedSystemPrompt += '\n\nPlease generate a brief vision that aligns with the user\'s interests and background.';
+        AppLogger.logInfo(_component, 'Enhanced system prompt with personalized context for brief random vision');
+      }
+      
+      // Create a prompt for brief random vision
+      String visionPrompt = 'Give me a brief spiritual insight or oracle message.';
+      if (personalizedContext != null && personalizedContext.isNotEmpty) {
+        visionPrompt = 'Based on my background, give me a brief spiritual insight that would be meaningful to me.';
+      }
+      
+      AppLogger.logInfo(_component, 'Using enhanced system prompt with brevity instruction');
+      AppLogger.logInfo(_component, 'Using brief vision prompt: $visionPrompt');
+      
+      final response = await AIServiceManager.generateResponse(
+        prompt: visionPrompt,
+        systemMessage: enhancedSystemPrompt,
+        temperature: 0.7,
+      );
+      
+      AppLogger.logInfo(_component, 'AI brief random vision response received: ${response != null ? "YES" : "NULL"}');
+      if (response != null) {
+        AppLogger.logInfo(_component, 'AI brief random vision response length: ${response.length}');
+        AppLogger.logInfo(_component, 'AI brief random vision response content: $response');
+      }
+      
+      if (response != null && response.isNotEmpty) {
+        AppLogger.logInfo(_component, '✅ AI brief random vision generated successfully');
+        return response;
+      } else {
+        AppLogger.logWarning(_component, '⚠️ AI returned empty brief random vision, throwing for UI fallback');
+        throw Exception('AI returned empty brief random vision - UI should handle with localized fallback');
+      }
+    } catch (e) {
+      AppLogger.logError(_component, '❌ AI brief random vision failed, throwing for UI fallback', e);
+      throw e; // Re-throw so UI can handle with localized methods
+    }
+  }
 }

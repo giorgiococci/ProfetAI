@@ -154,10 +154,12 @@ class VisionIntegrationService {
     required BuildContext context,
     required Profet profet,
     required bool isAIEnabled,
+    bool isBrief = false,
   }) async {
     try {
       AppLogger.logInfo(_component, 'Generating and storing random vision');
       AppLogger.logInfo(_component, 'Prophet: ${profet.name}');
+      AppLogger.logInfo(_component, 'Brief mode: $isBrief');
       
       // Generate the vision content using existing flow
       String content;
@@ -184,17 +186,27 @@ class VisionIntegrationService {
             personalizedContext = '';
           }
           
-          // Use enhanced method with personalization if available
-          if (personalizedContext.isNotEmpty) {
-            content = await profet.getAIRandomVisionWithContext(
+          // Choose the appropriate AI method based on brevity requirement
+          if (isBrief) {
+            // Use the new brief random vision method
+            content = await profet.getAIBriefRandomVision(
               context, 
-              personalizedContext: personalizedContext,
+              personalizedContext: personalizedContext.isNotEmpty ? personalizedContext : null,
             );
-            AppLogger.logInfo(_component, 'AI-generated personalized random vision received');
+            AppLogger.logInfo(_component, 'AI-generated brief random vision received');
           } else {
-            // Fall back to standard AI random vision
-            content = await profet.getAIRandomVision(context);
-            AppLogger.logInfo(_component, 'AI-generated standard random vision received');
+            // Use enhanced method with personalization if available
+            if (personalizedContext.isNotEmpty) {
+              content = await profet.getAIRandomVisionWithContext(
+                context, 
+                personalizedContext: personalizedContext,
+              );
+              AppLogger.logInfo(_component, 'AI-generated personalized random vision received');
+            } else {
+              // Fall back to standard AI random vision
+              content = await profet.getAIRandomVision(context);
+              AppLogger.logInfo(_component, 'AI-generated standard random vision received');
+            }
           }
           
           actuallyAIGenerated = true;
